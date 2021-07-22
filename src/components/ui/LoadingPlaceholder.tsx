@@ -1,5 +1,5 @@
-import { styled } from '@linaria/react';
-import { css } from '@linaria/core';
+import { styled } from 'linaria/react';
+import { css } from 'linaria';
 
 import classNames from 'classnames';
 
@@ -58,7 +58,7 @@ function LoadingPlaceholder({ title, active }: loadingPlaceholderProps) {
         <Dots />
       </DotsContainer>
       <StyledText
-        className={ classNames({ inactive: !active, textCss }) }
+        className={ classNames({ inactive: !active, [textCss]: true }) }
       >{ title }</StyledText>
     </Layer>
   )

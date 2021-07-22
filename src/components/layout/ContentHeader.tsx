@@ -1,4 +1,4 @@
-import { styled } from '@linaria/react';
+import { styled } from 'linaria/react';
 
 const Header = styled.div`
   height: 48px;

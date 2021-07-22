@@ -1,7 +1,13 @@
-import { css } from '@linaria/core';
+import { css } from 'linaria';
 
-import { useState, Fragment } from 'react';
+import { useState, Fragment, useRef, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+
+import { useTranslation } from 'react-i18next';
+
+import { useAppSelector } from '../store/hooks';
+
+import AuthService from '../services/api/auth/auth.service';
 
 import '../styles/App.css';
 
@@ -17,12 +23,32 @@ const modalCss = css`
   width: 440px
 `
 
+const negativeColorCss = css`
+  color: var(--text-negative);
+`
+
 function Register() {
+  const token = useAppSelector((state) => state.token.value);
+  const history = useHistory();
+
+  useEffect(() => {
+    if (token) {
+      history.push('/channels/me');
+    }
+  });
+
+  const { t } = useTranslation(['reg']);
+
   const [registerLoading, setRegisterLoading] = useState(false);
   const [registerState, setRegisterState] = useState(0);
   const [placeholderText, setPlaceholderText] = useState(0);
+  const [emailError, setEmailError] = useState(false);
+  const [usernameError, setUsernameError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
 
-  const history = useHistory()
+  const emailInput = useRef<HTMLInputElement>(null);
+  const usernameInput = useRef<HTMLInputElement>(null);
+  const passwordInput = useRef<HTMLInputElement>(null);
 
   return (
     <div className="Login dark-theme">
@@ -32,18 +58,22 @@ function Register() {
 
           { registerState === 0 && (
             <Fragment>
-              <ModalHeader>Register<br /><StyledText>Only one step is required to enter the world of Nexomia!</StyledText></ModalHeader>
-              <InputField placeholder="Email" />
-              <InputField placeholder="Username" />
-              <InputField placeholder="Password" type="password" hidden={ true } />
-              <StyledText>Already registered? <Link to="/login">Log in</Link></StyledText>
-              <FilledButton onClick={ register }>Continue</FilledButton>
+              <ModalHeader>{ t('reg:register') }<br /><StyledText>{ t('reg:welcomer_register') }</StyledText></ModalHeader>
+              <InputField placeholder="Email" ref={ emailInput } />
+              { (emailError && <StyledText className={ negativeColorCss }>{ t('reg:errors.required_field') }</StyledText>) }
+              <InputField placeholder={ t('reg:fields.username') } ref={ usernameInput } />
+              { (usernameError && <StyledText className={ negativeColorCss }>{ t('reg:errors.required_field') }</StyledText>) }
+              <InputField placeholder={ t('reg:fields.password') } type="password" ref={ passwordInput } hidden={ true } />
+              { (passwordError && <StyledText className={ negativeColorCss }>{ t('reg:errors.required_field') }</StyledText>) }
+              <StyledText>{ t('reg:has_account') } <Link to="/login">{ t('reg:log_in') }</Link></StyledText>
+              <FilledButton onClick={ register }>{ t('reg:continue') }</FilledButton>
             </Fragment>
           ) }
 
           { registerState === 1 && (
             <Fragment>
-              <ModalHeader>Confirm Yourself!<br /><StyledText>Check your EMail inbox and click the provided link to finish registration.</StyledText></ModalHeader>
+              <ModalHeader>{ t('reg:account_created') }<br /><StyledText>{ t('reg:account_log_in') }</StyledText></ModalHeader>
+              <FilledButton onClick={ login }>{ t('reg:continue') }</FilledButton>
             </Fragment>
           ) }
         </Modal>
@@ -51,10 +81,27 @@ function Register() {
     </div>
   );
 
-  function register() {
+  async function register() {
+    setEmailError(!emailInput.current?.value);
+    setUsernameError(!usernameInput.current?.value);
+    setPasswordError(!passwordInput.current?.value);
+
+    if (!emailInput.current?.value || !usernameInput.current?.value || !passwordInput.current?.value) return;
+
     setRegisterLoading(true);
 
-    setTimeout(() => {
+    const response = await AuthService.register(
+      emailInput.current?.value,
+      usernameInput.current?.value,
+      passwordInput.current?.value
+    );
+
+    if (!response) return;
+
+    setRegisterLoading(false);
+    setRegisterState(1);
+
+    /* setTimeout(() => {
       setRegisterLoading(false);
       setRegisterState(1);
     }, 2000);
@@ -66,7 +113,11 @@ function Register() {
 
     setTimeout(() => {
       history.push('/channels/1');
-    }, 7000);
+    }, 7000); */
+  }
+
+  function login() {
+    history.push('/login');
   }
 }
 

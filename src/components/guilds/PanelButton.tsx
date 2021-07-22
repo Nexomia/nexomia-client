@@ -1,4 +1,4 @@
-import { styled } from '@linaria/react';
+import { styled } from 'linaria/react';
 
 const PanelButton = styled.div`
   width: 48px;

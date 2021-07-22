@@ -1,4 +1,4 @@
-import { styled } from '@linaria/react';
+import { styled } from 'linaria/react';
 
 const ModalHeader = styled.div`
   display: block;

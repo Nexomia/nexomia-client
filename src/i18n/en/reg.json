@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "username": "Username",
+    "password": "Password"
+  },
+  "errors": {
+    "required_field": "This field is required.",
+    "invalid_credentials": "Email or password is invalid."
+  },
+  "log_in": "Log In",
+  "register": "Register",
+  "logging_in": "Logging in...",
+  "welcomer_log_in": "We are glad to see you again!",
+  "welcomer_register": "Only one step is required to enter the world of Nexomia!",
+  "no_account": "Don't have an account?",
+  "has_account": "Already registered?",
+  "continue": "Continue",
+  "account_created": "Your Account Is Up!",
+  "account_log_in": "The only step left is to log in your new account!"
+}

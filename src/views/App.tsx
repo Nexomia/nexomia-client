@@ -5,6 +5,8 @@ import {
   useRouteMatch
 } from 'react-router-dom';
 
+import '../i18n/config';
+
 import '../styles/App.css';
 
 import Guilds from '../components/layout/Guilds';
