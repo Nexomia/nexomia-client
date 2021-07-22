@@ -5,26 +5,28 @@ import {
   useRouteMatch
 } from 'react-router-dom';
 
-import './App.css';
+import '../styles/App.css';
 
-import Servers from '../components/Servers';
-import Sidebar from '../components/Sidebar';
-import Content from '../components/Content';
+import Guilds from '../components/layout/Guilds';
+import Sidebar from '../components/layout/Sidebar';
+import Content from '../components/layout/Content';
 
 function App() {
   const match = useRouteMatch();
 
   return (
-    <div className="App">
-      <Servers />
+    <div className="App dark-theme">
+      <Guilds />
+      <Sidebar />
       <Switch>
         <Route path={`${match.path}/:channelId`}>
+          <Content />
           <Sidebar />
         </Route>
       </Switch>
-      <Content />
     </div>
   );
 }
 
 export default App;
+

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { IntlProvider } from 'react-intl';
 import './index.css';
-import reportWebVitals from './reportWebVitals';
 
 import {
   BrowserRouter as Router,
@@ -10,21 +10,26 @@ import {
 } from 'react-router-dom';
 
 import App from './views/App';
+import Login from './views/Login';
+import Register from './views/Register';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <Switch>
-        <Route path="/channels">
-          <App />
-        </Route>
-      </Switch>
-    </Router>
+    <IntlProvider locale='en' defaultLocale='en'>
+      <Router>
+        <Switch>
+          <Route path='/channels'>
+            <App />
+          </Route>
+          <Route path='/login'>
+            <Login />
+          </Route>
+          <Route path='/register'>
+            <Register />
+          </Route>
+        </Switch>
+      </Router>
+    </IntlProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
