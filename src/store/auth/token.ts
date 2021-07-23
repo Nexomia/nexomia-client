@@ -15,6 +15,7 @@ export const storeSlice = createSlice({
   reducers: {
     setToken: (state, action: PayloadAction<string>) => {
       state.value = action.payload;
+      localStorage.setItem('authid', action.payload);
     }
   }
 });

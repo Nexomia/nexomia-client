@@ -12,6 +12,8 @@ const Content = styled.div`
   color: var(--text-primary);
   font-weight: 900;
   font-size: 18px;
+  padding: 0 16px;
+  user-select: none;
 `
 
 function ContentHeader() {

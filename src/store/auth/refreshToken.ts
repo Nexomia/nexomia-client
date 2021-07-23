@@ -6,7 +6,7 @@ interface TokenState {
 }
 
 const initialState: TokenState = {
-  value: ''
+  value: localStorage.getItem('rauthid') || ''
 };
 
 export const storeSlice = createSlice({
@@ -15,10 +15,11 @@ export const storeSlice = createSlice({
   reducers: {
     setRefreshToken: (state, action: PayloadAction<string>) => {
       state.value = action.payload;
+      localStorage.setItem('rauthid', action.payload);
     }
   }
 });
 
 export const { setRefreshToken } = storeSlice.actions;
-export const selectToken = (state: RootState) => state.token.value
+export const selectRefreshToken = (state: RootState) => state.refreshToken.value
 export default storeSlice.reducer

@@ -35,7 +35,7 @@ function Register() {
     if (token) {
       history.push('/channels/me');
     }
-  });
+  }, []);
 
   const { t } = useTranslation(['reg']);
 
@@ -100,20 +100,6 @@ function Register() {
 
     setRegisterLoading(false);
     setRegisterState(1);
-
-    /* setTimeout(() => {
-      setRegisterLoading(false);
-      setRegisterState(1);
-    }, 2000);
-
-    setTimeout(() => {
-      setPlaceholderText(1);
-      setRegisterLoading(true);
-    }, 5000);
-
-    setTimeout(() => {
-      history.push('/channels/1');
-    }, 7000); */
   }
 
   function login() {

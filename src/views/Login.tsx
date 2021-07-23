@@ -5,7 +5,7 @@ import { Link, useHistory } from 'react-router-dom';
 
 import { useTranslation } from 'react-i18next';
 
-import { useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { setToken } from '../store/auth/token';
 import { setRefreshToken } from '../store/auth/refreshToken';
 
@@ -31,17 +31,17 @@ const negativeColorCss = css`
 
 function Login() {
   const token = useAppSelector((state) => state.token.value);
+  const dispatch = useAppDispatch();
   const history = useHistory();
 
   useEffect(() => {
-    if (token) {
-      history.push('/channels/me');
+    console.log(token)
+    if (token && token !== '') {
+      history.push('/channels/@home');
     }
-  });
+  }, []);
 
   const { t } = useTranslation(['reg']);
-
-  // const token = useAppSelector((state) => state.token.value);
 
   const [loginLoading, setLoginLoading] = useState(false);
   const [emailError, setEmailError] = useState(false);
@@ -91,12 +91,10 @@ function Login() {
       return;
     }
 
-    setToken(response.access_token);
-    setRefreshToken(response.refresh_token);
+    dispatch(setToken(response.access_token));
+    dispatch(setRefreshToken(response.refresh_token));
 
-    localStorage.setItem('authid', response.access_token);
-
-    history.push('/channels/me');
+    history.push('/channels/@home');
   }
 }
 

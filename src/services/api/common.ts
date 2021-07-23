@@ -3,6 +3,8 @@ import axios, { Method, AxiosResponse, AxiosError } from 'axios';
 import config from '../../config';
 
 class CommonRequestManager {
+  private token = '';
+
   private getConvertedData(data: object): string {
     let convertedString = '';
 
@@ -24,10 +26,17 @@ class CommonRequestManager {
     return axios.request({
       method,
       url: config.api.endpoint + path,
-      data: this.getConvertedData(data)
+      data: this.getConvertedData(data),
+      headers: {
+        authorization: this.token
+      }
     }).catch((error: AxiosError) => {
       return error;
     });
+  }
+
+  setToken(token: string) {
+    this.token = token;
   }
 }
 

@@ -25,6 +25,10 @@ const Layer = styled.div`
   }
 `
 
+const SolidLayer = css`
+  background: var(--background-primary);
+`
+
 const DotsContainer = styled.div`
   margin: 0 0 20px 0;
   transition: .4s;
@@ -35,9 +39,11 @@ const DotsContainer = styled.div`
   }
 `
 
-type loadingPlaceholderProps = {
+type LoadingPlaceholderProps = {
   title: string,
-  active: boolean
+  active: boolean,
+  solid?: boolean,
+  subtext?: string
 }
 
 const textCss = css`
@@ -51,15 +57,15 @@ const textCss = css`
   }
 `
 
-function LoadingPlaceholder({ title, active }: loadingPlaceholderProps) {
+function LoadingPlaceholder({ title, active, solid = false, subtext = '' }: LoadingPlaceholderProps) {
   return (
-    <Layer className={ classNames({ inactive: !active }) }>
+    <Layer className={ classNames({ inactive: !active, [SolidLayer]: solid }) }>
       <DotsContainer className={ classNames({ inactive: !active }) }>
         <Dots />
       </DotsContainer>
       <StyledText
         className={ classNames({ inactive: !active, [textCss]: true }) }
-      >{ title }</StyledText>
+      >{ title }{ subtext && ( <StyledText className={ css`text-align: center` }>{ subtext }</StyledText> ) }</StyledText>
     </Layer>
   )
 }
