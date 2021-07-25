@@ -14,6 +14,9 @@ const PanelButton = styled.div`
     background: var(--accent-alt);
     border-radius: 12px;
   }
+  &:active {
+    transform: translateY(2px);
+  }
 `
 
 export default PanelButton;

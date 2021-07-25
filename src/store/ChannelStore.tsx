@@ -1,37 +1,34 @@
 import { createStore, createEvent } from 'effector-root';
+import Channel from './models/Channel';
 
-const setGuildChannels = createEvent<GuildChannels>();
+const setGuildChannels = createEvent<GuildChannelsInfo>();
+const setCurrentChannel = createEvent<GuildChannelPath>();
 
-interface GuildChannels {
+interface GuildChannelsInfo {
   guild: string,
   channels: Channel[]
 }
 
-interface Channel {
-  id?: string,
-  created?: number,
-  type?: number,
-  guild_id?: string,
-  position?: number,
-  permission_overwrites?: string[],
-  name?: string,
-  topic?: string,
-  nsfw?: boolean,
-  bitrate?: number,
-  user_limit?: number,
-  rate_limit_per_user?: number,
-  /* recipients?: User[], */
-  icon?: string,
-  owner_id?: string,
-  application_id?: string,
-  parent_id?: string,
-  pinned_messages_ids?: string[],
-  last_pin_timestamp?: number,
+interface GuildChannelPath {
+  guild: string,
+  channel: string
 }
 
-const $ChannelStore = createStore({});
+interface GuildChannels {
+  [key: string]: Channel[]
+}
 
-$ChannelStore.on(setGuildChannels, (state, info: GuildChannels) => ({ ...state, [info.guild]: info.channels }));
+const $ChannelStore = createStore<GuildChannels>({});
+const $CurrentChannelStore = createStore<Channel>({});
 
-export default $ChannelStore;
-export { setGuildChannels };
+$ChannelStore
+  .on(setGuildChannels, (state: GuildChannels, info: GuildChannelsInfo) => ({ ...state, [info.guild]: info.channels }))
+
+$CurrentChannelStore.on(
+  setCurrentChannel,
+  (state: Channel, path: GuildChannelPath) => ({
+    ...state, current: $ChannelStore.getState()[path.guild].find((channel) => channel.id === path.channel) || null
+  })
+);
+
+export { setGuildChannels, setCurrentChannel, $ChannelStore, $CurrentChannelStore };

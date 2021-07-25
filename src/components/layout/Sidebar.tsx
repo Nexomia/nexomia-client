@@ -1,15 +1,23 @@
 import { styled } from 'linaria/react';
-import { Fragment } from 'react';
-import { useParams } from 'react-router-dom';
+import { css } from 'linaria';
+import { Fragment, useEffect, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 
 import { useStore } from 'effector-react';
 import $GuildStore from '../../store/GuildStore';
+import { $ChannelStore, $CurrentChannelStore, setGuildChannels, setCurrentChannel } from '../../store/ChannelStore';
 import Tab from '../sidebar/Tab';
 
 import { BiHash } from 'react-icons/bi';
 import { RiVolumeDownFill } from 'react-icons/ri';
 
 import SidebarHeader from './SidebarHeader';
+
+import Channel from '../../store/models/Channel';
+import StyledText from '../ui/StyledText';
+import channelsService from '../../services/api/channels/channels.service';
+import Dots from '../animations/Dots';
+import classNames from 'classnames';
 
 const SidebarContainer = styled.div`
   display: flex;
@@ -29,18 +37,55 @@ const Content = styled.div`
   user-select: none;
 `
 
+const CenteredContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`
+
 interface RouteParams {
-  guildId: string
+  guildId: string,
+  channelId: string
 }
 
 interface SidebarProps {
   type?: string
 }
 
+interface GuildChannels {
+  [key: string]: Channel[]
+}
+
 function Sidebar({ type = 'channels' }: SidebarProps) {
-  const { guildId } = useParams<RouteParams>();
+  const { guildId, channelId } = useParams<RouteParams>();
 
   const guilds = useStore($GuildStore);
+  const channels = useStore<GuildChannels>($ChannelStore);
+  const currentChannel = useStore<Channel>($CurrentChannelStore);
+
+  const history = useHistory();
+
+  const [loading, setLoading] = useState(false);
+
+  const [guildChannels, setGuildChannelsValue] = useState<Channel[]>([]);
+
+  useEffect(() => {
+    setLoading(false);
+    if (type === 'channels') {
+      if (guildId === '@me' || guildId === '@home') return;
+      setGuildChannelsValue(channels[guildId] || []);
+      
+      if (!guildChannels.length) {
+        loadChannels();
+      }
+    }
+  }, [guildId]);
+
+  useEffect(() => {
+    if (type !== 'channels') return;
+    setCurrentChannel({ guild: guildId, channel: channelId });
+  }, [channelId]);
 
   return (
     <SidebarContainer>
@@ -61,13 +106,36 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
           <SidebarHeader>
             <Content>{ guilds.find((guild) => guild.id === guildId)?.name }</Content>
           </SidebarHeader>
-          <Tab Icon={ BiHash } title="general" />
-          <Tab Icon={ BiHash } title="not general" />
-          <Tab Icon={ RiVolumeDownFill } title="voice" />
         </Fragment>
       ) }
+
+      { guildId !== '@me' && guildId !== '@home' && type === 'channels' && (guildChannels.length ? (
+        guildChannels.map((channel: Channel) => (
+          <Tab
+            Icon={ BiHash }
+            title={ channel.name || '' }
+            tabId={ channel.id }
+            key={ channel.id }
+            onClick={ () => { history.push(`/channels/${guildId}/${channel.id}`) } }
+          />
+        ))
+      ) : loading ? (
+        <CenteredContainer>
+          <Dots />
+        </CenteredContainer>
+      ) : (
+        <StyledText className={ css`text-align: center` }>No channels</StyledText>
+      )) }
     </SidebarContainer>
   );
+
+  async function loadChannels() {
+    setLoading(true);
+    const response = await channelsService.getGuildChannels(guildId);
+    setGuildChannels({ guild: guildId, channels: response });
+    setGuildChannelsValue(response);
+    setLoading(false);
+  }
 }
 
 export default Sidebar;

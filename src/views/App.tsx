@@ -59,7 +59,7 @@ function App() {
         solid={ true }
       />
       <Switch>
-        <Route path={`${match.path}/:guildId`}>
+        <Route path={`${match.path}/:guildId/:channelId?`}>
           <Modals />
           <Guilds />
           <Sidebar />

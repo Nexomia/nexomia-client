@@ -2,6 +2,8 @@ import { styled } from 'linaria/react';
 import { css } from 'linaria';
 import classNames from 'classnames';
 
+import { useParams } from 'react-router-dom';
+
 import { IconType } from 'react-icons/lib';
 import StyledIconCss from '../css/StyledIconCss';
 import StyledText from '../ui/StyledText';
@@ -36,12 +38,21 @@ const TextCss = css`
 
 interface TabProps {
   Icon?: IconType,
-  title: string
+  title: string,
+  active?: boolean,
+  tabId?: string,
+  onClick?: any
 }
 
-function Tab({ Icon, title }: TabProps) {
+interface RouteParams {
+  channelId: string
+}
+
+function Tab({ Icon, title, active, onClick, tabId }: TabProps) {
+  const { channelId } = useParams<RouteParams>();
+
   return (
-    <Container>
+    <Container onClick={ onClick } className={ classNames({ active: active || tabId === channelId }) }>
       { Icon && <Icon className={ classNames({ [StyledIconCss]: true, [TabIconCss]: true }) } /> }
       <StyledText className={ TextCss }>{ title }</StyledText>
     </Container>

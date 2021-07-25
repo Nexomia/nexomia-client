@@ -10,7 +10,7 @@ const InputField = styled.input`
   background: var(--background-secondary-alt);
   border-radius: 4px;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 600;
   color: var(--text-primary);
   outline: none;
   transition: .2s;

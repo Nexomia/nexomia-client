@@ -7,7 +7,7 @@ const FilledButton = styled.button`
   border-radius: 4px;
   padding: 0 16px;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 600;
   margin-top: 16px;
   color: var(--text-primary);
   cursor: pointer;
