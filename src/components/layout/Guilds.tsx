@@ -42,6 +42,7 @@ const GuildLetters = css`
   line-height: 48px;
   height: 48px;
   text-align: center;
+  font-weight: 600;
   margin: 0;
 `
 

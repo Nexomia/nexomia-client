@@ -8,7 +8,7 @@ interface Guild {
 }
 
 interface UserState {
-  value: Array<Guild>
+  value: Guild[]
 }
 
 const initialState: UserState = {
@@ -19,7 +19,7 @@ export const storeSlice = createSlice({
   name: 'guilds',
   initialState,
   reducers: {
-    setGuilds: (state, action: PayloadAction<Array<Guild>>) => {
+    setGuilds: (state, action: PayloadAction<Guild[]>) => {
       state.value = action.payload;
     },
 

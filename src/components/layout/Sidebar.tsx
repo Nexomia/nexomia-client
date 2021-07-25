@@ -1,14 +1,19 @@
 import { styled } from 'linaria/react';
-
+import { Fragment } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useAppSelector } from '../../store/hooks';
+import Tab from '../sidebar/Tab';
+
+import { BiHash } from 'react-icons/bi';
+import { RiVolumeDownFill } from 'react-icons/ri';
 
 import SidebarHeader from './SidebarHeader';
 
 const SidebarContainer = styled.div`
   display: flex;
   width: 240px;
+  flex-direction: column;
   align-self: stretch;
   background: var(--background-secondary-alt)
 `
@@ -51,9 +56,14 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       ) }
 
       { guildId !== '@me' && guildId !== '@home' && type === 'channels' && (
-        <SidebarHeader>
-          <Content>{ guilds.find((guild) => guild.id === guildId)?.name }</Content>
-        </SidebarHeader>
+        <Fragment>
+          <SidebarHeader>
+            <Content>{ guilds.find((guild) => guild.id === guildId)?.name }</Content>
+          </SidebarHeader>
+          <Tab Icon={ BiHash } title="general" />
+          <Tab Icon={ BiHash } title="not general" />
+          <Tab Icon={ RiVolumeDownFill } title="voice" />
+        </Fragment>
       ) }
     </SidebarContainer>
   );
