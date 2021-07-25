@@ -1,4 +1,4 @@
-import { createStore, createEvent } from 'effector';
+import { createStore, createEvent } from 'effector-root';
 
 const setModalState = createEvent<object>();
 

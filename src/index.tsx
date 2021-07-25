@@ -8,7 +8,8 @@ import {
   Route
 } from 'react-router-dom';
 
-import { Provider } from 'react-redux';
+import { attachLogger } from 'effector-logger/attach';
+import { root } from 'effector-root';
 
 import App from './views/App';
 import Login from './views/Login';
@@ -32,3 +33,5 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+
+attachLogger(root);
