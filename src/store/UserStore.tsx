@@ -26,7 +26,7 @@ const $UserStore = createStore<UserInfo>({
   email: ''
 });
 
-$UserStore.on(setUser, (state, user: UserInfo) => ({ ...state, user }));
+$UserStore.on(setUser, (state, user: UserInfo) => ({ ...state, ...user }));
 
 export default $UserStore;
 export { setUser };

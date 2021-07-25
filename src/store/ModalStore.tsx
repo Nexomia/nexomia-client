@@ -10,7 +10,7 @@ const $ModalStore = createStore<Modals>({
   serverCreation: false
 });
 
-$ModalStore.on(setModalState, (state, modifiedState: object) => ({ ...state, modifiedState }));
+$ModalStore.on(setModalState, (state, modifiedState: object) => ({ ...state, ...modifiedState }));
 
 export default $ModalStore;
 export { setModalState };

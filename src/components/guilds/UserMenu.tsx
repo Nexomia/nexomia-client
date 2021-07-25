@@ -54,6 +54,7 @@ function UserMenu() {
   const [containerOpened, setContainerOpened] = useState(true);
   
   const user = useStore($UserStore);
+  console.log(user)
 
   return (
     <Container className={ classNames({ active: containerOpened }) }>
