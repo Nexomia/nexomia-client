@@ -19,7 +19,7 @@ const Content = styled.div`
 function ContentHeader() {
   return (
     <Header>
-      <Content>чаннел титле</Content>
+      <Content>not general</Content>
     </Header>
   );
 }
