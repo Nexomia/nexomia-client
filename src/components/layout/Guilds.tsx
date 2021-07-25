@@ -9,8 +9,9 @@ import {
   RiAddFill
 } from 'react-icons/ri'
 
-import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { modifyModalState } from '../../store/modals/modals';
+import { useStore } from 'effector-react';
+import $ModalStore, { setModalState } from '../../store/ModalStore';
+import $GuildStore from '../../store/GuildStore';
 
 import UserMenu from '../guilds/UserMenu';
 import PanelButton from '../guilds/PanelButton';
@@ -53,10 +54,9 @@ interface RouteParams {
 function Guilds() {
   const history = useHistory();
   const { guildId } = useParams<RouteParams>();
-  const dispatch = useAppDispatch();
 
-  const modals = useAppSelector((state) => state.modals.value);
-  const guilds = useAppSelector((state) => state.guilds.value);
+  const modals = useStore($ModalStore);
+  const guilds = useStore($GuildStore);
 
   return (
     <GuildsContainer>
@@ -89,7 +89,7 @@ function Guilds() {
           </PanelButton>
         ))
       }
-      <PanelButton className={ css`margin-bottom: 0` } onClick={ openServerCreationModal }>
+      <PanelButton className={ css`margin-bottom: 0` } onClick={ () => { setModalState({ serverCreation: true }) } }>
         <RiAddFill className={ PanelIconCss } />
       </PanelButton>
     </GuildsContainer>
@@ -97,10 +97,6 @@ function Guilds() {
 
   function switchGuild(id: string) {
     history.push(`/channels/${id}`);
-  }
-
-  function openServerCreationModal() {
-    dispatch(modifyModalState({ serverCreation: true }));
   }
 }
 

@@ -8,12 +8,10 @@ import {
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useAppSelector, useAppDispatch } from '../store/hooks';
-import { setToken } from '../store/auth/token';
-import { setUserInfo } from '../store/users/user';
-import { setGuilds } from '../store/guilds/guilds';
-
-import { css } from 'linaria';
+import { useStore } from 'effector-react';
+import $AuthStore, { setToken } from '../store/AuthStore';
+import { setUser } from '../store/UserStore';
+import { setGuilds } from '../store/GuildStore';
 
 import UsersService from '../services/api/users/users.service';
 import GuildsService from '../services/api/guilds/guilds.service';
@@ -34,8 +32,7 @@ import preloaders from '../i18n/preloaders.json';
 function App() {
   const { t } = useTranslation(['states']);
 
-  const token = useAppSelector((state) => state.token.value);
-  const dispatch = useAppDispatch();
+  const { token } = useStore($AuthStore);
 
   const match = useRouteMatch();
   const history = useHistory();
@@ -77,15 +74,15 @@ function App() {
     CommonRequestManager.setToken(token);
     const userInfo = await UsersService.getUser('@me');
     if (!userInfo) {
-      dispatch(setToken(''));
+      setToken('');
       history.push('/login');
       return;
     }
 
     const guilds = await GuildsService.getUserGuilds();
 
-    dispatch(setUserInfo(userInfo));
-    dispatch(setGuilds(guilds));
+    setUser(userInfo);
+    setGuilds(guilds);
 
     setLoaded(true);
   }

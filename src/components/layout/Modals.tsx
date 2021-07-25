@@ -2,10 +2,11 @@ import { Fragment } from 'react';
 
 import ServerCreationModal from '../modals/ServerCreationModal';
 
-import { useAppSelector } from '../../store/hooks';
+import { useStore } from 'effector-react';
+import $ModalStore from '../../store/ModalStore';
 
 function Modals() {
-  const modals = useAppSelector((state) => state.modals.value);
+  const modals = useStore($ModalStore);
 
   return (
     <Fragment>

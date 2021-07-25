@@ -11,7 +11,8 @@ import {
   
 } from 'react-icons/ri';
 
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { useStore } from 'effector-react';
+import $UserStore from '../../store/UserStore';
 
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -52,7 +53,7 @@ function UserMenu() {
 
   const [containerOpened, setContainerOpened] = useState(true);
   
-  const user = useAppSelector((state) => state.user.value);
+  const user = useStore($UserStore);
 
   return (
     <Container className={ classNames({ active: containerOpened }) }>

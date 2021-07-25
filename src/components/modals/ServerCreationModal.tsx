@@ -2,9 +2,9 @@ import { css } from 'linaria';
 import classNames from 'classnames';
 import { useState, useRef, Fragment, useEffect } from 'react';
 
-import { useAppDispatch } from '../../store/hooks';
-import { modifyModalState } from '../../store/modals/modals';
-import { addGuild } from '../../store/guilds/guilds';
+import { useStore } from 'effector-react';
+import $ModalStore, { setModalState } from '../../store/ModalStore';
+import { addGuild } from '../../store/GuildStore';
 
 import GuildsService from '../../services/api/guilds/guilds.service';
 
@@ -28,8 +28,6 @@ const negativeColorCss = css`
 `
 
 function ServerCreationModal({ active }: ServerCreationModalProps) {
-  const dispatch = useAppDispatch();
-
   const layerRef = useRef(null);
 
   const [modalPage, setModalPage] = useState(0);
@@ -87,7 +85,7 @@ function ServerCreationModal({ active }: ServerCreationModalProps) {
   // TODO: что-то сделать с этим пиздецом в типах
   function closeModal(event: any) {
     if (event.target !== layerRef.current) return;
-    dispatch(modifyModalState({ serverCreation: false }));
+    setModalState({ serverCreation: false });
   }
 
   async function createServer() {
@@ -101,16 +99,16 @@ function ServerCreationModal({ active }: ServerCreationModalProps) {
 
     const { id, name } = response;
 
-    dispatch(addGuild({
+    addGuild({
       id,
       name,
       icon: response.icon || ''
-    }));
+    });
 
     setLoading(false);
     setNameValue('');
     setInviteValue('');
-    dispatch(modifyModalState({ serverCreation: false }));
+    setModalState({ serverCreation: false });
   }
 
   async function joinServer() {
@@ -124,16 +122,16 @@ function ServerCreationModal({ active }: ServerCreationModalProps) {
 
     const { id, name } = response;
 
-    dispatch(addGuild({
+    addGuild({
       id,
       name,
       icon: response.icon || ''
-    }));
+    });
 
     setLoading(false);
     setNameValue('');
     setInviteValue('');
-    dispatch(modifyModalState({ serverCreation: false }));
+    setModalState({ serverCreation: false });
   }
 }
 

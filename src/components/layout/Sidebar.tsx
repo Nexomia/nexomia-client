@@ -2,7 +2,8 @@ import { styled } from 'linaria/react';
 import { Fragment } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useAppSelector } from '../../store/hooks';
+import { useStore } from 'effector-react';
+import $GuildStore from '../../store/GuildStore';
 import Tab from '../sidebar/Tab';
 
 import { BiHash } from 'react-icons/bi';
@@ -39,7 +40,7 @@ interface SidebarProps {
 function Sidebar({ type = 'channels' }: SidebarProps) {
   const { guildId } = useParams<RouteParams>();
 
-  const guilds = useAppSelector((state) => state.guilds.value);
+  const guilds = useStore($GuildStore);
 
   return (
     <SidebarContainer>

@@ -5,7 +5,8 @@ import { Link, useHistory } from 'react-router-dom';
 
 import { useTranslation } from 'react-i18next';
 
-import { useAppSelector } from '../store/hooks';
+import { useStore } from 'effector-react';
+import $AuthStore from '../store/AuthStore';
 
 import AuthService from '../services/api/auth/auth.service';
 
@@ -28,7 +29,7 @@ const negativeColorCss = css`
 `
 
 function Register() {
-  const token = useAppSelector((state) => state.token.value);
+  const { token } = useStore($AuthStore);
   const history = useHistory();
 
   useEffect(() => {
