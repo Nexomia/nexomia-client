@@ -77,12 +77,14 @@ function Guilds() {
               (
                 <StyledText className={ GuildLetters }>
                   {
-                    guilds[guildListId].name.split(' ')[1]
-                    ? guilds[guildListId].name.split(' ')[0][0] + guilds[guildListId].name.split(' ')[1][0]
-                    : guilds[guildListId].name.split(' ')[0][0] + (
-                      guilds[guildListId].name.split(' ')[0][1]
-                      ? guilds[guildListId].name.split(' ')[0][1]
-                      : ''
+                    guilds[guildListId]?.name && (
+                      guilds[guildListId].name.split(' ')[1]
+                      ? guilds[guildListId].name.split(' ')[0][0] + guilds[guildListId].name.split(' ')[1][0]
+                      : guilds[guildListId].name.split(' ')[0][0] + (
+                        guilds[guildListId].name.split(' ')[0][1]
+                        ? guilds[guildListId].name.split(' ')[0][1]
+                        : ''
+                      )
                     )
                   }
                 </StyledText>

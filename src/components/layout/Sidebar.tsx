@@ -6,7 +6,8 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useStore } from 'effector-react';
 import $GuildStore from '../../store/GuildStore';
 import $GuildCacheStore from '../../store/GuildCacheStore';
-import { $ChannelStore, $CurrentChannelStore, setGuildChannels, setCurrentChannel } from '../../store/ChannelStore';
+import $ChannelStore, { setGuildChannels } from '../../store/ChannelStore';
+import $ChannelCacheStore, { cacheChannels } from '../../store/ChannelCacheStore';
 import Tab from '../sidebar/Tab';
 
 import { BiHash } from 'react-icons/bi';
@@ -49,7 +50,11 @@ interface SidebarProps {
 }
 
 interface GuildChannels {
-  [key: string]: Channel[]
+  [key: string]: string[]
+}
+
+interface ChannelsCache {
+  [key: string]: Channel
 }
 
 function Sidebar({ type = 'channels' }: SidebarProps) {
@@ -57,13 +62,13 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
 
   const guilds = useStore($GuildCacheStore);
   const channels = useStore<GuildChannels>($ChannelStore);
-  const currentChannel = useStore<Channel>($CurrentChannelStore);
+  const channelsCache = useStore<ChannelsCache>($ChannelCacheStore);
 
   const history = useHistory();
 
   const [loading, setLoading] = useState(false);
 
-  const [guildChannels, setGuildChannelsValue] = useState<Channel[]>([]);
+  const [guildChannels, setGuildChannelsValue] = useState<string[]>([]);
 
   useEffect(() => {
     setLoading(false);
@@ -76,15 +81,6 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       }
     }
   }, [guildId]);
-
-  useEffect(() => {
-    if (type !== 'channels') return;
-    if (!channelId) {
-      setCurrentChannel({ guild: '', channel: '' });
-      return;
-    }
-    setCurrentChannel({ guild: guildId, channel: channelId });
-  }, [channelId]);
 
   return (
     <SidebarContainer>
@@ -108,14 +104,14 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
         </Fragment>
       ) }
 
-      { guildId !== '@me' && guildId !== '@home' && type === 'channels' && (guildChannels.length ? (
-        guildChannels.map((channel: Channel) => (
+      { guildId !== '@me' && guildId !== '@home' && type === 'channels' && (guildChannels.length && channelsCache[guildChannels[0]] ? (
+        guildChannels.map((channel: string) => (
           <Tab
             Icon={ BiHash }
-            title={ channel.name || '' }
-            tabId={ channel.id }
-            key={ channel.id }
-            onClick={ () => { history.push(`/channels/${guildId}/${channel.id}`) } }
+            title={ channelsCache[channel]?.name || '' }
+            tabId={ channelsCache[channel]?.id }
+            key={ channelsCache[channel]?.id }
+            onClick={ () => { history.push(`/channels/${guildId}/${channel}`) } }
           />
         ))
       ) : loading ? (
@@ -131,8 +127,9 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
   async function loadChannels() {
     setLoading(true);
     const response = await channelsService.getGuildChannels(guildId);
-    setGuildChannels({ guild: guildId, channels: response });
-    setGuildChannelsValue(response);
+    cacheChannels(response);
+    setGuildChannels({ guild: guildId, channels: response.map((channel: Channel) => channel.id) });
+    setGuildChannelsValue(response.map((channel: Channel) => channel.id));
     setLoading(false);
   }
 }

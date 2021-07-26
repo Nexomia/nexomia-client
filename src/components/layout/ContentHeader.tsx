@@ -2,10 +2,11 @@ import { styled } from 'linaria/react';
 import { css } from 'linaria';
 
 import { useStore } from 'effector-react';
-import { $CurrentChannelStore } from '../../store/ChannelStore';
+import { useParams } from 'react-router-dom';
 import { BiHash } from 'react-icons/bi';
 import classNames from 'classnames';
 import StyledIconCss from '../css/StyledIconCss';
+import $ChannelCacheStore from '../../store/ChannelCacheStore';
 
 const Header = styled.div`
   height: 48px;
@@ -30,13 +31,18 @@ const HeaderIconCss = css`
   margin-left: 8px;
 `
 
+interface RouteParams {
+  channelId: string
+}
+
 function ContentHeader() {
-  const currentChannel = useStore($CurrentChannelStore);
+  const { channelId } = useParams<RouteParams>();
+  const channelsCache = useStore($ChannelCacheStore);
 
   return (
     <Header>
-      { currentChannel.name && (<BiHash className={ classNames({ [StyledIconCss]: true, [HeaderIconCss]: true }) } />) }
-      <Content>{ currentChannel.name || '' }</Content>
+      { channelsCache[channelId]?.name && (<BiHash className={ classNames({ [StyledIconCss]: true, [HeaderIconCss]: true }) } />) }
+      <Content>{ channelsCache[channelId]?.name || '' }</Content>
     </Header>
   );
 }

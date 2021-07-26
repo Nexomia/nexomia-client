@@ -1,5 +1,5 @@
 export default interface Channel {
-  id?: string,
+  id: string,
   created?: number,
   type?: number,
   guild_id?: string,
