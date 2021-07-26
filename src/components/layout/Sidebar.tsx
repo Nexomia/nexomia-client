@@ -99,7 +99,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       { guildId !== '@me' && guildId !== '@home' && type === 'channels' && (
         <Fragment>
           <SidebarHeader>
-            <Content>{ guilds[guildId].name }</Content>
+            <Content>{ guilds[guildId]?.name }</Content>
           </SidebarHeader>
         </Fragment>
       ) }
@@ -127,6 +127,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
   async function loadChannels() {
     setLoading(true);
     const response = await channelsService.getGuildChannels(guildId);
+    if (!response) return history.push('/channels/@home');
     cacheChannels(response);
     setGuildChannels({ guild: guildId, channels: response.map((channel: Channel) => channel.id) });
     setGuildChannelsValue(response.map((channel: Channel) => channel.id));
