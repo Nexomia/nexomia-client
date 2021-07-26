@@ -24,9 +24,9 @@ const Container = styled.div`
 const InputButton = styled.div`
   display: flex;
   flex-direction: row;
-  width: 40px;
+  width: 46px;
   height: 40px;
-  padding: 8px;
+  padding: 8px 11px;
   margin: 4px;
   border-radius: 6px;
   cursor: pointer;
@@ -54,8 +54,8 @@ const Input = styled.input`
   outline: none;
   background: transparent;
   border: 0px;
-  font-weight: 900;
-  font-size: 14px;
+  font-weight: 400;
+  font-size: 16px;
   color: var(--text-primary);
   &::placeholder {
     color: var(--text-secondary);
@@ -78,7 +78,7 @@ function ChatInput({ channel }: ChatInputProps) {
         <RiAddCircleFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
       </InputButton>
       <Input placeholder="Type something here..." ref={ inputRef } />
-      <InputButton>
+      <InputButton className={ css`margin-right: 0` }>
         <RiEmotionLaughFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
       </InputButton>
       <InputButton onClick={ sendMessage } className={ classNames({ active: sendLoading }) } >
@@ -98,7 +98,7 @@ function ChatInput({ channel }: ChatInputProps) {
     if (!response) return setSendLoading(false);
 
     cacheMessages([response]);
-    addMessage(response.id);
+    addMessage({ channel: response.channel_id, message: response.id });
 
     setSendLoading(false);
   }

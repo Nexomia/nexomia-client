@@ -14,6 +14,7 @@ const MessageContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  padding-bottom: 32px;
 `
 
 interface ChatViewProps {

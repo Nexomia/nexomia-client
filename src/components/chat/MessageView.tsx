@@ -2,11 +2,15 @@ import { Fragment, useEffect, useState } from 'react';
 import { css } from 'linaria';
 import Dots from '../animations/Dots';
 import CenteredContainer from '../layout/CenteredContainer';
+import MessageRenderer from './MessageRenderer';
 
 import { useStore } from 'effector-react';
 import $MessageStore, { setChannelMessages } from '../../store/MessageStore';
+import $ChannelCacheStore from '../../store/ChannelCacheStore';
 import { cacheMessages } from '../../store/MessageCacheStore';
-import messagesService from '../../services/api/messages/messages.service';
+import { cacheUsers } from '../../store/UserCacheStore';
+import MessagesService from '../../services/api/messages/messages.service';
+import GuildsService from '../../services/api/guilds/guilds.service';
 import Message from '../../store/models/Message';
 
 interface MessageViewProps {
@@ -16,6 +20,7 @@ interface MessageViewProps {
 function MessageView({ channel }: MessageViewProps) {
   const [loading, setLoading] = useState(false);
   const MessageStore = useStore($MessageStore);
+  const CachedChannels = useStore($ChannelCacheStore);
 
   useEffect(() => {
     if (!MessageStore[channel] || !MessageStore[channel].length) {
@@ -34,7 +39,7 @@ function MessageView({ channel }: MessageViewProps) {
       ) : (
         MessageStore[channel] && MessageStore[channel].length && (
           MessageStore[channel].map((message) => (
-            <div>{ message }</div>
+            <MessageRenderer id={ message } key={ message } />
           ))
         )
       ) }
@@ -42,10 +47,12 @@ function MessageView({ channel }: MessageViewProps) {
   )
 
   async function loadMessages() {
-    const response = await messagesService.getChannelMessages(channel);
+    const response = await MessagesService.getChannelMessages(channel);
+    const membersResponse = await GuildsService.getGuildMembers(CachedChannels[channel].guild_id || '');
 
     if (!response) return setLoading(false);
 
+    cacheUsers(membersResponse.map((member: any) => member.user));
     cacheMessages(response);
     setChannelMessages({ channel, messages: response.map((message: Message) => message.id) });
     setLoading(false);
