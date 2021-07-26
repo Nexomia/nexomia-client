@@ -26,9 +26,7 @@ $ChannelStore
 
 $CurrentChannelStore.on(
   setCurrentChannel,
-  (state: Channel, path: GuildChannelPath) => ({
-    ...state, current: $ChannelStore.getState()[path.guild].find((channel) => channel.id === path.channel) || null
-  })
+  (state: Channel, path: GuildChannelPath) => (path.guild && ($ChannelStore.getState()[path.guild].find((channel) => channel.id === path.channel)) || {})
 );
 
 export { setGuildChannels, setCurrentChannel, $ChannelStore, $CurrentChannelStore };

@@ -15,6 +15,7 @@ import SidebarHeader from './SidebarHeader';
 
 import Channel from '../../store/models/Channel';
 import StyledText from '../ui/StyledText';
+import CenteredContainer from './CenteredContainer';
 import channelsService from '../../services/api/channels/channels.service';
 import Dots from '../animations/Dots';
 import classNames from 'classnames';
@@ -35,13 +36,6 @@ const Content = styled.div`
   font-size: 18px;
   padding: 0 16px;
   user-select: none;
-`
-
-const CenteredContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
 `
 
 interface RouteParams {
@@ -84,6 +78,10 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
 
   useEffect(() => {
     if (type !== 'channels') return;
+    if (!channelId) {
+      setCurrentChannel({ guild: '', channel: '' });
+      return;
+    }
     setCurrentChannel({ guild: guildId, channel: channelId });
   }, [channelId]);
 

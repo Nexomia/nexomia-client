@@ -17,11 +17,15 @@ const Container = styled.div`
   alignSelf: stretch;
   flex-direction: row;
   cursor: pointer;
+  transition: .2s;
   &:hover {
     background: var(--background-primary);
   }
   &.active {
-    background: var(--background-primary);
+    background: var(--accent);
+  }
+  &:active {
+    transform: scale(0.98);
   }
 `
 

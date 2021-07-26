@@ -8,6 +8,8 @@
 }
 
 .dark-theme {
+  --background-light: #4c5360;
+  --background-primary-alt: #404754;
   --background-primary: #373d49;
   --background-secondary-alt: #333844;
   --background-secondary: #2c313d;
