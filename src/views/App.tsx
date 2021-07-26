@@ -12,6 +12,7 @@ import { useStore } from 'effector-react';
 import $AuthStore, { setToken } from '../store/AuthStore';
 import { setUser } from '../store/UserStore';
 import { setGuilds } from '../store/GuildStore';
+import { cacheGuilds } from '../store/GuildCacheStore';
 
 import UsersService from '../services/api/users/users.service';
 import GuildsService from '../services/api/guilds/guilds.service';
@@ -28,6 +29,7 @@ import LoadingPlaceholder from '../components/ui/LoadingPlaceholder';
 import Modals from '../components/layout/Modals';
 
 import preloaders from '../i18n/preloaders.json';
+import Guild from '../store/models/Guild';
 
 function App() {
   const { t } = useTranslation(['states']);
@@ -82,7 +84,8 @@ function App() {
     const guilds = await GuildsService.getUserGuilds();
 
     setUser(userInfo);
-    setGuilds(guilds);
+    setGuilds(guilds.map((guild: Guild) => guild.id));
+    cacheGuilds(guilds);
 
     setLoaded(true);
   }

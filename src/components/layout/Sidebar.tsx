@@ -5,6 +5,7 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import { useStore } from 'effector-react';
 import $GuildStore from '../../store/GuildStore';
+import $GuildCacheStore from '../../store/GuildCacheStore';
 import { $ChannelStore, $CurrentChannelStore, setGuildChannels, setCurrentChannel } from '../../store/ChannelStore';
 import Tab from '../sidebar/Tab';
 
@@ -54,7 +55,7 @@ interface GuildChannels {
 function Sidebar({ type = 'channels' }: SidebarProps) {
   const { guildId, channelId } = useParams<RouteParams>();
 
-  const guilds = useStore($GuildStore);
+  const guilds = useStore($GuildCacheStore);
   const channels = useStore<GuildChannels>($ChannelStore);
   const currentChannel = useStore<Channel>($CurrentChannelStore);
 
@@ -102,7 +103,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       { guildId !== '@me' && guildId !== '@home' && type === 'channels' && (
         <Fragment>
           <SidebarHeader>
-            <Content>{ guilds.find((guild) => guild.id === guildId)?.name }</Content>
+            <Content>{ guilds[guildId].name }</Content>
           </SidebarHeader>
         </Fragment>
       ) }

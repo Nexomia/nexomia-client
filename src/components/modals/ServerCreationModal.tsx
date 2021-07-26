@@ -5,6 +5,7 @@ import { useState, useRef, Fragment, useEffect } from 'react';
 import { useStore } from 'effector-react';
 import $ModalStore, { setModalState } from '../../store/ModalStore';
 import { addGuild } from '../../store/GuildStore';
+import { cacheGuilds } from '../../store/GuildCacheStore';
 
 import GuildsService from '../../services/api/guilds/guilds.service';
 
@@ -99,11 +100,12 @@ function ServerCreationModal({ active }: ServerCreationModalProps) {
 
     const { id, name } = response;
 
-    addGuild({
+    cacheGuilds([{
       id,
       name,
       icon: response.icon || ''
-    });
+    }]);
+    addGuild(id);
 
     setLoading(false);
     setNameValue('');
@@ -122,11 +124,12 @@ function ServerCreationModal({ active }: ServerCreationModalProps) {
 
     const { id, name } = response;
 
-    addGuild({
+    cacheGuilds([{
       id,
       name,
       icon: response.icon || ''
-    });
+    }]);
+    addGuild(id);
 
     setLoading(false);
     setNameValue('');

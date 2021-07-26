@@ -23,17 +23,20 @@ const ContentBody = styled.div`
 `
 
 interface RouteParams {
+  guildId: string,
   channelId: string
 }
 
 function Content() {
-  const { channelId } = useParams<RouteParams>();
+  const { guildId, channelId } = useParams<RouteParams>();
 
   return (
     <Container>
       <ContentHeader />
       <ContentBody>
-        <ChatView channel={ channelId } />
+        { guildId !== '@me' && guildId !== '@home' && channelId && (
+          <ChatView channel={ channelId } />
+        ) }
       </ContentBody>
     </Container>
   );

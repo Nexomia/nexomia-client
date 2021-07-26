@@ -32,6 +32,16 @@ class GuildsService {
 
     return response.data;
   }
+
+  async getGuildMembers(guild: string) {
+    const response = await CommonRequestManager.apiRequest('GET', `/guilds/${guild}/members`, {});
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
 }
 
 export default new GuildsService();

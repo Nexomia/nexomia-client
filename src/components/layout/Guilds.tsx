@@ -12,6 +12,7 @@ import {
 import { useStore } from 'effector-react';
 import $ModalStore, { setModalState } from '../../store/ModalStore';
 import $GuildStore from '../../store/GuildStore';
+import $GuildCacheStore from '../../store/GuildCacheStore';
 
 import UserMenu from '../guilds/UserMenu';
 import PanelButton from '../guilds/PanelButton';
@@ -56,30 +57,31 @@ function Guilds() {
   const { guildId } = useParams<RouteParams>();
 
   const modals = useStore($ModalStore);
-  const guilds = useStore($GuildStore);
+  const guildList = useStore($GuildStore);
+  const guilds = useStore($GuildCacheStore);
 
   return (
     <GuildsContainer>
       <UserMenu />
       <Splitter />
       {
-        guilds.map((guild) => (
+        guildList.map((guildListId) => (
           <PanelButton
-            onClick={ () => switchGuild(guild.id) }
-            key={ guild.id }
-            className={ classNames({ active: guildId === guild.id }) }
+            onClick={ () => switchGuild(guildListId) }
+            key={ guildListId }
+            className={ classNames({ active: guildId === guildListId }) }
           >
-            { guild.icon && <AvatarImg src={ guild.icon } /> }
+            { guilds[guildListId]?.icon && <AvatarImg src={ guilds[guildListId]?.icon } /> }
             {
-              !guild.icon &&
+              !guilds[guildListId]?.icon &&
               (
                 <StyledText className={ GuildLetters }>
                   {
-                    guild.name.split(' ')[1]
-                    ? guild.name.split(' ')[0][0] + guild.name.split(' ')[1][0]
-                    : guild.name.split(' ')[0][0] + (
-                      guild.name.split(' ')[0][1]
-                      ? guild.name.split(' ')[0][1]
+                    guilds[guildListId].name.split(' ')[1]
+                    ? guilds[guildListId].name.split(' ')[0][0] + guilds[guildListId].name.split(' ')[1][0]
+                    : guilds[guildListId].name.split(' ')[0][0] + (
+                      guilds[guildListId].name.split(' ')[0][1]
+                      ? guilds[guildListId].name.split(' ')[0][1]
                       : ''
                     )
                   }

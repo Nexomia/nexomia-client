@@ -1,19 +1,13 @@
 import { createStore, createEvent } from 'effector-root';
 
-const setGuilds = createEvent<Guild[]>();
-const addGuild = createEvent<Guild>();
+const setGuilds = createEvent<string[]>();
+const addGuild = createEvent<string>();
 
-interface Guild {
-  id: string,
-  name: string,
-  icon: string
-}
-
-const $GuildStore = createStore<Guild[]>([]);
+const $GuildStore = createStore<string[]>([]);
 
 $GuildStore
-  .on(setGuilds, (state, guilds: Guild[]) => guilds)
-  .on(addGuild, (state, guild: Guild) => ([...state, guild]));
+  .on(setGuilds, (state, guilds: string[]) => guilds)
+  .on(addGuild, (state, guild: string) => ([...state, guild]));
 
 export default $GuildStore;
 export { setGuilds, addGuild };

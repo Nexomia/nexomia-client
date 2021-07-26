@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import { RiAddCircleFill, RiEmotionLaughFill, RiSendPlane2Fill } from 'react-icons/ri';
 
 import { addMessage } from '../../store/MessageStore';
+import { cacheMessages } from '../../store/MessageCacheStore';
 
 import StyledIconCss from '../css/StyledIconCss';
 import Dots from '../animations/Dots';
@@ -96,7 +97,8 @@ function ChatInput({ channel }: ChatInputProps) {
 
     if (!response) return setSendLoading(false);
 
-    addMessage({ channel: response.channel_id, message: response });
+    cacheMessages([response]);
+    addMessage(response.id);
 
     setSendLoading(false);
   }
