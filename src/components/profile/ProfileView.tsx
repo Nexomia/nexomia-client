@@ -35,7 +35,8 @@ const InfoContainer = styled.div`
   padding: 16px;
   border-radius: 8px;
   background: var(--background-secondary-alt);
-  width: 900px;
+  max-width: 900px;
+  width: 100%;
   margin-top: 32px;
 `
 
@@ -46,17 +47,23 @@ function ProfileView({ user }: ProfileViewProps) {
     <Fragment>
       { UserCache[user] && (
         <Fragment>
-          <Banner style={{ background: `url(${ UserCache[user].banner })`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
-          <CenteredContainer className={ css`flex-direction: column` }>
+          { UserCache[user].banner ? (
+            <Banner style={{ background: `url(${ UserCache[user].banner })`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+          ) : (
+            <Banner className={ css`background: var(--accent-dark)` } />
+          ) }
+          <CenteredContainer className={ css`flex-direction: column; margin: 0 16px` }>
             <Avatar src={ UserCache[user].avatar } />
             <StyledText className={ css`font-size: 28px; font-weight: 900` }>
               { UserCache[user].username }
               <DarkText className={ css`display: inline-block` }>#{ UserCache[user].discriminator }</DarkText>
             </StyledText>
             <StyledText className={ css`font-size: 18px` }>{ UserCache[user].status }</StyledText>
-            <InfoContainer>
-              <StyledText className={ css`font-size: 18px; margin: 0` } dangerouslySetInnerHTML={{ __html: markdown(UserCache[user].description || '') }}></StyledText>
-            </InfoContainer>
+            { UserCache[user].description && (
+              <InfoContainer>
+                <StyledText className={ css`font-size: 18px; margin: 0` } dangerouslySetInnerHTML={{ __html: markdown(UserCache[user].description || '') }}></StyledText>
+              </InfoContainer>
+            ) }
           </CenteredContainer>
         </Fragment>
       ) }
