@@ -7,7 +7,7 @@ import MessageRenderer from './MessageRenderer';
 import { useStore } from 'effector-react';
 import $MessageStore, { setChannelMessages } from '../../store/MessageStore';
 import $ChannelCacheStore from '../../store/ChannelCacheStore';
-import { cacheMessages } from '../../store/MessageCacheStore';
+import $MessageCacheStore, { cacheMessages } from '../../store/MessageCacheStore';
 import { cacheUsers } from '../../store/UserCacheStore';
 import MessagesService from '../../services/api/messages/messages.service';
 import GuildsService from '../../services/api/guilds/guilds.service';
@@ -20,7 +20,10 @@ interface MessageViewProps {
 function MessageView({ channel }: MessageViewProps) {
   const [loading, setLoading] = useState(false);
   const MessageStore = useStore($MessageStore);
+  const MessageCacheStore = useStore($MessageCacheStore);
   const CachedChannels = useStore($ChannelCacheStore);
+
+  let prevMessage = '';
 
   useEffect(() => {
     if (!MessageStore[channel] || !MessageStore[channel].length) {
@@ -38,9 +41,18 @@ function MessageView({ channel }: MessageViewProps) {
         </CenteredContainer>
       ) : (
         MessageStore[channel] && MessageStore[channel].length && (
-          MessageStore[channel].map((message) => (
-            <MessageRenderer id={ message } key={ message } />
-          ))
+          MessageStore[channel].map((message) => {
+            const rendered =  (
+              <MessageRenderer
+                id={ message }
+                key={ message }
+                grouped={ MessageCacheStore[prevMessage]?.author === MessageCacheStore[message]?.author }
+              />
+            );
+
+            prevMessage = message;
+            return rendered;
+          })
         )
       ) }
     </Fragment>
