@@ -26,6 +26,7 @@
     "react-icons": "^4.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
+    "snarkdown": "^2.0.0",
     "typescript": "^4.0.3"
   },
   "scripts": {

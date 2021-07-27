@@ -3,7 +3,7 @@ import { createStore, createEvent } from 'effector-root';
 const setModalState = createEvent<object>();
 
 interface Modals {
-  serverCreation: boolean
+  serverCreation: boolean,
 }
 
 const $ModalStore = createStore<Modals>({

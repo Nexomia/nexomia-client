@@ -2,7 +2,8 @@ import {
   Switch,
   Route,
   useRouteMatch,
-  useHistory
+  useHistory,
+  useParams
 } from 'react-router-dom';
 
 import { useState, useEffect } from 'react';

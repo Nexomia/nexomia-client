@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 
 import ContentHeader from './ContentHeader';
 import ChatView from '../chat/ChatView';
+import ProfileView from '../profile/ProfileView';
+import isTabGuild from '../../utils/isTabGuild';
 
 const Container = styled.div`
   display: flex;
@@ -20,6 +22,7 @@ const ContentBody = styled.div`
   justify-content: stretch;
   border-radius: 8px 8px 0 0;
   background: var(--background-primary);
+  overflow: hidden;
 `
 
 interface RouteParams {
@@ -34,7 +37,11 @@ function Content() {
     <Container>
       <ContentHeader />
       <ContentBody>
-        { guildId !== '@me' && guildId !== '@home' && channelId && (
+        { guildId == '@profiles' && channelId && (
+          <ProfileView user={ channelId } />
+        ) }
+
+        { isTabGuild(guildId) && channelId && (
           <ChatView channel={ channelId } />
         ) }
       </ContentBody>

@@ -11,7 +11,7 @@ const PanelButton = styled.div`
   transition: .2s;
   cursor: pointer;
   &:hover, &.active {
-    background: var(--accent-alt);
+    background: var(--accent);
     border-radius: 12px;
   }
   &:active {

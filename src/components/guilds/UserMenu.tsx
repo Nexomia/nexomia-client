@@ -8,7 +8,7 @@ import {
   RiMailFill,
   RiSettings4Fill,
   RiEmotionLaughFill,
-  
+  RiCompassFill
 } from 'react-icons/ri';
 
 import { useStore } from 'effector-react';
@@ -34,7 +34,7 @@ const Container = styled.div`
   }
   &.active {
     border-radius: 12px;
-    height: 272px;
+    height: 328px;
   }
 `
 
@@ -62,6 +62,9 @@ function UserMenu() {
       </PanelButton>
       <PanelButton onClick={ () => history.push('/channels/@home') } className={ classNames({ active: guildId === '@home' }) }>
         <RiHomeFill className={ PanelIconCss } />
+      </PanelButton>
+      <PanelButton onClick={ () => history.push('/channels/@discover') } className={ classNames({ active: guildId === '@discover' || guildId === '@profiles' }) }>
+        <RiCompassFill className={ PanelIconCss } />
       </PanelButton>
       <PanelButton onClick={ () => history.push('/channels/@me') } className={ classNames({ active: guildId === '@me' }) }>
         <RiMailFill className={ PanelIconCss } />

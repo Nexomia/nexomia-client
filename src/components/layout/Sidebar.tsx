@@ -11,7 +11,11 @@ import $ChannelCacheStore, { cacheChannels } from '../../store/ChannelCacheStore
 import Tab from '../sidebar/Tab';
 
 import { BiHash } from 'react-icons/bi';
-import { RiVolumeDownFill } from 'react-icons/ri';
+import {
+  RiVolumeDownFill,
+  RiMessage3Fill,
+  RiUserFill
+} from 'react-icons/ri';
 
 import SidebarHeader from './SidebarHeader';
 
@@ -21,6 +25,7 @@ import CenteredContainer from './CenteredContainer';
 import channelsService from '../../services/api/channels/channels.service';
 import Dots from '../animations/Dots';
 import classNames from 'classnames';
+import isTabGuild from '../../utils/isTabGuild';
 
 const SidebarContainer = styled.div`
   display: flex;
@@ -90,13 +95,42 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
         </SidebarHeader>
       ) }
 
-      { guildId === '@home' && type === 'channels' && (
-        <SidebarHeader>
-          <Content>Home</Content>
-        </SidebarHeader>
+      { (guildId === '@discover' || guildId === '@profiles') && type === 'channels' && (
+        <Fragment>
+          <SidebarHeader>
+            <Content>Discover</Content>
+          </SidebarHeader>
+          <Tab
+            Icon={ RiUserFill }
+            title={ 'People' }
+            tabId={ 'people' }
+            active={ guildId === '@profiles' }
+            onClick={ () => { history.push(`/channels/@discover/people`) } }
+          />
+        </Fragment>
       ) }
 
-      { guildId !== '@me' && guildId !== '@home' && type === 'channels' && (
+      { guildId === '@home' && type === 'channels' && (
+        <Fragment>
+          <SidebarHeader>
+            <Content>Home</Content>
+          </SidebarHeader>
+          <Tab
+            Icon={ RiMessage3Fill }
+            title={ 'Feed' }
+            tabId={ 'feed' }
+            onClick={ () => { history.push(`/channels/@home/feed`) } }
+          />
+          <Tab
+            Icon={ RiUserFill }
+            title={ 'Friends' }
+            tabId={ 'friends' }
+            onClick={ () => { history.push(`/channels/@home/friends`) } }
+          />
+        </Fragment>
+      ) }
+
+      { isTabGuild(guildId) && type === 'channels' && (
         <Fragment>
           <SidebarHeader>
             <Content>{ guilds[guildId]?.name }</Content>
@@ -104,7 +138,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
         </Fragment>
       ) }
 
-      { guildId !== '@me' && guildId !== '@home' && type === 'channels' && (guildChannels.length && channelsCache[guildChannels[0]] ? (
+      { isTabGuild(guildId) && type === 'channels' && (guildChannels.length && channelsCache[guildChannels[0]] ? (
         guildChannels.map((channel: string) => (
           <Tab
             Icon={ BiHash }

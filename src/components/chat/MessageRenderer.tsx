@@ -3,13 +3,15 @@ import { useStore } from 'effector-react';
 import { format } from 'fecha';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
+import { useHistory } from 'react-router-dom';
 import $MessageCacheStore from '../../store/MessageCacheStore';
 import $UserCacheStore from '../../store/UserCacheStore';
+import { setModalState } from '../../store/ModalStore';
 import StyledText from '../ui/StyledText';
 
 const Container = styled.div`
   margin-top: 8px;
-  margin-bottom: -2px;
+  margin-bottom: -1px;
   padding: 4px 0;
   display: flex;
   flex-direction: row;
@@ -29,6 +31,11 @@ const Avatar = styled.img`
   border-radius: 50%;
   margin: 0 16px;
   user-select: none;
+  cursor: pointer;
+  transition: .2s;
+  &:active {
+    transform: translateY(2px);
+  }
 `
 
 const Spacer = styled.div`
@@ -50,10 +57,12 @@ function MessageRenderer({ id, grouped }: MessageProps) {
   const UserCache = useStore($UserCacheStore);
   const MessageCache = useStore($MessageCacheStore);
 
+  const history = useHistory();
+
   return (
     <Container className={ classNames({ [GroupedContainerCss]: grouped }) }>
       { !grouped ? (
-        <Avatar src={ UserCache[MessageCache[id].author].avatar }></Avatar>
+        <Avatar src={ UserCache[MessageCache[id].author].avatar } onClick={ showUserProfile }></Avatar>
       ) : (
         <Spacer />
       ) }
@@ -70,6 +79,10 @@ function MessageRenderer({ id, grouped }: MessageProps) {
       </ContentContainer>
     </Container>
   )
+
+  function showUserProfile() {
+    history.push(`/channels/@profiles/${ MessageCache[id].author }`);
+  }
 }
 
 export default MessageRenderer;

@@ -65,6 +65,11 @@ export default interface User {
   avatar?: string;
 
   /**
+   * The user's banner
+   */
+  banner?: string;
+
+  /**
    * The user's status
    */
   status?: string;
