@@ -68,9 +68,12 @@ function MessageRenderer({ id, grouped }: MessageProps) {
       ) }
       <ContentContainer>
         { !grouped && (
-          <StyledText className={ css`margin: 0;` }>
-            { UserCache[MessageCache[id].author].username }
-            <StyledText className={ css`margin: 0 0 0 8px; color: var(--text-secondary); display: inline-block; font-size: 12px;` }>
+          <StyledText className={ css`margin: 0` }>
+            <div
+              className={ css`display: inline-block; cursor: pointer; &:hover { text-decoration: underline }` } 
+              onClick={ showUserProfile }
+            >{ UserCache[MessageCache[id].author].username }</div>
+            <StyledText className={ css`margin: 0 0 0 8px; color: var(--text-secondary); display: inline-block; font-size: 12px` }>
               { format(new Date(MessageCache[id].created), 'HH:mm') }
             </StyledText>
           </StyledText>

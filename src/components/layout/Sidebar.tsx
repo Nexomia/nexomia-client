@@ -78,7 +78,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
   useEffect(() => {
     setLoading(false);
     if (type === 'channels') {
-      if (guildId === '@me' || guildId === '@home') return;
+      if (!isTabGuild(guildId)) return;
       setGuildChannelsValue(channels[guildId] || []);
       
       if (!guildChannels.length) {
