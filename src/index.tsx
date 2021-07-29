@@ -19,14 +19,14 @@ ReactDOM.render(
   <React.StrictMode>
     <Router>
       <Switch>
-        <Route path='/channels'>
-          <App />
-        </Route>
         <Route path='/login'>
           <Login />
         </Route>
         <Route path='/register'>
           <Register />
+        </Route>
+        <Route path='/'>
+          <App />
         </Route>
       </Switch>
     </Router>

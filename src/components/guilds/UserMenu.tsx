@@ -44,12 +44,13 @@ const AvatarImg = styled.img`
 `
 
 interface RouteParams {
+  path: string,
   guildId: string
 }
 
 function UserMenu() {
   const history = useHistory();
-  const { guildId } = useParams<RouteParams>();
+  const { path, guildId } = useParams<RouteParams>();
 
   const [containerOpened, setContainerOpened] = useState(true);
   
@@ -60,10 +61,10 @@ function UserMenu() {
       <PanelButton className={ classNames({ active: containerOpened }) } onClick={ () => setContainerOpened(!containerOpened) }>
         <AvatarImg src={ user.avatar } />
       </PanelButton>
-      <PanelButton onClick={ () => history.push('/channels/@home') } className={ classNames({ active: guildId === '@home' }) }>
+      <PanelButton onClick={ () => history.push('/home') } className={ classNames({ active: path === 'home' }) }>
         <RiHomeFill className={ PanelIconCss } />
       </PanelButton>
-      <PanelButton onClick={ () => history.push('/channels/@discover') } className={ classNames({ active: guildId === '@discover' || guildId === '@profiles' }) }>
+      <PanelButton onClick={ () => history.push('/discover') } className={ classNames({ active: path === 'discover' || path === 'profiles' }) }>
         <RiCompassFill className={ PanelIconCss } />
       </PanelButton>
       <PanelButton onClick={ () => history.push('/channels/@me') } className={ classNames({ active: guildId === '@me' }) }>

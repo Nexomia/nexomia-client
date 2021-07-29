@@ -84,7 +84,7 @@ function MessageRenderer({ id, grouped }: MessageProps) {
   )
 
   function showUserProfile() {
-    history.push(`/channels/@profiles/${ MessageCache[id].author }`);
+    history.push(`/profiles/${ MessageCache[id].author }`);
   }
 }
 

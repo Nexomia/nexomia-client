@@ -49,14 +49,15 @@ interface TabProps {
 }
 
 interface RouteParams {
+  guildId: string,
   channelId: string
 }
 
 function Tab({ Icon, title, active, onClick, tabId }: TabProps) {
-  const { channelId } = useParams<RouteParams>();
+  const { guildId, channelId } = useParams<RouteParams>();
 
   return (
-    <Container onClick={ onClick } className={ classNames({ active: active || tabId === channelId }) }>
+    <Container onClick={ onClick } className={ classNames({ active: active || tabId === channelId || tabId === guildId }) }>
       { Icon && <Icon className={ classNames({ [StyledIconCss]: true, [TabIconCss]: true }) } /> }
       <StyledText className={ TextCss }>{ title }</StyledText>
     </Container>

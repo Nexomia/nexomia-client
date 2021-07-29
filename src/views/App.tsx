@@ -62,12 +62,34 @@ function App() {
         solid={ true }
       />
       <Switch>
-        <Route path={`${match.path}/:guildId/:channelId?`}>
+        <Route path={`/channels/:guildId/:channelId`}>
           <Modals />
           <Guilds />
           <Sidebar />
           <Content />
           <Sidebar type="members" />
+        </Route>
+
+        <Route path={`/channels/:guildId`}>
+          <Modals />
+          <Guilds />
+          <Sidebar />
+          <Content />
+          <Sidebar type="members" />
+        </Route>
+
+        <Route path={`/:path/:guildId`}>
+          <Modals />
+          <Guilds />
+          <Sidebar />
+          <Content />
+        </Route>
+
+        <Route path={`/:path`}>
+          <Modals />
+          <Guilds />
+          <Sidebar />
+          <Content />
         </Route>
       </Switch>
     </div>

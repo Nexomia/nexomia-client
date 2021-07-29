@@ -34,7 +34,7 @@ function Register() {
 
   useEffect(() => {
     if (token) {
-      history.push('/channels/me');
+      history.push('/channels/@me');
     }
   }, []);
 

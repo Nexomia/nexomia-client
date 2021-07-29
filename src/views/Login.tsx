@@ -35,7 +35,7 @@ function Login() {
   useEffect(() => {
     console.log(token)
     if (token && token !== '') {
-      history.push('/channels/@home');
+      history.push('/home');
     }
   }, []);
 
@@ -92,7 +92,7 @@ function Login() {
     setToken(response.access_token);
     setRefreshToken(response.refresh_token);
 
-    history.push('/channels/@home');
+    history.push('/home');
   }
 }
 

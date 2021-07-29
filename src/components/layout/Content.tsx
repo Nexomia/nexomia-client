@@ -1,5 +1,8 @@
 import { styled } from 'linaria/react';
+import { css } from 'linaria';
 import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import classNames from 'classnames';
 
 import ContentHeader from './ContentHeader';
 import ChatView from '../chat/ChatView';
@@ -25,20 +28,27 @@ const ContentBody = styled.div`
   overflow: hidden;
 `
 
+const NoSidebarCss = css`
+  border-top-right-radius: 0;
+`
+
 interface RouteParams {
+  path: string,
   guildId: string,
   channelId: string
 }
 
 function Content() {
-  const { guildId, channelId } = useParams<RouteParams>();
+  const { path, guildId, channelId } = useParams<RouteParams>();
+
+  useEffect(() => console.log(path))
 
   return (
     <Container>
       <ContentHeader />
-      <ContentBody>
-        { guildId == '@profiles' && channelId && (
-          <ProfileView user={ channelId } />
+      <ContentBody className={ classNames({ [NoSidebarCss]: !!path }) }>
+        { path === 'profiles' && guildId && (
+          <ProfileView user={ guildId } />
         ) }
 
         { isTabGuild(guildId) && channelId && (
