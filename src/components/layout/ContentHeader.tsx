@@ -18,6 +18,7 @@ const Header = styled.div`
   display: flex;
   alignSelf: stretch;
   align-items: center;
+  flex-shrink: 0;
 `
 
 const Content = styled.div`
@@ -53,16 +54,24 @@ function ContentHeader() {
         <RiUserFill className={ classNames({ [StyledIconCss]: true, [HeaderIconCss]: true }) } />
       ) }
 
-      { isTabGuild(guildId) && channelId && (
+      { !path && isTabGuild(guildId) && channelId && (
         channelsCache[channelId]?.name && (<BiHash className={ classNames({ [StyledIconCss]: true, [HeaderIconCss]: true }) } />)
       ) }
 
-      { isTabGuild(guildId) && channelId && (
+      { !path && isTabGuild(guildId) && channelId && (
         <Content>{ channelsCache[channelId]?.name || '' }</Content>
       ) }
 
       { path === 'profiles' && guildId !== 'people' && (
         <Content>{ usersCache[guildId]?.username || '' }'s Profile</Content>
+      ) }
+
+      { path === 'guildsettings' && channelId === 'general' && (
+        <Content>General</Content>
+      ) }
+
+      { path === 'guildsettings' && channelId === 'roles' && (
+        <Content>Roles</Content>
       ) }
     </Header>
   );

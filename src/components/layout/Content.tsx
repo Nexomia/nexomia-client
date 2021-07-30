@@ -8,6 +8,7 @@ import ContentHeader from './ContentHeader';
 import ChatView from '../chat/ChatView';
 import ProfileView from '../profile/ProfileView';
 import isTabGuild from '../../utils/isTabGuild';
+import SettingsView from '../settings/SettingsView';
 
 const Container = styled.div`
   display: flex;
@@ -26,6 +27,7 @@ const ContentBody = styled.div`
   border-radius: 8px 8px 0 0;
   background: var(--background-primary);
   overflow: hidden;
+  overflow-y: auto;
 `
 
 const NoSidebarCss = css`
@@ -51,7 +53,11 @@ function Content() {
           <ProfileView user={ guildId } />
         ) }
 
-        { isTabGuild(guildId) && channelId && (
+        { path === 'guildsettings' && guildId && (
+          <SettingsView />
+        ) }
+
+        { !path && isTabGuild(guildId) && channelId && (
           <ChatView channel={ channelId } />
         ) }
       </ContentBody>

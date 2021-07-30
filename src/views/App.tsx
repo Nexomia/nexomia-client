@@ -81,6 +81,13 @@ function App() {
           <Sidebar type="members" />
         </Route>
 
+        <Route path={`/:path/:guildId/:channelId`}>
+          <Modals />
+          <Guilds />
+          <Sidebar />
+          <Content />
+        </Route>
+
         <Route path={`/:path/:guildId`}>
           <Modals />
           <Guilds />

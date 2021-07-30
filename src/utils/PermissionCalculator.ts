@@ -1,9 +1,7 @@
-
+import PermissionOverwrites from '../store/models/PermissionOverwrites';
 
 class PermissionCalculator {
-  getGuildPermissions(guild: string) {
-    
-  }
+  
 }
 
 export default new PermissionCalculator();

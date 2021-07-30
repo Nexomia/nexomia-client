@@ -27,9 +27,15 @@ const GuildsContainer = styled.div`
   width: 64px;
   align-self: stretch;
   background: var(--background-secondary);
+  overflow: auto
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
 `
 
 const Splitter = styled.div`
+  flex-shrink: 0;
   height: 4px;
   width: calc(100% - 32px);
   margin: 0 16px 8px 16px;
@@ -70,7 +76,7 @@ function Guilds() {
         guildList.map((guildListId) => (
           <PanelButton
             onClick={ () => switchGuild(guildListId) }
-            onContextMenu={ openContextMenu }
+            onContextMenu={ (event: any) => openContextMenu(event, guildListId) }
             key={ guildListId }
             className={ classNames({ active: guildId === guildListId }) }
           >
@@ -106,9 +112,9 @@ function Guilds() {
     history.push(`/channels/${id}`);
   }
 
-  function openContextMenu(event: any) {
+  function openContextMenu(event: any, id: string) {
     event.preventDefault();
-    setContextMenu({ type: 'guild', top: event.pageY, left: event.pageX, visible: true })
+    setContextMenu({ type: 'guild', top: event.pageY, left: event.pageX, visible: true, id });
   }
 }
 

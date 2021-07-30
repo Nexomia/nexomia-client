@@ -19,6 +19,7 @@ const Container = styled.div`
   background: var(--background-primary-alt);
   height: 48px;
   flex-direction: row;
+  z-index: 2;
 `
 
 const InputButton = styled.div`

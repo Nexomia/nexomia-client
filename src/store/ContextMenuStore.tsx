@@ -4,7 +4,8 @@ interface ContextMenu {
   type?: string,
   top?: number,
   left?: number,
-  visible?: boolean
+  visible?: boolean,
+  id?: string
 }
 
 const $ContextMenuStore = createStore<ContextMenu>({

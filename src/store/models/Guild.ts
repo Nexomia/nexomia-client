@@ -65,7 +65,7 @@ export default interface Guild {
   /**
    * Roles in the guild
    */
-  roles?: Role[];
+  roles?: string[];
 
   /**
    * Custom guild emojis

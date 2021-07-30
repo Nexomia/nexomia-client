@@ -10,6 +10,7 @@ const Layer = styled.div`
   padding: 16px;
   opacity: 1;
   transition: .4s;
+  z-index: 10;
 `
 
 export default Layer;

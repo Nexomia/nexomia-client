@@ -5,9 +5,12 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import { useStore } from 'effector-react';
 import $GuildStore from '../../store/GuildStore';
-import $GuildCacheStore from '../../store/GuildCacheStore';
+import $GuildCacheStore, { setGuildRoles } from '../../store/GuildCacheStore';
 import $ChannelStore, { setGuildChannels } from '../../store/ChannelStore';
 import $ChannelCacheStore, { cacheChannels } from '../../store/ChannelCacheStore';
+import { cacheUsers } from '../../store/UserCacheStore';
+import { cacheMembers } from '../../store/MemberCacheStore';
+import { cacheRoles } from '../../store/RolesCacheStore';
 import Tab from '../sidebar/Tab';
 
 import { BiHash } from 'react-icons/bi';
@@ -22,10 +25,13 @@ import SidebarHeader from './SidebarHeader';
 import Channel from '../../store/models/Channel';
 import StyledText from '../ui/StyledText';
 import CenteredContainer from './CenteredContainer';
-import channelsService from '../../services/api/channels/channels.service';
+import ChannelsService from '../../services/api/channels/channels.service';
 import Dots from '../animations/Dots';
 import classNames from 'classnames';
 import isTabGuild from '../../utils/isTabGuild';
+import GuildsService from '../../services/api/guilds/guilds.service';
+import RolesService from '../../services/api/roles/roles.service';
+import Role from '../../store/models/Role';
 
 const SidebarContainer = styled.div`
   display: flex;
@@ -83,7 +89,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       if (!isTabGuild(guildId)) return;
       setGuildChannelsValue(channels[guildId] || []);
       
-      if (!guildChannels.length) {
+      if (!guildChannels.length && (!path || path === 'guildsettings')) {
         loadChannels();
       }
     }
@@ -140,7 +146,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
           <Tab
             title={ 'General' }
             tabId={ 'general' }
-            onClick={ () => { history.push(`/guildsettings/${guildId}/roles`) } }
+            onClick={ () => { history.push(`/guildsettings/${guildId}/general`) } }
           />
           <Tab
             title={ 'Roles' }
@@ -150,7 +156,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
         </Fragment>
       ) }
 
-      { isTabGuild(guildId) && type === 'channels' && (
+      { !path && isTabGuild(guildId) && type === 'channels' && (
         <Fragment>
           <SidebarHeader>
             <Content>{ guilds[guildId]?.name }</Content>
@@ -180,8 +186,18 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
 
   async function loadChannels() {
     setLoading(true);
-    const response = await channelsService.getGuildChannels(guildId);
+    const response = await ChannelsService.getGuildChannels(guildId);
     if (!response) return history.push('/home');
+    const membersResponse = await GuildsService.getGuildMembers(guildId || '');
+    const rolesResponse = await RolesService.getGuildRoles(guildId || '');
+
+    cacheUsers([...membersResponse].map((member: any) => member.user));
+    cacheMembers([...membersResponse].map((member: any) => {
+      delete member.user;
+      return { ...member, guild: guildId };
+    }));
+    cacheRoles(rolesResponse);
+    setGuildRoles({ guild: guildId, roles: rolesResponse.map((role: Role) => role.id) });
     cacheChannels(response);
     setGuildChannels({ guild: guildId, channels: response.map((channel: Channel) => channel.id) });
     setGuildChannelsValue(response.map((channel: Channel) => channel.id));

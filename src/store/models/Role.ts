@@ -16,4 +16,6 @@ export default interface Role {
   position?: number;
 
   mentionable?: boolean;
+
+  default?: boolean;
 }

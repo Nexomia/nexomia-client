@@ -91,7 +91,7 @@ function MessageRenderer({ id, grouped }: MessageProps) {
 
   function openContextMenu(event: any) {
     event.preventDefault();
-    setContextMenu({ type: 'message', top: event.pageY, left: event.pageX, visible: true })
+    setContextMenu({ type: 'message', top: event.pageY, left: event.pageX, visible: true, id });
   }
 }
 

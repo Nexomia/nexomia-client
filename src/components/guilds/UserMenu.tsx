@@ -21,6 +21,7 @@ import PanelIconCss from '../css/PanelIconCss';
 import classNames from 'classnames';
 
 const Container = styled.div`
+  flex-shrink: 0;
   width: 48px;
   align-self: center;
   overflow: hidden;
@@ -70,7 +71,7 @@ function UserMenu() {
       <PanelButton onClick={ () => history.push('/channels/@me') } className={ classNames({ active: guildId === '@me' }) }>
         <RiMailFill className={ PanelIconCss } />
       </PanelButton>
-      <PanelButton>
+      <PanelButton className={ classNames({ active: path === 'guildsettings' }) }>
         <RiSettings4Fill className={ PanelIconCss } />
       </PanelButton>
       <PanelButton className={ css`margin-bottom: 0` }>

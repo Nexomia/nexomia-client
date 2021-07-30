@@ -1,11 +1,18 @@
 import { createStore, createEvent } from 'effector-root';
 
 import Guild from './models/Guild';
+import Role from './models/Role';
 
 const cacheGuilds = createEvent<Guild[]>();
+const setGuildRoles = createEvent<GuildRolesInfo>();
 
 interface GuildCache {
   [key: string]: Guild
+}
+
+interface GuildRolesInfo {
+  guild: string,
+  roles: string[]
 }
 
 const $GuildCacheStore = createStore<GuildCache>({});
@@ -18,6 +25,11 @@ $GuildCacheStore
     });
     return modifiedState;
   })
+  .on(setGuildRoles, (state: GuildCache, info: GuildRolesInfo) => {
+    const modifiedState = { ...state };
+    modifiedState[info.guild].roles = info.roles.reverse();
+    return modifiedState;
+  })
 
 export default $GuildCacheStore;
-export { cacheGuilds };
+export { cacheGuilds, setGuildRoles };

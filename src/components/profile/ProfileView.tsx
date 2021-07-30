@@ -15,6 +15,11 @@ interface ProfileViewProps {
   user: string
 }
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
 const Banner = styled.div`
   height: 400px;
   background-size: cover;
@@ -62,7 +67,7 @@ function ProfileView({ user }: ProfileViewProps) {
   const UserCache = useStore($UserCacheStore);
 
   return (
-    <Fragment>
+    <Container>
       { UserCache[user] && (
         <Fragment>
           { UserCache[user].banner ? (
@@ -93,7 +98,7 @@ function ProfileView({ user }: ProfileViewProps) {
           </CenteredContainer>
         </Fragment>
       ) }
-    </Fragment>
+    </Container>
   )
 }
 

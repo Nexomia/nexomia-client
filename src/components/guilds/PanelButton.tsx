@@ -10,6 +10,7 @@ const PanelButton = styled.div`
   border-radius: 50%;
   transition: .2s;
   cursor: pointer;
+  flex-shrink: 0;
   &:hover, &.active {
     background: var(--accent);
     border-radius: 12px;

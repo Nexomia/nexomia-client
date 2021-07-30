@@ -62,14 +62,6 @@ function MessageView({ channel }: MessageViewProps) {
   async function loadMessages() {
     const response = await MessagesService.getChannelMessages(channel);
     if (!response) return setLoading(false);
-    
-    const membersResponse = await GuildsService.getGuildMembers(CachedChannels[channel].guild_id || '');
-
-    cacheUsers([...membersResponse].map((member: any) => member.user));
-    cacheMembers([...membersResponse].map((member: any) => {
-      delete member.user;
-      return { ...member, guild: CachedChannels[channel].guild_id }
-    }));
     cacheMessages(response);
     setChannelMessages({ channel, messages: response.map((message: Message) => message.id) });
     setLoading(false);

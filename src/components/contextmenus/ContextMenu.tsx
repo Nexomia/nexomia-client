@@ -2,6 +2,7 @@ import { useStore } from 'effector-react';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
 import { Fragment } from 'react';
+import { useHistory } from 'react-router';
 import $ContextMenuStore from '../../store/ContextMenuStore';
 import ContextTab from './ContextTab';
 
@@ -15,7 +16,8 @@ const Base = styled.div`
 `
 
 function ContextMenu() {
-  const { top, left, visible, type } = useStore($ContextMenuStore);
+  const { top, left, visible, type, id } = useStore($ContextMenuStore);
+  const history = useHistory();
 
   return (
     <Fragment>
@@ -23,7 +25,7 @@ function ContextMenu() {
         <Base style={{ top, left }}>
           { type === 'guild' && (
             <Fragment>
-              <ContextTab title='Settings' />
+              <ContextTab title='Settings' onClick={ () => history.push(`/guildsettings/${id}`) } />
               <ContextTab title='Leave Server' />
               <ContextTab title='Copy ID' />
             </Fragment>
