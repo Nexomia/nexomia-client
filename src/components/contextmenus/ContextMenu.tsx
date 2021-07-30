@@ -24,7 +24,7 @@ function ContextMenu() {
           { type === 'guild' && (
             <Fragment>
               <ContextTab title='Settings' />
-              <ContextTab title='Leave Guild' />
+              <ContextTab title='Leave Server' />
               <ContextTab title='Copy ID' />
             </Fragment>
           ) }

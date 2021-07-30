@@ -56,7 +56,7 @@ function App() {
   }, []);
 
   return (
-    <div className="App dark-theme" onClick={ closeContextMenu }>
+    <div className="App dark-theme" onClick={ closeContextMenu } onContextMenu={ (event: any) => event.preventDefault() }>
       <LoadingPlaceholder
         title={ t(`states:loading.${loaderTitleId.toString()}`) }
         subtext={ `@${preloaders.authors[loaderTitleAuthor].name}` }
