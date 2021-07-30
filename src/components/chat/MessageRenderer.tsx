@@ -8,6 +8,7 @@ import $MessageCacheStore from '../../store/MessageCacheStore';
 import $UserCacheStore from '../../store/UserCacheStore';
 import { setModalState } from '../../store/ModalStore';
 import StyledText from '../ui/StyledText';
+import { setContextMenu } from '../../store/ContextMenuStore';
 
 const Container = styled.div`
   margin-top: 8px;
@@ -61,7 +62,7 @@ function MessageRenderer({ id, grouped }: MessageProps) {
   const history = useHistory();
 
   return (
-    <Container className={ classNames({ [GroupedContainerCss]: grouped }) }>
+    <Container className={ classNames({ [GroupedContainerCss]: grouped }) } onContextMenu={ openContextMenu } >
       { !grouped ? (
         <Avatar src={ UserCache[MessageCache[id].author].avatar } onClick={ showUserProfile }></Avatar>
       ) : (
@@ -86,6 +87,11 @@ function MessageRenderer({ id, grouped }: MessageProps) {
 
   function showUserProfile() {
     history.push(`/profiles/${ MessageCache[id].author }`);
+  }
+
+  function openContextMenu(event: any) {
+    event.preventDefault();
+    setContextMenu({ type: 'message', top: event.pageY, left: event.pageX, visible: true })
   }
 }
 

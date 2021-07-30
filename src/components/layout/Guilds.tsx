@@ -13,6 +13,7 @@ import { useStore } from 'effector-react';
 import $ModalStore, { setModalState } from '../../store/ModalStore';
 import $GuildStore from '../../store/GuildStore';
 import $GuildCacheStore from '../../store/GuildCacheStore';
+import { setContextMenu } from '../../store/ContextMenuStore';
 
 import UserMenu from '../guilds/UserMenu';
 import PanelButton from '../guilds/PanelButton';
@@ -69,6 +70,7 @@ function Guilds() {
         guildList.map((guildListId) => (
           <PanelButton
             onClick={ () => switchGuild(guildListId) }
+            onContextMenu={ openContextMenu }
             key={ guildListId }
             className={ classNames({ active: guildId === guildListId }) }
           >
@@ -102,6 +104,11 @@ function Guilds() {
 
   function switchGuild(id: string) {
     history.push(`/channels/${id}`);
+  }
+
+  function openContextMenu(event: any) {
+    event.preventDefault();
+    setContextMenu({ type: 'guild', top: event.pageY, left: event.pageX, visible: true })
   }
 }
 

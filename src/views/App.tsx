@@ -14,6 +14,7 @@ import $AuthStore, { setToken } from '../store/AuthStore';
 import { setUser } from '../store/UserStore';
 import { setGuilds } from '../store/GuildStore';
 import { cacheGuilds } from '../store/GuildCacheStore';
+import { setContextMenu } from '../store/ContextMenuStore';
 
 import UsersService from '../services/api/users/users.service';
 import GuildsService from '../services/api/guilds/guilds.service';
@@ -31,6 +32,7 @@ import Modals from '../components/layout/Modals';
 
 import preloaders from '../i18n/preloaders.json';
 import Guild from '../store/models/Guild';
+import ContextMenu from '../components/contextmenus/ContextMenu';
 
 function App() {
   const { t } = useTranslation(['states']);
@@ -54,13 +56,14 @@ function App() {
   }, []);
 
   return (
-    <div className="App dark-theme">
+    <div className="App dark-theme" onClick={ closeContextMenu }>
       <LoadingPlaceholder
         title={ t(`states:loading.${loaderTitleId.toString()}`) }
         subtext={ `@${preloaders.authors[loaderTitleAuthor].name}` }
         active={ !loaded }
         solid={ true }
       />
+      <ContextMenu />
       <Switch>
         <Route path={`/channels/:guildId/:channelId`}>
           <Modals />
@@ -111,6 +114,10 @@ function App() {
     cacheGuilds(guilds);
 
     setLoaded(true);
+  }
+
+  function closeContextMenu() {
+    setContextMenu({ visible: false });
   }
 }
 
