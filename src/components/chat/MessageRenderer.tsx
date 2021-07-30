@@ -40,6 +40,7 @@ const Avatar = styled.img`
 
 const Spacer = styled.div`
   width: 72px;
+  flex-shrink: 0;
 `
 
 const ContentContainer = styled.div`
@@ -78,7 +79,7 @@ function MessageRenderer({ id, grouped }: MessageProps) {
             </StyledText>
           </StyledText>
         ) }
-        <StyledText className={ css`margin: 0; font-weight: 400; user-select: text` }>{ MessageCache[id].content }</StyledText>
+        <StyledText className={ css`margin: 0; padding-right: 16px; font-weight: 400; user-select: text; word-break: break-all` }>{ MessageCache[id].content }</StyledText>
       </ContentContainer>
     </Container>
   )

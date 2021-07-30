@@ -30,6 +30,7 @@ import isTabGuild from '../../utils/isTabGuild';
 const SidebarContainer = styled.div`
   display: flex;
   width: 240px;
+  flex-shrink: 0;
   flex-direction: column;
   align-self: stretch;
   background: var(--background-secondary-alt)
@@ -127,6 +128,24 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             title={ 'Friends' }
             tabId={ 'friends' }
             onClick={ () => { history.push(`/home/friends`) } }
+          />
+        </Fragment>
+      ) }
+
+      { path === 'guildsettings' && type === 'channels' && (
+        <Fragment>
+          <SidebarHeader>
+            <Content>Server Settings</Content>
+          </SidebarHeader>
+          <Tab
+            title={ 'General' }
+            tabId={ 'general' }
+            onClick={ () => { history.push(`/guildsettings/${guildId}/roles`) } }
+          />
+          <Tab
+            title={ 'Roles' }
+            tabId={ 'roles' }
+            onClick={ () => { history.push(`/guildsettings/${guildId}/roles`) } }
           />
         </Fragment>
       ) }

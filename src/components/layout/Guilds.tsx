@@ -22,6 +22,7 @@ import PanelIconCss from '../css/PanelIconCss';
 const GuildsContainer = styled.div`
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   width: 64px;
   align-self: stretch;
   background: var(--background-secondary);

@@ -37,18 +37,19 @@ const HeaderIconCss = css`
 `
 
 interface RouteParams {
+  path: string,
   guildId: string,
   channelId: string
 }
 
 function ContentHeader() {
-  const { guildId, channelId } = useParams<RouteParams>();
+  const { path, guildId, channelId } = useParams<RouteParams>();
   const channelsCache = useStore($ChannelCacheStore);
   const usersCache = useStore($UserCacheStore);
 
   return (
     <Header>
-      { guildId === '@profiles' && channelId !== 'people' && (
+      { path === 'profiles' && guildId !== 'people' && (
         <RiUserFill className={ classNames({ [StyledIconCss]: true, [HeaderIconCss]: true }) } />
       ) }
 
@@ -60,8 +61,8 @@ function ContentHeader() {
         <Content>{ channelsCache[channelId]?.name || '' }</Content>
       ) }
 
-      { guildId === '@profiles' && channelId !== 'people' && (
-        <Content>{ usersCache[channelId]?.username || '' }'s Profile</Content>
+      { path === 'profiles' && guildId !== 'people' && (
+        <Content>{ usersCache[guildId]?.username || '' }'s Profile</Content>
       ) }
     </Header>
   );

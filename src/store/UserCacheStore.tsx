@@ -17,7 +17,7 @@ $UserCacheStore
       modifiedState = { ...modifiedState, [user.id]: user };
     });
     return modifiedState;
-  });
+  })
 
 export default $UserCacheStore;
 export { cacheUsers };
