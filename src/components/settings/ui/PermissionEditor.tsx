@@ -155,18 +155,21 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
   }
 
   function enablePermission(compare: number) {
-    setPermissions({ allow: permissions?.allow | compare, deny: permissions?.deny & ~compare });
-    onChange(permissions);
+    const editedPermissions = { allow: permissions?.allow | compare, deny: permissions?.deny & ~compare };
+    setPermissions(editedPermissions);
+    onChange(editedPermissions);
   }
 
   function disablePermission(compare: number) {
-    setPermissions({ allow: permissions?.allow & ~compare, deny: permissions?.deny | compare });
-    onChange(permissions);
+    const editedPermissions = { allow: permissions?.allow & ~compare, deny: permissions?.deny | compare };
+    setPermissions(editedPermissions);
+    onChange(editedPermissions);
   }
 
   function inheritPermission(compare: number) {
-    setPermissions({ allow: permissions?.allow & ~compare, deny: permissions?.deny & ~compare });
-    onChange(permissions);
+    const editedPermissions = { allow: permissions?.allow & ~compare, deny: permissions?.deny & ~compare };
+    setPermissions(editedPermissions);
+    onChange(editedPermissions);
   }
 }
 
