@@ -59,7 +59,7 @@ function Role({ name, color, defaultRole, onClick, active = false }: RoleProps) 
   return (
     <Container onClick={ onClick } className={ classNames({ active }) }>
       <ColorDot style={{ background: color }} />
-      <StyledText className={ css`margin: 0` }>{ name }</StyledText>
+      <StyledText className={ css`margin: 0; font-weight: 900` }>{ name }</StyledText>
       <Splitter />
       { defaultRole && (<StyledText className={ DefaultIconCss }>DEFAULT</StyledText>) }
       { !active && (<RiArrowRightSLine className={ classNames({ [StyledIconCss]: true, [IconCss]: true }) } />) }

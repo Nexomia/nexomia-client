@@ -13,6 +13,16 @@ class RolesService {
 
     return response.data;
   }
+
+  async patchRole(guild: string, roleId: string, rolePatch: object) {
+    const response = await CommonRequestManager.apiRequest('PATCH', `/guilds/${guild}/roles/${roleId}`, rolePatch);
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
 }
 
 export default new RolesService();

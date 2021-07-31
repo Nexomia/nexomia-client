@@ -1,3 +1,5 @@
+import PermissionOverwrites from './PermissionOverwrites';
+
 export default interface Role {
   id: string;
 
@@ -7,7 +9,7 @@ export default interface Role {
 
   members: string[];
 
-  // permissions: Permissions;
+  permissions: PermissionOverwrites;
 
   color?: string;
 
