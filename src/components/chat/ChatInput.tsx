@@ -1,7 +1,7 @@
 import { styled } from 'linaria/react';
 import { css } from 'linaria';
 import classNames from 'classnames';
-import { useRef, useState } from 'react';
+import { KeyboardEvent, useRef, useState } from 'react';
 import { RiAddCircleFill, RiEmotionLaughFill, RiSendPlane2Fill } from 'react-icons/ri';
 
 import { addMessage } from '../../store/MessageStore';
@@ -65,10 +65,11 @@ const Input = styled.input`
 `
 
 interface ChatInputProps {
-  channel: string
+  channel: string,
+  onMessageSent: any
 }
 
-function ChatInput({ channel }: ChatInputProps) {
+function ChatInput({ channel, onMessageSent }: ChatInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [sendLoading, setSendLoading] = useState(false);
@@ -78,7 +79,7 @@ function ChatInput({ channel }: ChatInputProps) {
       <InputButton>
         <RiAddCircleFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
       </InputButton>
-      <Input placeholder="Type something here..." ref={ inputRef } />
+      <Input placeholder="Type something here..." ref={ inputRef } onKeyPress={ handleKeyPress } />
       <InputButton className={ css`margin-right: 0` }>
         <RiEmotionLaughFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
       </InputButton>
@@ -102,6 +103,14 @@ function ChatInput({ channel }: ChatInputProps) {
     addMessage({ channel: response.channel_id, message: response.id });
 
     setSendLoading(false);
+
+    onMessageSent();
+  }
+
+  function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === 'Enter') {
+      sendMessage();
+    }
   }
 }
 

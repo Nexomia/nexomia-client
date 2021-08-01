@@ -23,7 +23,7 @@ const ScrollableContent = styled.div`
   left: 0;
   bottom: 0;
   right: 0;
-  overflow: hidden scroll;
+  overflow: hidden auto;
   box-sizing: border-box;
 `
 
@@ -56,7 +56,7 @@ function ChatView({ channel }: ChatViewProps) {
           </ScrollableContent>
         </MessageContainer>
       </MessageContainerWrapper>
-      <ChatInput channel={ channel } />
+      <ChatInput channel={ channel } onMessageSent={ scrollView } />
     </Fragment>
   )
 
