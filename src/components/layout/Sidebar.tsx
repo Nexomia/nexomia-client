@@ -5,7 +5,7 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import { useStore } from 'effector-react';
 import $GuildStore from '../../store/GuildStore';
-import $GuildCacheStore, { setGuildRoles } from '../../store/GuildCacheStore';
+import $GuildCacheStore, { setGuildRoles, setGuildMembers } from '../../store/GuildCacheStore';
 import $ChannelStore, { setGuildChannels } from '../../store/ChannelStore';
 import $ChannelCacheStore, { cacheChannels } from '../../store/ChannelCacheStore';
 import { cacheUsers } from '../../store/UserCacheStore';
@@ -54,8 +54,7 @@ const Content = styled.div`
 
 interface RouteParams {
   path: string,
-  guildId: string,
-  channelId: string
+  guildId: string
 }
 
 interface SidebarProps {
@@ -71,7 +70,7 @@ interface ChannelsCache {
 }
 
 function Sidebar({ type = 'channels' }: SidebarProps) {
-  const { path, guildId, channelId } = useParams<RouteParams>();
+  const { path, guildId } = useParams<RouteParams>();
 
   const guilds = useStore($GuildCacheStore);
   const channels = useStore<GuildChannels>($ChannelStore);
@@ -192,6 +191,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
     const rolesResponse = await RolesService.getGuildRoles(guildId || '');
 
     cacheUsers([...membersResponse].map((member: any) => member.user));
+    setGuildMembers({ guild: guildId, members: [...membersResponse].map((member: any) => member.id) });
     cacheMembers([...membersResponse].map((member: any) => {
       delete member.user;
       return { ...member, guild: guildId };

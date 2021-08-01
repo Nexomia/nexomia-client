@@ -1,10 +1,12 @@
+import PermissionOverwrites from './PermissionOverwrites';
+
 export default interface Channel {
   id: string,
   created?: number,
   type?: number,
   guild_id?: string,
   position?: number,
-  permission_overwrites?: string[],
+  permission_overwrites?: PermissionOverwrites,
   name?: string,
   topic?: string,
   nsfw?: boolean,

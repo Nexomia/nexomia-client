@@ -1,4 +1,3 @@
-import Role from './Role';
 import Emoji from './Emoji';
 
 export default interface Guild {

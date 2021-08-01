@@ -1,8 +1,30 @@
-import PermissionOverwrites from '../store/models/PermissionOverwrites';
+import $ChannelCacheStore from '../store/ChannelCacheStore';
+import $GuildCacheStore from '../store/GuildCacheStore';
+import $MemberCacheStore from '../store/MemberCacheStore';
+import $RoleCacheStore from '../store/RolesCacheStore';
 
 class PermissionCalculator {
-  getUserPermissions(guild: string, channel: string, user: string) {
+  getUserPermissions(guild: string, channel: string, user: string): number {
+    const GuildStore = $GuildCacheStore.getState();
+    const ChannelStore = $ChannelCacheStore.getState();
+    const MemberStore = $MemberCacheStore.getState();
+    const RolesStore = $RoleCacheStore.getState();
+
+    let result = 0;
     
+    [ ...(GuildStore[guild].roles || []) ].map((roleId) => {
+      const permissions = RolesStore[roleId]?.permissions;
+      result &= ~permissions.deny;
+      result |= permissions.allow;
+    });
+
+    result &= ~(ChannelStore[channel]?.permission_overwrites?.deny || 0);
+    result |= ChannelStore[channel]?.permission_overwrites?.allow || 0;
+
+    result &= ~(MemberStore[user]?.permissions?.deny || 0);
+    result |= ~(MemberStore[user]?.permissions?.allow || 0);
+    
+    return result;
   }
 }
 
