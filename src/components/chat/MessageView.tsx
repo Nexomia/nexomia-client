@@ -42,20 +42,22 @@ function MessageView({ channel, onMessagesLoaded }: MessageViewProps) {
           <Dots />
         </CenteredContainer>
       ) : (
-        MessageStore[channel] && MessageStore[channel].length && (
-          MessageStore[channel].map((message) => {
-            const rendered =  (
-              <MessageRenderer
-                id={ message }
-                key={ message }
-                grouped={ MessageCacheStore[prevMessage]?.author === MessageCacheStore[message]?.author }
-              />
-            );
+        (
+          MessageStore[channel] && (MessageStore[channel].length && MessageStore[channel].length !== 0) && (
+            MessageStore[channel].map((message) => {
+              const rendered =  (
+                <MessageRenderer
+                  id={ message }
+                  key={ message }
+                  grouped={ MessageCacheStore[prevMessage]?.author === MessageCacheStore[message]?.author }
+                />
+              );
 
-            prevMessage = message;
-            return rendered;
-          })
-        )
+              prevMessage = message;
+              return rendered;
+            })
+          )
+        ) || ''
       ) }
     </Fragment>
   )
