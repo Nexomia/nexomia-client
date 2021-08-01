@@ -15,10 +15,11 @@ import GuildsService from '../../services/api/guilds/guilds.service';
 import Message from '../../store/models/Message';
 
 interface MessageViewProps {
-  channel: string
+  channel: string,
+  onMessagesLoaded: any
 }
 
-function MessageView({ channel }: MessageViewProps) {
+function MessageView({ channel, onMessagesLoaded }: MessageViewProps) {
   const [loading, setLoading] = useState(false);
   const MessageStore = useStore($MessageStore);
   const MessageCacheStore = useStore($MessageCacheStore);
@@ -65,6 +66,7 @@ function MessageView({ channel }: MessageViewProps) {
     cacheMessages(response);
     setChannelMessages({ channel, messages: response.map((message: Message) => message.id) });
     setLoading(false);
+    onMessagesLoaded();
   }
 }
 

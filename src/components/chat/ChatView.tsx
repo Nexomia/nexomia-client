@@ -1,5 +1,5 @@
 import { styled } from 'linaria/react';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 
 import ChatInput from './ChatInput';
 import MessageView from './MessageView';
@@ -41,13 +41,17 @@ interface ChatViewProps {
 }
 
 function ChatView({ channel }: ChatViewProps) {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => scrollView(), [channel]);
+
   return (
     <Fragment>
       <MessageContainerWrapper>
         <MessageContainer>
-          <ScrollableContent>
+          <ScrollableContent ref={ scrollerRef }>
             <MessageWrapper>
-              <MessageView channel={ channel } />
+              <MessageView channel={ channel } onMessagesLoaded={ scrollView } />
             </MessageWrapper>
           </ScrollableContent>
         </MessageContainer>
@@ -55,6 +59,10 @@ function ChatView({ channel }: ChatViewProps) {
       <ChatInput channel={ channel } />
     </Fragment>
   )
+
+  function scrollView() {
+    scrollerRef.current?.scrollTo({ top: scrollerRef.current.scrollHeight, behavior: 'auto' });
+  }
 }
 
 export default ChatView;

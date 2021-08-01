@@ -13,6 +13,7 @@ const Base = styled.div`
   border-radius: 4px;
   padding: 8px 8px;
   box-shadow: 0px 5px 15px 0 rgba(0, 0, 0, 0.2);
+  z-index: 10;
 `
 
 function ContextMenu() {

@@ -26,6 +26,7 @@ import '../styles/App.css';
 
 import Guilds from '../components/layout/Guilds';
 import Sidebar from '../components/layout/Sidebar';
+import MemberSidebar from '../components/layout/MemberSidebar';
 import Content from '../components/layout/Content';
 import LoadingPlaceholder from '../components/ui/LoadingPlaceholder';
 import Modals from '../components/layout/Modals';
@@ -70,7 +71,7 @@ function App() {
           <Guilds />
           <Sidebar />
           <Content />
-          <Sidebar type="members" />
+          <MemberSidebar />
         </Route>
 
         <Route path={`/channels/:guildId`}>
@@ -78,7 +79,6 @@ function App() {
           <Guilds />
           <Sidebar />
           <Content />
-          <Sidebar type="members" />
         </Route>
 
         <Route path={`/:path/:guildId/:channelId`}>
