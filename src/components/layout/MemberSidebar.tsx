@@ -40,6 +40,14 @@ function MemberSidebar() {
       { GuildStore[guildId]?.roles && GuildStore[guildId].roles?.map((role: string) => {
         if (!RoleCacheStore[role].hoist) return null;
 
+        const onlineMembers = GuildStore[guildId].members?.map((memberId) => (
+          UserCacheStore[memberId].presence !== 4 &&
+          RoleCacheStore[role].members.includes(memberId) &&
+          !renderedUsers.includes(memberId)
+        ))
+        console.log(onlineMembers);
+        if (!onlineMembers?.includes(true)) return null;
+
         return (
           <Fragment>
             <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px;` }>{ RoleCacheStore[role].name !== 'everyone' ? RoleCacheStore[role].name : 'Online' }</StyledText>
