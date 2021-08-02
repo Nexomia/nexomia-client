@@ -8,7 +8,6 @@ import { addMessage } from '../../store/MessageStore';
 import { cacheMessages } from '../../store/MessageCacheStore';
 
 import StyledIconCss from '../css/StyledIconCss';
-import Dots from '../animations/Dots';
 
 import MessagesService from '../../services/api/messages/messages.service';
 

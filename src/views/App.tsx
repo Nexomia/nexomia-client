@@ -1,9 +1,7 @@
 import {
   Switch,
   Route,
-  useRouteMatch,
-  useHistory,
-  useParams
+  useHistory
 } from 'react-router-dom';
 
 import { useState, useEffect } from 'react';
@@ -40,7 +38,6 @@ function App() {
 
   const { token } = useStore($AuthStore);
 
-  const match = useRouteMatch();
   const history = useHistory();
 
   const [loaded, setLoaded] = useState(false);

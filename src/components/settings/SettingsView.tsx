@@ -12,12 +12,11 @@ const Wrapper = styled.div`
 `
 
 interface RouteParams {
-  guildId: string,
   channelId: string
 }
 
 function SettingsView() {
-  const { guildId, channelId } = useParams<RouteParams>();
+  const { channelId } = useParams<RouteParams>();
 
   return (
     <CenteredContainer>

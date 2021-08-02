@@ -8,10 +8,7 @@ import { useStore } from 'effector-react';
 import $MessageStore, { setChannelMessages } from '../../store/MessageStore';
 import $ChannelCacheStore from '../../store/ChannelCacheStore';
 import $MessageCacheStore, { cacheMessages } from '../../store/MessageCacheStore';
-import { cacheUsers } from '../../store/UserCacheStore';
-import { cacheMembers } from '../../store/MemberCacheStore';
 import MessagesService from '../../services/api/messages/messages.service';
-import GuildsService from '../../services/api/guilds/guilds.service';
 import Message from '../../store/models/Message';
 
 interface MessageViewProps {

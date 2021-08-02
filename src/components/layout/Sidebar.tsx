@@ -2,10 +2,8 @@ import { styled } from 'linaria/react';
 import { css } from 'linaria';
 import { Fragment, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import classNames from 'classnames';
 
 import { useStore } from 'effector-react';
-import $GuildStore from '../../store/GuildStore';
 import $GuildCacheStore, { setGuildRoles, setGuildMembers } from '../../store/GuildCacheStore';
 import $ChannelStore, { setGuildChannels } from '../../store/ChannelStore';
 import $ChannelCacheStore, { cacheChannels } from '../../store/ChannelCacheStore';
@@ -17,7 +15,6 @@ import { ComputedPermissions } from '../../store/models/ComputedPermissions';
 
 import { BiHash } from 'react-icons/bi';
 import {
-  RiVolumeDownFill,
   RiMessage3Fill,
   RiUserFill
 } from 'react-icons/ri';
@@ -82,7 +79,6 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
   const guilds = useStore($GuildCacheStore);
   const channels = useStore<GuildChannels>($ChannelStore);
   const channelsCache = useStore<ChannelsCache>($ChannelCacheStore);
-  const guildsCache = useStore($GuildCacheStore);
   const user = useStore($UserStore);
 
   const history = useHistory();

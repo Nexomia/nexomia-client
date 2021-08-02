@@ -1,6 +1,5 @@
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
-import { RiArrowRightSLine } from 'react-icons/ri';
 import StyledIconCss from '../../css/StyledIconCss';
 import StyledText from '../../ui/StyledText';
 
@@ -30,20 +29,6 @@ const Splitter = styled.div`
   flex-grow: 1;
 `
 
-const DefaultIconCss = css`
-  padding: 2px 4px;
-  border-radius: 2px;
-  background: var(--accent);
-  margin: 0;
-  font-size: 14px;
-`
-
-const IconCss = css`
-  width: 20px;
-  height: 20px;
-  margin-left: 16px;
-`
-
 const Selector = styled.div`
   width: 28px;
   height: 28px;
@@ -62,6 +47,18 @@ const Selector = styled.div`
 
   &.active {
     background: var(--accent);
+  }
+`
+
+const GreenActiveCss = css`
+  &.active {
+    background: var(--accent-green);
+  }
+`
+
+const RedActiveCss = css`
+  &.active {
+    background: var(--text-negative);
   }
 `
 
@@ -86,11 +83,11 @@ function Permission({ name, description, active = 1, inherit, onEnablePerm, onDi
         <StyledText className={ css`margin: 0; font-size: 14px` }>{ description }</StyledText>
       </div>
       <Splitter />
-      <Selector className={ classNames({ [LeftIconCss]: true, active: active === 0 || (!inherit && active === 1) }) } onClick={ onDisablePerm }>
+      <Selector className={ classNames({ [LeftIconCss]: true, active: active === 0 || (!inherit && active === 1), [RedActiveCss]: true }) } onClick={ onDisablePerm }>
         <RiCloseFill className={ StyledIconCss } />
       </Selector>
       { inherit && (<Selector className={ classNames({ active: active === 1 }) } onClick={ onInheritPerm } />) }
-      <Selector className={ classNames({ [RightIconCss]: true, active: active === 2 }) } onClick={ onEnablePerm }>
+      <Selector className={ classNames({ [RightIconCss]: true, active: active === 2, [GreenActiveCss]: true }) } onClick={ onEnablePerm }>
         <RiCheckFill className={ StyledIconCss } />
       </Selector>
     </Container>

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { css } from 'linaria';
 import { ComputedPermissions } from '../../../store/models/ComputedPermissions';
 import PermissionOverwrites from '../../../store/models/PermissionOverwrites';
@@ -16,6 +16,7 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
 
   return (
     <Fragment>
+      <FilledButton onClick={ clearPermissions } className={ css`margin: 0 0 8px 0` }>Clear all permissions</FilledButton>
       <Permission 
         name='Administrator'
         description='Enables all permissions and bypasses channel restrictions.'
@@ -168,6 +169,12 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
 
   function inheritPermission(compare: number) {
     const editedPermissions = { allow: permissions?.allow & ~compare, deny: permissions?.deny & ~compare };
+    setPermissions(editedPermissions);
+    onChange(editedPermissions);
+  }
+
+  function clearPermissions() {
+    const editedPermissions = { allow: 0, deny: 0 };
     setPermissions(editedPermissions);
     onChange(editedPermissions);
   }

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Role from '../../../store/models/Role';
 
 import CommonRequestManager from '../common';
 

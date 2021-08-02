@@ -10,11 +10,9 @@ import $GuildCacheStore from '../../../store/GuildCacheStore';
 import PermissionOverwrites from '../../../store/models/PermissionOverwrites';
 import $RoleCacheStore, { cacheRoles } from '../../../store/RolesCacheStore';
 import StyledIconCss from '../../css/StyledIconCss';
-import FilledButton from '../../ui/FilledButton';
 import InputField from '../../ui/InputField';
 import LoadingPlaceholder from '../../ui/LoadingPlaceholder';
 import StyledText from '../../ui/StyledText';
-import Permission from '../ui/Permission';
 import PermissionEditor from '../ui/PermissionEditor';
 import Role from '../ui/Role';
 

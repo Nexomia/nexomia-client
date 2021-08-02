@@ -2,8 +2,7 @@ import { css } from 'linaria';
 import classNames from 'classnames';
 import { useState, useRef, Fragment, useEffect } from 'react';
 
-import { useStore } from 'effector-react';
-import $ModalStore, { setModalState } from '../../store/ModalStore';
+import { setModalState } from '../../store/ModalStore';
 import { addGuild } from '../../store/GuildStore';
 import { cacheGuilds } from '../../store/GuildCacheStore';
 

@@ -6,9 +6,7 @@ import { styled } from 'linaria/react';
 import { useHistory } from 'react-router-dom';
 import $MessageCacheStore from '../../store/MessageCacheStore';
 import $UserCacheStore from '../../store/UserCacheStore';
-import $GuildCacheStore from '../../store/GuildCacheStore';
 import $ChannelCacheStore from '../../store/ChannelCacheStore';
-import { setModalState } from '../../store/ModalStore';
 import StyledText from '../ui/StyledText';
 import { setContextMenu } from '../../store/ContextMenuStore';
 import getMemberColor from '../../utils/getMemberColor';
@@ -63,7 +61,6 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
   const UserCache = useStore($UserCacheStore);
   const MessageCache = useStore($MessageCacheStore);
   const ChannelCache = useStore($ChannelCacheStore);
-  const GuildCache = useStore($GuildCacheStore);
 
   const history = useHistory();
 

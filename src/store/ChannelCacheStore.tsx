@@ -15,6 +15,7 @@ $ChannelCacheStore
     let modifiedState = { ...state };
     channels.map((channel) => {
       modifiedState = { ...modifiedState, [channel.id]: channel };
+      return null;
     });
     return modifiedState;
   })

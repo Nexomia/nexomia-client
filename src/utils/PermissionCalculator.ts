@@ -18,6 +18,7 @@ class PermissionCalculator {
         result &= ~permissions.deny;
         result |= permissions.allow;
       }
+      return null;
     });
 
     result &= ~(ChannelStore[channel]?.permission_overwrites?.deny || 0);

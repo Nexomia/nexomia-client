@@ -1,7 +1,6 @@
 import { createStore, createEvent } from 'effector-root';
 
 import Guild from './models/Guild';
-import Role from './models/Role';
 
 const cacheGuilds = createEvent<Guild[]>();
 const setGuildRoles = createEvent<GuildRolesInfo>();
@@ -28,6 +27,7 @@ $GuildCacheStore
     let modifiedState = { ...state };
     guilds.map((guild) => {
       modifiedState = { ...modifiedState, [guild.id]: guild };
+      return null;
     });
     return modifiedState;
   })

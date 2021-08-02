@@ -15,6 +15,7 @@ $MessageCacheStore
     let modifiedState = { ...state };
     messages.map((message) => {
       modifiedState = { ...modifiedState, [message.id]: message };
+      return null;
     });
     return modifiedState;
   })

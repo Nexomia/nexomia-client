@@ -1,7 +1,5 @@
 import { createStore, createEvent } from 'effector-root';
 
-import Message from './models/Message';
-
 const setChannelMessages = createEvent<ChannelMessagesInfo>();
 const addMessage = createEvent<ChannelMessageInfo>();
 

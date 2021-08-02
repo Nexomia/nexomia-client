@@ -15,6 +15,7 @@ $RoleCacheStore
     let modifiedState = { ...state };
     roles.map((role) => {
       modifiedState = { ...modifiedState, [role.id]: role };
+      return null;
     });
     return modifiedState;
   })

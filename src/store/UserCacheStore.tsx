@@ -15,6 +15,7 @@ $UserCacheStore
     let modifiedState = { ...state };
     users.map((user) => {
       modifiedState = { ...modifiedState, [user.id]: user };
+      return null;
     });
     return modifiedState;
   })

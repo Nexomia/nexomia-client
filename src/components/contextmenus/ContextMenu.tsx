@@ -1,5 +1,4 @@
 import { useStore } from 'effector-react';
-import { css } from 'linaria';
 import { styled } from 'linaria/react';
 import { Fragment } from 'react';
 import { useHistory } from 'react-router';

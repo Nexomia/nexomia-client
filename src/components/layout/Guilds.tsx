@@ -10,7 +10,7 @@ import {
 } from 'react-icons/ri'
 
 import { useStore } from 'effector-react';
-import $ModalStore, { setModalState } from '../../store/ModalStore';
+import { setModalState } from '../../store/ModalStore';
 import $GuildStore from '../../store/GuildStore';
 import $GuildCacheStore from '../../store/GuildCacheStore';
 import { setContextMenu } from '../../store/ContextMenuStore';
@@ -64,7 +64,6 @@ function Guilds() {
   const history = useHistory();
   const { guildId } = useParams<RouteParams>();
 
-  const modals = useStore($ModalStore);
   const guildList = useStore($GuildStore);
   const guilds = useStore($GuildCacheStore);
 

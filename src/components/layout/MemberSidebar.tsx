@@ -57,7 +57,7 @@ function MemberSidebar() {
                   !RoleCacheStore[role].members.includes(memberId) ||
                   renderedUsers.includes(memberId) ||
                   UserCacheStore[memberId].presence === 4
-                ) return;
+                ) return null;
                 renderedUsers.push(memberId);
     
                 return (
@@ -75,7 +75,7 @@ function MemberSidebar() {
         GuildStore[guildId]?.members && GuildStore[guildId].members?.map((memberId: string) => {
           if (
             renderedUsers.includes(memberId)
-          ) return;
+          ) return null;
           renderedUsers.push(memberId);
 
           return (

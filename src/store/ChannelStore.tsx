@@ -1,16 +1,10 @@
 import { createStore, createEvent } from 'effector-root';
-import Channel from './models/Channel';
 
 const setGuildChannels = createEvent<GuildChannelsInfo>();
 
 interface GuildChannelsInfo {
   guild: string,
   channels: string[]
-}
-
-interface GuildChannelPath {
-  guild: string,
-  channel: string
 }
 
 interface GuildChannels {

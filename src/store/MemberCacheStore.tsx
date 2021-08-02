@@ -15,6 +15,7 @@ $MemberCacheStore
     let modifiedState = { ...state };
     members.map((member) => {
       modifiedState = { ...modifiedState, [member.id + member.guild]: member };
+      return null;
     });
     return modifiedState;
   })
