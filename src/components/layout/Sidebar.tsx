@@ -79,6 +79,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
   const guilds = useStore($GuildCacheStore);
   const channels = useStore<GuildChannels>($ChannelStore);
   const channelsCache = useStore<ChannelsCache>($ChannelCacheStore);
+  const guildsCache = useStore($GuildCacheStore);
   const user = useStore($UserStore);
 
   const history = useHistory();
@@ -91,9 +92,10 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
     setLoading(false);
     if (type === 'channels') {
       if (!isTabGuild(guildId)) return;
-      setGuildChannelsValue(channels[guildId] || []);
+      const newGuildChannels = channels[guildId] || [];
+      setGuildChannelsValue(newGuildChannels);
       
-      if (!guildChannels.length && (!path || path === 'guildsettings')) {
+      if (!newGuildChannels.length && (!path || path === 'guildsettings')) {
         loadChannels();
       }
     }
@@ -168,7 +170,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
         </Fragment>
       ) }
 
-      { !path && isTabGuild(guildId) && type === 'channels' && (guildChannels.length && channelsCache[guildChannels[0]] ? (
+      { !path && isTabGuild(guildId) && type === 'channels' && (guildChannels && guildChannels.length && channelsCache[guildChannels[0]] ? (
         guildChannels.map((channel: string) => (
           (PermissionCalculator.getUserPermissions(guildId, channel, user.id) & ComputedPermissions.VIEW_CHANNEL) && (
             <Tab

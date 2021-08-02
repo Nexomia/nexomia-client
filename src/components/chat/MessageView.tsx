@@ -33,15 +33,7 @@ function MessageView({ channel, onMessagesLoaded }: MessageViewProps) {
       loadMessages();
       return;
     }
-  }, [channel]);
-
-  useEffect(() => {
-    if (!MessageStore[channel] || !MessageStore[channel].length) {
-      setLoading(true);
-      loadMessages();
-      return;
-    }
-  }, [CachedChannels]);
+  }, [channel, CachedChannels]);
 
   return (
     <Fragment>
