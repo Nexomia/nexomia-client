@@ -3,6 +3,7 @@ import { css } from 'linaria';
 import { styled } from 'linaria/react';
 import { useHistory } from 'react-router-dom';
 import $UserCacheStore from '../../store/UserCacheStore';
+import getMemberColor from '../../utils/getMemberColor';
 import StyledText from '../ui/StyledText';
 
 const Container = styled.div`
@@ -45,10 +46,10 @@ const Presence = styled.div`
 
 interface MemberProps {
   id: string,
-  color: string
+  guild?: string
 }
 
-function Member({ id, color }: MemberProps) {
+function Member({ id, guild }: MemberProps) {
   const UserCache = useStore($UserCacheStore);
   const history = useHistory();
 
@@ -56,7 +57,7 @@ function Member({ id, color }: MemberProps) {
     <Container onClick={ openProfile }>
       <Avatar src={ UserCache[id].avatar } />
       <div className={ css`display: flex; flex-direction: column; justify-content: center; width: 154px;` }>
-        <StyledText className={ css`margin: 0; font-size: 16px` } style={{ color }}>{ UserCache[id].username }</StyledText>
+        <StyledText className={ css`margin: 0; font-size: 16px` } style={{ color: getMemberColor(guild || '', id) }}>{ UserCache[id].username }</StyledText>
         { (UserCache[id].status && UserCache[id].presence !== 4) && <StyledText className={ css`margin: 0; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;` }>
           { UserCache[id].status }
         </StyledText> }

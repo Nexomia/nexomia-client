@@ -50,6 +50,7 @@ function MessageView({ channel, onMessagesLoaded }: MessageViewProps) {
                   id={ message }
                   key={ message }
                   grouped={ MessageCacheStore[prevMessage]?.author === MessageCacheStore[message]?.author }
+                  channel={ channel }
                 />
               );
 

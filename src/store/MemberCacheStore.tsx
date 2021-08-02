@@ -14,7 +14,7 @@ $MemberCacheStore
   .on(cacheMembers, (state: MemberCache, members: GuildMember[]) => {
     let modifiedState = { ...state };
     members.map((member) => {
-      modifiedState = { ...modifiedState, [member.id]: member };
+      modifiedState = { ...modifiedState, [member.id + member.guild]: member };
     });
     return modifiedState;
   })

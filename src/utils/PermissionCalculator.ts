@@ -13,16 +13,18 @@ class PermissionCalculator {
     let result = 0;
     
     [ ...(GuildStore[guild].roles || []) ].map((roleId) => {
-      const permissions = RolesStore[roleId]?.permissions;
-      result &= ~permissions.deny;
-      result |= permissions.allow;
+      if (RolesStore[roleId].members.includes(user)) {
+        const permissions = RolesStore[roleId]?.permissions;
+        result &= ~permissions.deny;
+        result |= permissions.allow;
+      }
     });
 
     result &= ~(ChannelStore[channel]?.permission_overwrites?.deny || 0);
     result |= ChannelStore[channel]?.permission_overwrites?.allow || 0;
 
-    result &= ~(MemberStore[user]?.permissions?.deny || 0);
-    result |= ~(MemberStore[user]?.permissions?.allow || 0);
+    result &= ~(MemberStore[user + guild]?.permissions?.deny || 0);
+    result |= ~(MemberStore[user + guild]?.permissions?.allow || 0);
     
     return result;
   }

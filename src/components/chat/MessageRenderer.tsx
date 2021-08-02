@@ -6,9 +6,12 @@ import { styled } from 'linaria/react';
 import { useHistory } from 'react-router-dom';
 import $MessageCacheStore from '../../store/MessageCacheStore';
 import $UserCacheStore from '../../store/UserCacheStore';
+import $GuildCacheStore from '../../store/GuildCacheStore';
+import $ChannelCacheStore from '../../store/ChannelCacheStore';
 import { setModalState } from '../../store/ModalStore';
 import StyledText from '../ui/StyledText';
 import { setContextMenu } from '../../store/ContextMenuStore';
+import getMemberColor from '../../utils/getMemberColor';
 
 const Container = styled.div`
   margin-top: 8px;
@@ -52,12 +55,15 @@ const ContentContainer = styled.div`
 
 interface MessageProps {
   id: string,
-  grouped: boolean
+  grouped: boolean,
+  channel: string
 }
 
-function MessageRenderer({ id, grouped }: MessageProps) {
+function MessageRenderer({ id, grouped, channel }: MessageProps) {
   const UserCache = useStore($UserCacheStore);
   const MessageCache = useStore($MessageCacheStore);
+  const ChannelCache = useStore($ChannelCacheStore);
+  const GuildCache = useStore($GuildCacheStore);
 
   const history = useHistory();
 
@@ -72,7 +78,8 @@ function MessageRenderer({ id, grouped }: MessageProps) {
         { !grouped && (
           <StyledText className={ css`margin: 0` }>
             <div
-              className={ css`display: inline-block; cursor: pointer; &:hover { text-decoration: underline }` } 
+              className={ css`display: inline-block; cursor: pointer; &:hover { text-decoration: underline }` }
+              style={{ color: getMemberColor(ChannelCache[channel].guild_id || '', MessageCache[id].author) }}
               onClick={ showUserProfile }
             >{ UserCache[MessageCache[id].author].username }</div>
             <StyledText className={ css`margin: 0 0 0 8px; color: var(--text-secondary); display: inline-block; font-size: 12px` }>

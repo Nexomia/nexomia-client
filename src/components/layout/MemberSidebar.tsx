@@ -62,7 +62,7 @@ function MemberSidebar() {
     
                 return (
                   memberId && (PermissionCalculator.getUserPermissions(guildId, channelId, memberId) & ComputedPermissions.VIEW_CHANNEL) && (
-                    <Member id={ memberId } color={ RoleCacheStore[role].color || 'var(--text-primary)' } />
+                    <Member id={ memberId } key={ memberId } guild={ guildId } />
                   )
                 )
               })
@@ -80,7 +80,7 @@ function MemberSidebar() {
 
           return (
             memberId && (PermissionCalculator.getUserPermissions(guildId, channelId, memberId) & ComputedPermissions.VIEW_CHANNEL) && (
-              <Member id={ memberId } color={ 'var(--text-primary)' } />
+              <Member id={ memberId } key={ memberId } guild={ guildId } />
             )
           )
         })
