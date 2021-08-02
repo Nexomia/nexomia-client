@@ -17,6 +17,7 @@ const Layer = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  z-index: 100;
   transition: .4s;
   
   &.inactive {
