@@ -28,12 +28,20 @@ function MessageView({ channel, onMessagesLoaded }: MessageViewProps) {
   let prevMessage = '';
 
   useEffect(() => {
-    if (!MessageStore[channel] || !MessageStore[channel].length) {
+    if ((!MessageStore[channel] || !MessageStore[channel].length) && CachedChannels[channel]) {
       setLoading(true);
       loadMessages();
       return;
     }
   }, [channel]);
+
+  useEffect(() => {
+    if (!MessageStore[channel] || !MessageStore[channel].length) {
+      setLoading(true);
+      loadMessages();
+      return;
+    }
+  }, [CachedChannels]);
 
   return (
     <Fragment>
@@ -64,7 +72,7 @@ function MessageView({ channel, onMessagesLoaded }: MessageViewProps) {
 
   async function loadMessages() {
     const response = await MessagesService.getChannelMessages(channel);
-    if (!response) return setLoading(false);
+    if (!response) return;
     cacheMessages(response);
     setChannelMessages({ channel, messages: response.map((message: Message) => message.id) });
     setLoading(false);

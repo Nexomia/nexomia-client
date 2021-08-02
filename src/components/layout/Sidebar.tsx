@@ -2,6 +2,7 @@ import { styled } from 'linaria/react';
 import { css } from 'linaria';
 import { Fragment, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import classNames from 'classnames';
 
 import { useStore } from 'effector-react';
 import $GuildStore from '../../store/GuildStore';
@@ -11,7 +12,8 @@ import $ChannelCacheStore, { cacheChannels } from '../../store/ChannelCacheStore
 import { cacheUsers } from '../../store/UserCacheStore';
 import { cacheMembers } from '../../store/MemberCacheStore';
 import { cacheRoles } from '../../store/RolesCacheStore';
-import Tab from '../sidebar/Tab';
+import PermissionCalculator from '../../utils/PermissionCalculator';
+import { ComputedPermissions } from '../../store/models/ComputedPermissions';
 
 import { BiHash } from 'react-icons/bi';
 import {
@@ -27,11 +29,13 @@ import StyledText from '../ui/StyledText';
 import CenteredContainer from './CenteredContainer';
 import ChannelsService from '../../services/api/channels/channels.service';
 import Dots from '../animations/Dots';
-import classNames from 'classnames';
 import isTabGuild from '../../utils/isTabGuild';
 import GuildsService from '../../services/api/guilds/guilds.service';
 import RolesService from '../../services/api/roles/roles.service';
 import Role from '../../store/models/Role';
+import Tab from '../sidebar/Tab';
+import $UserStore from '../../store/UserStore';
+
 
 const SidebarContainer = styled.div`
   display: flex;
@@ -75,6 +79,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
   const guilds = useStore($GuildCacheStore);
   const channels = useStore<GuildChannels>($ChannelStore);
   const channelsCache = useStore<ChannelsCache>($ChannelCacheStore);
+  const user = useStore($UserStore);
 
   const history = useHistory();
 
@@ -165,13 +170,15 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
 
       { !path && isTabGuild(guildId) && type === 'channels' && (guildChannels.length && channelsCache[guildChannels[0]] ? (
         guildChannels.map((channel: string) => (
-          <Tab
-            Icon={ BiHash }
-            title={ channelsCache[channel]?.name || '' }
-            tabId={ channelsCache[channel]?.id }
-            key={ channelsCache[channel]?.id }
-            onClick={ () => { history.push(`/channels/${guildId}/${channel}`) } }
-          />
+          (PermissionCalculator.getUserPermissions(guildId, channel, user.id) & ComputedPermissions.VIEW_CHANNEL) && (
+            <Tab
+              Icon={ BiHash }
+              title={ channelsCache[channel]?.name || '' }
+              tabId={ channelsCache[channel]?.id }
+              key={ channelsCache[channel]?.id }
+              onClick={ () => { history.push(`/channels/${guildId}/${channel}`) } }
+            />
+          )
         ))
       ) : loading ? (
         <CenteredContainer>
