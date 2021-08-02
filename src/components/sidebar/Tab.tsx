@@ -38,6 +38,9 @@ const TextCss = css`
   margin-top: 1px;
   margin-left: 4px;
   font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `
 
 interface TabProps {

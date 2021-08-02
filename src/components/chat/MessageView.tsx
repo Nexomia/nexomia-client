@@ -28,8 +28,8 @@ function MessageView({ channel, onMessagesLoaded }: MessageViewProps) {
   let prevMessage = '';
 
   useEffect(() => {
+    if (!MessageStore[channel] || !MessageStore[channel].length) setLoading(true);
     if ((!MessageStore[channel] || !MessageStore[channel].length) && CachedChannels[channel]) {
-      setLoading(true);
       loadMessages();
       return;
     }

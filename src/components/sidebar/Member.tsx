@@ -10,8 +10,10 @@ const Container = styled.div`
   padding: 6px 8px;
   border-radius: 4px;
   display: flex;
-  alignSelf: stretch;
+  height: 46px;
   flex-direction: row;
+  flex-grow: 0;
+  align-items: center;
   cursor: pointer;
   transition: .2s;
   &:hover {
@@ -35,20 +37,31 @@ const Avatar = styled.img`
   }
 `
 
+const Presence = styled.div`
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+`
+
 interface MemberProps {
-  id: string
+  id: string,
+  color: string
 }
 
-function Member({ id }: MemberProps) {
+function Member({ id, color }: MemberProps) {
   const UserCache = useStore($UserCacheStore);
   const history = useHistory();
 
   return (
     <Container onClick={ openProfile }>
       <Avatar src={ UserCache[id].avatar } />
-      <div className={ css`display: flex; flex-direction: column; justify-content: center;` }>
-        <StyledText className={ css`margin: 0` }>{ UserCache[id].username }</StyledText>
+      <div className={ css`display: flex; flex-direction: column; justify-content: center; width: 154px;` }>
+        <StyledText className={ css`margin: 0; font-size: 16px` } style={{ color }}>{ UserCache[id].username }</StyledText>
+        { (UserCache[id].status && UserCache[id].presence !== 4) && <StyledText className={ css`margin: 0; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;` }>
+          { UserCache[id].status }
+        </StyledText> }
       </div>
+      <Presence style={{ background: ['var(--accent-green)', 'var(--accent-yellow)', 'var(--text-negative)'][(UserCache[id].presence || 3) - 1] }} />
     </Container>
   )
 

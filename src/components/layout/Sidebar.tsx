@@ -54,6 +54,9 @@ const Content = styled.div`
   font-size: 18px;
   padding: 0 16px;
   user-select: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `
 
 interface RouteParams {
