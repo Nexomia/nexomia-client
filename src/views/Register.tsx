@@ -42,7 +42,7 @@ function Register() {
 
   const [registerLoading, setRegisterLoading] = useState(false);
   const [registerState, setRegisterState] = useState(0);
-  const [placeholderText, setPlaceholderText] = useState(0);
+  const [placeholderText] = useState(0);
   const [emailError, setEmailError] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);

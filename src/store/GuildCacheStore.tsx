@@ -33,7 +33,7 @@ $GuildCacheStore
   })
   .on(setGuildRoles, (state: GuildCache, info: GuildRolesInfo) => {
     const modifiedState = { ...state };
-    modifiedState[info.guild].roles = info.roles.reverse();
+    modifiedState[info.guild].roles = info.roles;
     return modifiedState;
   })
   .on(setGuildMembers, (state: GuildCache, info: GuildMembersInfo) => {

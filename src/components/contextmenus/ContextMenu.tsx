@@ -25,7 +25,7 @@ function ContextMenu() {
         <Base style={{ top, left }}>
           { type === 'guild' && (
             <Fragment>
-              <ContextTab title='Settings' onClick={ () => history.push(`/guildsettings/${id}`) } />
+              <ContextTab title='Settings' onClick={ () => history.push(`/guildsettings/${id}/general`) } />
               <ContextTab title='Leave Server' />
               <ContextTab title='Copy ID' />
             </Fragment>

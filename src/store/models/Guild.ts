@@ -110,7 +110,7 @@ export default interface Guild {
   /**
    * Channels in the guild
    */
-  channels?: string[];
+  channels: string[];
 
   /**
    * All active threads in the guild that current user has permission to view

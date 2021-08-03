@@ -58,7 +58,8 @@ const Content = styled.div`
 
 interface RouteParams {
   path: string,
-  guildId: string
+  guildId: string,
+  channelId: string
 }
 
 interface SidebarProps {
@@ -74,7 +75,7 @@ interface ChannelsCache {
 }
 
 function Sidebar({ type = 'channels' }: SidebarProps) {
-  const { path, guildId } = useParams<RouteParams>();
+  const { path, guildId, channelId } = useParams<RouteParams>();
 
   const guilds = useStore($GuildCacheStore);
   const channels = useStore<GuildChannels>($ChannelStore);
@@ -205,7 +206,8 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       return { ...member, guild: guildId };
     }));
     cacheRoles(rolesResponse);
-    setGuildRoles({ guild: guildId, roles: rolesResponse.map((role: Role) => role.id) });
+    setGuildRoles({ guild: guildId, roles: rolesResponse.sort((a: Role, b: Role) => (a.position || 0) - (b.position || 0)).map((role: Role) => role.id) });
+    console.log(rolesResponse.sort((a: Role, b: Role) => (a.position || 0) - (b.position || 0)))
     cacheChannels(response);
     setGuildChannels({ guild: guildId, channels: response.map((channel: Channel) => channel.id) });
     setGuildChannelsValue(response.map((channel: Channel) => channel.id));

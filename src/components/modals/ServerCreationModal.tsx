@@ -102,7 +102,8 @@ function ServerCreationModal({ active }: ServerCreationModalProps) {
     cacheGuilds([{
       id,
       name,
-      icon: response.icon || ''
+      icon: response.icon || '',
+      channels: []
     }]);
     addGuild(id);
 
@@ -126,7 +127,8 @@ function ServerCreationModal({ active }: ServerCreationModalProps) {
     cacheGuilds([{
       id,
       name,
-      icon: response.icon || ''
+      icon: response.icon || '',
+      channels: []
     }]);
     addGuild(id);
 
