@@ -1,28 +1,11 @@
 .App, .Login {
   width: 100vw;
   height: 100vh;
-  font-family: 'Inter', sans-serif;
   display: flex;
   flex-shrink: 0;
   flex-grow: 0;
   flex-direction: row;
   background: var(--background-secondary);
-}
-
-.dark-theme {
-  --background-light: #4c5360;
-  --background-primary-alt: #404754;
-  --background-primary: #373d49;
-  --background-secondary-alt: #333844;
-  --background-secondary: #2c313d;
-  --accent: #7794ce;
-  --accent-green: #52c96c;
-  --accent-yellow: #dcdd6e;
-  --accent-alt: #6d87bc;
-  --accent-dark: #4e5f82;
-  --text-primary: #dadfea;
-  --text-secondary: #68707f;
-  --text-negative: #ff3d70;
 }
 
 ::-webkit-scrollbar {

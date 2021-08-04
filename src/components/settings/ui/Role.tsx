@@ -52,12 +52,13 @@ interface RoleProps {
   color: string,
   defaultRole: boolean,
   onClick?: any,
-  active?: boolean
+  active?: boolean,
+  ref?: any
 }
 
-function Role({ name, color, defaultRole, onClick, active = false }: RoleProps) {
+function Role({ name, color, defaultRole, onClick, active = false, ref }: RoleProps) {
   return (
-    <Container onClick={ onClick } className={ classNames({ active }) }>
+    <Container onClick={ onClick } className={ classNames({ active }) } ref={ ref }>
       <ColorDot style={{ background: color }} />
       <StyledText className={ css`margin: 0; font-weight: 900` }>{ name }</StyledText>
       <Splitter />

@@ -24,6 +24,7 @@
     "react-dom": "^17.0.1",
     "react-i18next": "^11.11.3",
     "react-icons": "^4.2.0",
+    "react-movable": "^2.5.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
     "snarkdown": "^2.0.0",

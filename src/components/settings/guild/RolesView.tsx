@@ -2,11 +2,12 @@ import classNames from 'classnames';
 import { useStore } from 'effector-react';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
-import { ChangeEvent, Fragment, useState } from 'react';
-import { RiArrowLeftLine } from 'react-icons/ri';
+import { ChangeEvent, Fragment, useEffect, useState } from 'react';
+import { RiArrowLeftLine, RiArrowRightSLine } from 'react-icons/ri';
 import { useParams } from 'react-router-dom';
+import { List, arrayMove } from 'react-movable';
 import RolesService from '../../../services/api/roles/roles.service';
-import $GuildCacheStore from '../../../store/GuildCacheStore';
+import $GuildCacheStore, { setGuildRoles } from '../../../store/GuildCacheStore';
 import PermissionOverwrites from '../../../store/models/PermissionOverwrites';
 import $RoleCacheStore, { cacheRoles } from '../../../store/RolesCacheStore';
 import StyledIconCss from '../../css/StyledIconCss';
@@ -15,6 +16,8 @@ import LoadingPlaceholder from '../../ui/LoadingPlaceholder';
 import StyledText from '../../ui/StyledText';
 import PermissionEditor from '../ui/PermissionEditor';
 import Role from '../ui/Role';
+import PermissionCalculator from '../../../utils/PermissionCalculator';
+import { ComputedPermissions } from '../../../store/models/ComputedPermissions';
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -36,6 +39,47 @@ const IconCss = css`
   margin-right: 14px;
 `
 
+const ColorDot = styled.div`
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-right: 16px;
+`
+
+const Container = styled.div`
+  padding: 16px;
+  border-radius: 4px;
+  background: var(--background-secondary-alt);
+  margin-bottom: 4px;
+  display: flex;
+  flex-grow: 1;
+  flex-direction: row;
+  align-items: center;
+
+  &:hover {
+    cursor: pointer;
+    background: var(--background-secondary);
+  }
+`
+
+const Splitter = styled.div`
+  flex-grow: 1;
+`
+
+const DefaultIconCss = css`
+  padding: 2px 4px;
+  border-radius: 2px;
+  background: var(--accent);
+  margin: 0;
+  font-size: 14px;
+`
+
+const RoleIconCss = css`
+  width: 20px;
+  height: 20px;
+  margin-left: 16px;
+`
+
 interface RouteParams {
   guildId: string
 }
@@ -44,6 +88,24 @@ function RolesView() {
   const { guildId } = useParams<RouteParams>();
   const GuildsCache = useStore($GuildCacheStore);
   const RolesCache = useStore($RoleCacheStore);
+
+  const [roleList, setRoleList] = useState<string[]>([]);
+  
+  useEffect(() => {
+    setRoleList([ ...(GuildsCache[guildId]?.roles || []) ]);
+    setCanMove(
+      !!(
+        PermissionCalculator.getUserPermissions(guildId, '', '')
+        & (ComputedPermissions.MANAGE_ROLES | ComputedPermissions.ADMINISTRATOR)
+      )
+    );
+  }, []);
+
+  useEffect(() => {
+    setGuildRoles({ guild: guildId, roles: roleList });
+  }, [roleList]);
+
+  const [canMove, setCanMove] = useState(false);
 
   const [roleSelected, setRoleSelected] = useState('');
   const [editedPermissions, setEditedPermissions] = useState<PermissionOverwrites>({ allow: 0, deny: 0 });
@@ -63,14 +125,35 @@ function RolesView() {
             <br />Role permissions are calculated from lowest (default) to highest role.
           </StyledText>
           { 
-            GuildsCache[guildId]?.roles?.map((role) => (
-              <Role
-                name={ RolesCache[role].name }
-                color={ RolesCache[role].color || 'var(--background-light)' }
-                defaultRole={ RolesCache[role].default === true }
-                onClick={ () => selectRole(role) }
-              /> 
-            ))
+            <List
+              lockVertically
+              values={ roleList }
+              onChange={ 
+                ({ oldIndex, newIndex }) => {
+                  const updatedRoleList = arrayMove(roleList, oldIndex, newIndex);
+                  updateRolePosition(newIndex, updatedRoleList);
+                  setRoleList(updatedRoleList);
+                }
+              }
+              renderList={ ({ children, props }) => <div { ...props }>{ children }</div> }
+              renderItem={ ({ value, props }) =>
+                <Container { ...props } onClick={ () => selectRole(value) }>
+                  <ColorDot
+                    style={{ background: RolesCache[value].color || 'var(--text-primary)' }}
+                  >
+                    <div data-movable-handle style={{ 
+                      width: canMove && !RolesCache[value].default ? '100%' : '0px',
+                      height: canMove && !RolesCache[value].default ? '100%' : '0px',
+                      cursor: 'grab'
+                    }} />
+                  </ColorDot>
+                  <StyledText className={ css`margin: 0; font-weight: 900` }>{ RolesCache[value].name }</StyledText>
+                  <Splitter />
+                  { RolesCache[value].default && (<StyledText className={ DefaultIconCss }>DEFAULT</StyledText>) }
+                  <RiArrowRightSLine className={ classNames({ [StyledIconCss]: true, [RoleIconCss]: true }) } />
+                </Container>
+              }
+            />
           }
         </Fragment>
       ) : (
@@ -153,6 +236,10 @@ function RolesView() {
 
     setPermissionsWasEdited(false);
     setRoleSelected('');
+  }
+
+  async function updateRolePosition(index: number, updatedRoleList: string[]) {
+    await RolesService.patchRole(guildId, updatedRoleList[index], { position: index + 1 });
   }
 }
 
