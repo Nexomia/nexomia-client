@@ -6,6 +6,7 @@ import CustomMessageEvent from './models/CustomMessageEvent';
 
 import MesssageEventHandler from './events/Messages';
 import UserEventHandler from './events/Users';
+import RoleEventHandler from './events/Roles';
 
 class SocketManager {
   public socket: WebSocket | null = null;
@@ -59,6 +60,10 @@ class SocketManager {
       case 'user.disconnected':
         UserEventHandler.userDisconnected(event);
         break
+
+      case 'guild.role_patched':
+        RoleEventHandler.rolePatched(event);
+        break;
     }
   }
 }

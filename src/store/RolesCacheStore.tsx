@@ -3,6 +3,12 @@ import { createStore, createEvent } from 'effector-root';
 import Role from './models/Role';
 
 const cacheRoles = createEvent<Role[]>();
+const updateRole = createEvent<RoleUpdateInfo>();
+
+interface RoleUpdateInfo {
+  role: string,
+  patch: any
+}
 
 interface RoleCache {
   [key: string]: Role
@@ -19,6 +25,11 @@ $RoleCacheStore
     });
     return modifiedState;
   })
+  .on(updateRole, (state: RoleCache, info: RoleUpdateInfo) => {
+    let modifiedState = { ...state };
+    modifiedState = { ...modifiedState, [info.role]: { ...modifiedState[info.role], ...info.patch } };
+    return modifiedState;
+  })
 
 export default $RoleCacheStore;
-export { cacheRoles };
+export { cacheRoles, updateRole };

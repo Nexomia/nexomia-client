@@ -9,7 +9,7 @@ import { List, arrayMove } from 'react-movable';
 import RolesService from '../../../services/api/roles/roles.service';
 import $GuildCacheStore, { setGuildRoles } from '../../../store/GuildCacheStore';
 import PermissionOverwrites from '../../../store/models/PermissionOverwrites';
-import $RoleCacheStore, { cacheRoles } from '../../../store/RolesCacheStore';
+import $RoleCacheStore, { cacheRoles, updateRole } from '../../../store/RolesCacheStore';
 import StyledIconCss from '../../css/StyledIconCss';
 import InputField from '../../ui/InputField';
 import LoadingPlaceholder from '../../ui/LoadingPlaceholder';
@@ -102,8 +102,8 @@ function RolesView() {
   }, []);
 
   useEffect(() => {
-    setGuildRoles({ guild: guildId, roles: roleList });
-  }, [roleList]);
+    setRoleList([ ...(GuildsCache[guildId]?.roles || []) ]);
+  }, [GuildsCache]);
 
   const [canMove, setCanMove] = useState(false);
 
@@ -239,6 +239,7 @@ function RolesView() {
   }
 
   async function updateRolePosition(index: number, updatedRoleList: string[]) {
+    setGuildRoles({ guild: guildId, roles: updatedRoleList });
     await RolesService.patchRole(guildId, updatedRoleList[index], { position: index + 1 });
   }
 }

@@ -207,7 +207,6 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
     }));
     cacheRoles(rolesResponse);
     setGuildRoles({ guild: guildId, roles: rolesResponse.sort((a: Role, b: Role) => (a.position || 0) - (b.position || 0)).map((role: Role) => role.id) });
-    console.log(rolesResponse.sort((a: Role, b: Role) => (a.position || 0) - (b.position || 0)))
     cacheChannels(response);
     setGuildChannels({ guild: guildId, channels: response.map((channel: Channel) => channel.id) });
     setGuildChannelsValue(response.map((channel: Channel) => channel.id));
