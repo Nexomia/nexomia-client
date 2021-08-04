@@ -87,4 +87,6 @@ export default interface User {
    * 4 - offline
    */
   presence?: 1 | 2 | 3 | 4;
+
+  connected: boolean
 }

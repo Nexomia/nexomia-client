@@ -1,5 +1,7 @@
+import { useStore } from 'effector-react';
 import { styled } from 'linaria/react';
 import { Fragment, useEffect, useRef } from 'react';
+import $MessageStore from '../../store/MessageStore';
 
 import ChatInput from './ChatInput';
 import MessageView from './MessageView';
@@ -42,8 +44,9 @@ interface ChatViewProps {
 
 function ChatView({ channel }: ChatViewProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const Messages = useStore($MessageStore);
 
-  useEffect(() => scrollView(), [channel]);
+  useEffect(() => scrollView(), [channel, Messages[channel]]);
 
   return (
     <Fragment>

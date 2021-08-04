@@ -18,6 +18,8 @@ import UsersService from '../services/api/users/users.service';
 import GuildsService from '../services/api/guilds/guilds.service';
 import CommonRequestManager from '../services/api/common';
 
+import SocketManager from '../services/socket/SocketManager';
+
 import '../i18n/config';
 
 import '../styles/App.css';
@@ -104,6 +106,7 @@ function App() {
 
   async function preloadUserInfo() {
     CommonRequestManager.setToken(token);
+    SocketManager.setToken(token);
     const userInfo = await UsersService.getUser('@me');
     if (!userInfo) {
       setToken('');
@@ -117,7 +120,9 @@ function App() {
     setGuilds(guilds.map((guild: Guild) => guild.id));
     cacheGuilds(guilds);
 
-    setLoaded(true);
+    SocketManager.init();
+
+    SocketManager.onLoad = () => setLoaded(true);
   }
 
   function closeContextMenu() {

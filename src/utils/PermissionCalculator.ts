@@ -13,7 +13,7 @@ class PermissionCalculator {
     let result = 0;
     
     [ ...(GuildStore[guild].roles?.reverse() || []) ].map((roleId) => {
-      if (RolesStore[roleId].members.includes(user)) {
+      if (RolesStore[roleId]?.members?.includes(user)) {
         const permissions = RolesStore[roleId]?.permissions;
         result &= ~permissions.deny;
         result |= permissions.allow;

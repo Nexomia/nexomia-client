@@ -27,6 +27,42 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onInheritPerm={ () => inheritPermission(ComputedPermissions.ADMINISTRATOR) }
       />
       <Permission
+        name='Manage Guild'
+        description='Ability to edit general guild settings.'
+        active={ getPermissionState(ComputedPermissions.MANAGE_GUILD) }
+        inherit={ inherit }
+        onEnablePerm={ () => enablePermission(ComputedPermissions.MANAGE_GUILD) }
+        onDisablePerm={ () => disablePermission(ComputedPermissions.MANAGE_GUILD) }
+        onInheritPerm={ () => inheritPermission(ComputedPermissions.MANAGE_GUILD) }
+      />
+      <Permission
+        name='Manage Roles'
+        description='Ability to edit roles.'
+        active={ getPermissionState(ComputedPermissions.MANAGE_ROLES) }
+        inherit={ inherit }
+        onEnablePerm={ () => enablePermission(ComputedPermissions.MANAGE_ROLES) }
+        onDisablePerm={ () => disablePermission(ComputedPermissions.MANAGE_ROLES) }
+        onInheritPerm={ () => inheritPermission(ComputedPermissions.MANAGE_ROLES) }
+      />
+      <Permission
+        name='Manage Messages'
+        description='Ability to delete and pin messages.'
+        active={ getPermissionState(ComputedPermissions.MANAGE_MESSAGES) }
+        inherit={ inherit }
+        onEnablePerm={ () => enablePermission(ComputedPermissions.MANAGE_MESSAGES) }
+        onDisablePerm={ () => disablePermission(ComputedPermissions.MANAGE_MESSAGES) }
+        onInheritPerm={ () => inheritPermission(ComputedPermissions.MANAGE_MESSAGES) }
+      />
+      <Permission
+        name='Manage Emojis'
+        description='Ability to create and delete emojis.'
+        active={ getPermissionState(ComputedPermissions.MANAGE_EMOJIS) }
+        inherit={ inherit }
+        onEnablePerm={ () => enablePermission(ComputedPermissions.MANAGE_EMOJIS) }
+        onDisablePerm={ () => disablePermission(ComputedPermissions.MANAGE_EMOJIS) }
+        onInheritPerm={ () => inheritPermission(ComputedPermissions.MANAGE_EMOJIS) }
+      />
+      <Permission
         name='View Channels'
         description='Ability to view channels.'
         active={ getPermissionState(ComputedPermissions.VIEW_CHANNEL) }

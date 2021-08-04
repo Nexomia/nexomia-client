@@ -3,9 +3,15 @@ import { createStore, createEvent } from 'effector-root';
 import User from './models/User';
 
 const cacheUsers = createEvent<User[]>();
+const modifyUser = createEvent<UserModificationInfo>();
 
 interface UserCache {
   [key: string]: User
+}
+
+interface UserModificationInfo {
+  user: string,
+  patch: any
 }
 
 const $UserCacheStore = createStore<UserCache>({});
@@ -19,6 +25,14 @@ $UserCacheStore
     });
     return modifiedState;
   })
+  .on(modifyUser, (state: UserCache, info: UserModificationInfo) => {
+    let modifiedState = { ...state };
+    modifiedState[info.user] = {
+      ...modifiedState[info.user],
+      ...info.patch
+    }
+    return modifiedState;
+  })
 
 export default $UserCacheStore;
-export { cacheUsers };
+export { cacheUsers, modifyUser };

@@ -43,20 +43,21 @@ function MemberSidebar() {
         const onlineMembers = GuildStore[guildId].members?.map((memberId) => (
           UserCacheStore[memberId].presence !== 4 &&
           RoleCacheStore[role].members.includes(memberId) &&
-          !renderedUsers.includes(memberId)
-        ))
-        console.log(onlineMembers);
+          !renderedUsers.includes(memberId) &&
+          UserCacheStore[memberId].connected
+        ));
         if (!onlineMembers?.includes(true)) return null;
 
         return (
-          <Fragment>
-            <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px;` }>{ RoleCacheStore[role].name !== 'everyone' ? RoleCacheStore[role].name : 'Online' }</StyledText>
+          <Fragment key={ role }>
+            <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` } key={ role }>{ RoleCacheStore[role].name !== 'everyone' ? RoleCacheStore[role].name : 'Online' }</StyledText>
             {
               GuildStore[guildId].members?.map((memberId: string) => {
                 if (
                   !RoleCacheStore[role].members.includes(memberId) ||
                   renderedUsers.includes(memberId) ||
-                  UserCacheStore[memberId].presence === 4
+                  UserCacheStore[memberId].presence === 4 ||
+                  !UserCacheStore[memberId].connected
                 ) return null;
                 renderedUsers.push(memberId);
     
@@ -70,7 +71,7 @@ function MemberSidebar() {
           </Fragment>
         )
       }) }
-      <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px;` }>Offline</StyledText>
+      <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` }>Offline</StyledText>
       {
         GuildStore[guildId]?.members && GuildStore[guildId].members?.map((memberId: string) => {
           if (
@@ -85,6 +86,7 @@ function MemberSidebar() {
           )
         })
       }
+      { (renderedUsers = []) && null }
     </SidebarContainer>
   )
 }

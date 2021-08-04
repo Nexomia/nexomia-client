@@ -1,6 +1,6 @@
 export default interface Attachment {
   /**
-   * Attachment id
+   * Attachment id 
    */
   id: string;
 

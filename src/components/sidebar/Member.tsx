@@ -58,11 +58,11 @@ function Member({ id, guild }: MemberProps) {
       <Avatar src={ UserCache[id].avatar } />
       <div className={ css`display: flex; flex-direction: column; justify-content: center; width: 154px;` }>
         <StyledText className={ css`margin: 0; font-size: 16px` } style={{ color: getMemberColor(guild || '', id) }}>{ UserCache[id].username }</StyledText>
-        { (UserCache[id].status && UserCache[id].presence !== 4) && <StyledText className={ css`margin: 0; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;` }>
+        { (UserCache[id].status && UserCache[id].presence !== 4 && UserCache[id].connected) && <StyledText className={ css`margin: 0; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;` }>
           { UserCache[id].status }
         </StyledText> }
       </div>
-      <Presence style={{ background: ['var(--accent-green)', 'var(--accent-yellow)', 'var(--text-negative)'][(UserCache[id].presence || 3) - 1] }} />
+      { UserCache[id].connected && <Presence style={{ background: ['var(--accent-green)', 'var(--accent-yellow)', 'var(--text-negative)'][(UserCache[id].presence || 3) - 1] }} /> }
     </Container>
   )
 
