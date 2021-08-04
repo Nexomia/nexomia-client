@@ -228,7 +228,7 @@ function RolesView() {
       });
 
       if (response) {
-        cacheRoles([response]);
+        updateRole({ role: roleSelected, patch: response });
       }
 
       setSaveLoading(false);
