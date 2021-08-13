@@ -32,4 +32,4 @@ jobs:
         run: CI=false yarn build
         
       - name: Move Built Project
-        run: mv "./build/*" "/root/projects/web/nexomia_client"
+        run: mv ./build/* "/root/projects/web/nexomia_client"
