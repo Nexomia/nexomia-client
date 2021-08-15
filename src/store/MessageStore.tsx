@@ -1,6 +1,7 @@
 import { createStore, createEvent } from 'effector-root';
 
 const setChannelMessages = createEvent<ChannelMessagesInfo>();
+const appendChannelMessages = createEvent<ChannelMessagesInfo>();
 const addMessage = createEvent<ChannelMessageInfo>();
 
 interface ChannelMessagesInfo {
@@ -21,6 +22,7 @@ const $MessageStore = createStore<ChannelMessages>({});
 
 $MessageStore
   .on(setChannelMessages, (state: ChannelMessages, info: ChannelMessagesInfo) => ({ ...state, [info.channel]: info.messages }))
+  .on(appendChannelMessages, (state: ChannelMessages, info: ChannelMessagesInfo) => ({ ...state, [info.channel]: [ ...info.messages, ...state[info.channel] ] }))
   .on(addMessage, (state: ChannelMessages, info: ChannelMessageInfo) => (
     {
       ...state,
@@ -29,4 +31,4 @@ $MessageStore
   ));
 
 export default $MessageStore;
-export { setChannelMessages, addMessage };
+export { setChannelMessages, appendChannelMessages, addMessage };

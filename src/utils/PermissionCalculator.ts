@@ -13,6 +13,10 @@ class PermissionCalculator {
     const UserStore = $UserStore.getState();
 
     let result = 0;
+
+    if (GuildStore[guild]?.owner_id === (user || UserStore.id)) {
+      return 1048575;
+    }
     
     [ ...(GuildStore[guild]?.roles || []) ]?.reverse().map((roleId) => {
       if (RolesStore[roleId]?.members?.includes(user || UserStore.id)) {
@@ -30,6 +34,14 @@ class PermissionCalculator {
 
     result &= ~(MemberStore[(user || UserStore.id) + guild]?.permissions?.deny || 0);
     result |= (MemberStore[(user || UserStore.id) + guild]?.permissions?.allow || 0);
+
+    if (result & 1) {
+      return 1048575;
+    }
+
+    if (result & 2) {
+      return 1048574;
+    }
     
     return result;
   }

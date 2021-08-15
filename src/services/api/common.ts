@@ -3,13 +3,15 @@ import axios, { Method, AxiosResponse, AxiosError } from 'axios';
 import config from '../../config';
 import $AuthStore, { setToken, setRefreshToken } from '../../store/AuthStore';
 
+import getUrlEncodedString from '../../utils/getUrlEncodedString';
+
 class CommonRequestManager {
   private token = '';
 
   apiRequest(method: Method, path: string, data: object): Promise<AxiosResponse> | any {
     return axios.request({
       method,
-      url: config.api.endpoint + path,
+      url: config.api.endpoint + path + (method === 'GET' ? `?${getUrlEncodedString(data)}` : ''),
       data,
       headers: {
         authorization: this.token

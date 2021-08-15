@@ -3,6 +3,8 @@ import { styled } from 'linaria/react';
 import { Fragment } from 'react';
 import { useHistory } from 'react-router';
 import $ContextMenuStore from '../../store/ContextMenuStore';
+import { ComputedPermissions } from '../../store/models/ComputedPermissions';
+import PermissionCalculator from '../../utils/PermissionCalculator';
 import ContextTab from './ContextTab';
 
 
@@ -25,7 +27,12 @@ function ContextMenu() {
         <Base style={{ top, left }}>
           { type === 'guild' && (
             <Fragment>
-              <ContextTab title='Settings' onClick={ () => history.push(`/guildsettings/${id}/general`) } />
+              { (
+                PermissionCalculator.getUserPermissions(id || '', '', '')
+                & ComputedPermissions.MANAGE_GUILD
+              ) ? (
+                <ContextTab title='Settings' onClick={ () => history.push(`/guildsettings/${id}/general`) } />
+              ) : null }
               <ContextTab title='Leave Server' />
               <ContextTab title='Copy ID' />
             </Fragment>
