@@ -12,6 +12,17 @@ import { setContextMenu } from '../../store/ContextMenuStore';
 import getMemberColor from '../../utils/getMemberColor';
 import getIconString from '../../utils/getIconString';
 
+const Spacer = styled.div`
+  width: 72px;
+  flex-shrink: 0;
+  color: transparent;
+  text-align: center;
+  user-select: none;
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 600;
+`
+
 const Container = styled.div`
   margin-top: 8px;
   margin-bottom: -1px;
@@ -21,6 +32,10 @@ const Container = styled.div`
 
   &:hover {
     background: var(--background-secondary-alt);
+  }
+
+  &:hover > ${Spacer} {
+    color: var(--text-secondary);
   }
 `
 
@@ -51,11 +66,6 @@ const AvatarCss = `
 const Avatar = styled.img`${AvatarCss}`
 const LetterAvatar = styled.div`${AvatarCss}`
 
-const Spacer = styled.div`
-  width: 72px;
-  flex-shrink: 0;
-`
-
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -84,7 +94,7 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
           <LetterAvatar onClick={ showUserProfile }>{ getIconString(UserCache[MessageCache[id].author].username || '') }</LetterAvatar>
         )
       ) : (
-        <Spacer />
+        <Spacer>{ format(new Date(MessageCache[id].created), 'HH:mm') }</Spacer>
       ) }
       <ContentContainer>
         { !grouped && (
