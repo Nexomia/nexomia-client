@@ -6,6 +6,7 @@ import { Fragment } from 'react';
 import { RiShieldCheckFill, RiCodeSSlashFill } from 'react-icons/ri';
 import markdown from 'snarkdown';
 import $UserCacheStore from '../../store/UserCacheStore';
+import getIconString from '../../utils/getIconString';
 import StyledIconCss from '../css/StyledIconCss';
 import CenteredContainer from '../layout/CenteredContainer';
 import StyledText from '../ui/StyledText';
@@ -25,7 +26,7 @@ const Banner = styled.div`
   background-position: center;
 `
 
-const Avatar = styled.img`
+const AvatarCss = `
   width: 128px;
   height: 128px;
   border-radius: 50%;
@@ -33,7 +34,17 @@ const Avatar = styled.img`
   user-select: none;
   border: solid 8px var(--background-primary);
   background: var(--background-primary);
+  line-height: 110px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--background-light);
+  flex-shrink: 0;
+  font-size: 48px;
 `
+
+const Avatar = styled.img`${AvatarCss}`
+const LetterAvatar = styled.div`${AvatarCss}`
 
 const DarkText = styled.div`
   color: var(--text-secondary);
@@ -75,7 +86,11 @@ function ProfileView({ user }: ProfileViewProps) {
             <Banner className={ css`background: var(--accent-dark)` } />
           ) }
           <CenteredContainer className={ css`flex-direction: column; margin: 0 16px` }>
-            <Avatar src={ UserCache[user].avatar } />
+            { UserCache[user].avatar ? (
+              <Avatar src={ UserCache[user].avatar } />
+            ) : (
+              <LetterAvatar>{ getIconString(UserCache[user].username || '') }</LetterAvatar>
+            ) }
             <StyledText className={ css`font-size: 28px; font-weight: 900` }>
               { UserCache[user].username }
               <DarkText className={ css`display: inline-block` }>#{ UserCache[user].discriminator }</DarkText>

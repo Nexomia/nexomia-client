@@ -19,6 +19,7 @@ import UserMenu from '../guilds/UserMenu';
 import PanelButton from '../guilds/PanelButton';
 import StyledText from '../ui/StyledText';
 import PanelIconCss from '../css/PanelIconCss';
+import getIconString from '../../utils/getIconString';
 
 const GuildsContainer = styled.div`
   display: flex;
@@ -85,15 +86,7 @@ function Guilds() {
               (
                 <StyledText className={ GuildLetters }>
                   {
-                    guilds[guildListId]?.name && (
-                      guilds[guildListId].name.split(' ')[1]
-                      ? guilds[guildListId].name.split(' ')[0][0] + guilds[guildListId].name.split(' ')[1][0]
-                      : guilds[guildListId].name.split(' ')[0][0] + (
-                        guilds[guildListId].name.split(' ')[0][1]
-                        ? guilds[guildListId].name.split(' ')[0][1]
-                        : ''
-                      )
-                    )
+                    guilds[guildListId]?.name && getIconString(guilds[guildListId].name)
                   }
                 </StyledText>
               )

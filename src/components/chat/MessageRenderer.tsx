@@ -10,6 +10,7 @@ import $ChannelCacheStore from '../../store/ChannelCacheStore';
 import StyledText from '../ui/StyledText';
 import { setContextMenu } from '../../store/ContextMenuStore';
 import getMemberColor from '../../utils/getMemberColor';
+import getIconString from '../../utils/getIconString';
 
 const Container = styled.div`
   margin-top: 8px;
@@ -27,7 +28,7 @@ const GroupedContainerCss = css`
   margin: 0;
 `
 
-const Avatar = styled.img`
+const AvatarCss = `
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -38,7 +39,17 @@ const Avatar = styled.img`
   &:active {
     transform: translateY(2px);
   }
+  line-height: 40px;
+  height: 40px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--background-light);
+  flex-shrink: 0;
 `
+
+const Avatar = styled.img`${AvatarCss}`
+const LetterAvatar = styled.div`${AvatarCss}`
 
 const Spacer = styled.div`
   width: 72px;
@@ -67,7 +78,11 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
   return (
     <Container className={ classNames({ [GroupedContainerCss]: grouped }) } onContextMenu={ openContextMenu } >
       { !grouped ? (
-        <Avatar src={ UserCache[MessageCache[id].author].avatar } onClick={ showUserProfile }></Avatar>
+        UserCache[MessageCache[id].author].avatar ? (
+          <Avatar src={ UserCache[MessageCache[id].author].avatar } onClick={ showUserProfile } className={ css`background: transparent` }></Avatar>
+        ) : (
+          <LetterAvatar onClick={ showUserProfile }>{ getIconString(UserCache[MessageCache[id].author].username || '') }</LetterAvatar>
+        )
       ) : (
         <Spacer />
       ) }

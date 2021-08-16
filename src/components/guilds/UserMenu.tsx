@@ -19,6 +19,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import PanelButton from './PanelButton';
 import PanelIconCss from '../css/PanelIconCss';
 import classNames from 'classnames';
+import getIconString from '../../utils/getIconString';
 
 const Container = styled.div`
   flex-shrink: 0;
@@ -44,6 +45,19 @@ const AvatarImg = styled.img`
   height: 100%;
 `
 
+const AvatarLetters = styled.div`
+  width: 100%;
+  line-height: 48px;
+  font-size: 18px;
+  height: 100%;
+  text-align: center;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--background-light);
+  flex-shrink: 0;
+  user-select: none;
+`
+
 interface RouteParams {
   path: string,
   guildId: string
@@ -60,7 +74,11 @@ function UserMenu() {
   return (
     <Container className={ classNames({ active: containerOpened }) }>
       <PanelButton className={ classNames({ active: containerOpened }) } onClick={ () => setContainerOpened(!containerOpened) }>
-        <AvatarImg src={ user.avatar } />
+        { user.avatar ? (
+          <AvatarImg src={ user.avatar } />
+        ) : (
+          <AvatarLetters>{ getIconString(user.username) }</AvatarLetters>
+        ) }
       </PanelButton>
       <PanelButton onClick={ () => history.push('/home') } className={ classNames({ active: path === 'home' }) }>
         <RiHomeFill className={ PanelIconCss } />
