@@ -4,7 +4,7 @@ import { styled } from 'linaria/react';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import $ChannelCacheStore from '../../store/ChannelCacheStore';
 import { cacheMessages } from '../../store/MessageCacheStore';
-import $MessageStore, { appendChannelMessages } from '../../store/MessageStore';
+import $MessageStore, { appendChannelMessages, clearLoadedMesssages } from '../../store/MessageStore';
 import { ComputedPermissions } from '../../store/models/ComputedPermissions';
 import $RoleCacheStore from '../../store/RolesCacheStore';
 import PermissionCalculator from '../../utils/PermissionCalculator';
@@ -109,10 +109,16 @@ function ChatView({ channel }: ChatViewProps) {
     ) {
       setLoading(true);
       const response = await MessagesService.getChannelMessages(channel, Messages[channel].length);
-      if (!response) return;
+      if (!response || !response.length) return;
       cacheMessages(response);
       appendChannelMessages({ channel, messages: response.map((message: Message) => message.id) });
       setOldHeight(scrollerRef?.current?.scrollHeight);
+    } else if (
+      scrollerRef?.current?.scrollTop &&
+      scrollerRef?.current?.scrollTop > scrollerRef?.current?.scrollHeight - 100 - window.innerHeight &&
+      Messages[channel].length > 50
+    ) {
+      clearLoadedMesssages(channel);
     }
   }
 }
