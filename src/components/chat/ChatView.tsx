@@ -59,12 +59,20 @@ function ChatView({ channel }: ChatViewProps) {
 
   const [inputVisible, setInputVisible] = useState(getSendPermission());
   const [loading, setLoading] = useState(false);
+  const [oldHeight, setOldHeight] = useState(0);
+  const [oldTop, setOldTop] = useState(0);
 
   useEffect(() => {
     setInputVisible(getSendPermission());
   }, [Roles]);
 
-  useEffect(() => scrollView(), [channel, Messages[channel]]);
+  useEffect(() => {
+    if (!loading) {
+      scrollView()
+    } else {
+      setLoading(false);
+    }
+  }, [channel, Messages[channel]]);
 
   return (
     <Fragment>
@@ -84,7 +92,9 @@ function ChatView({ channel }: ChatViewProps) {
   )
 
   function scrollView() {
-    scrollerRef.current?.scrollTo({ top: scrollerRef.current.scrollHeight, behavior: 'auto' });
+    if (!loading) {
+      scrollerRef.current?.scrollTo({ top: scrollerRef.current.scrollHeight, behavior: 'auto' });
+    }
   }
 
   function getSendPermission() {
@@ -102,7 +112,7 @@ function ChatView({ channel }: ChatViewProps) {
       if (!response) return;
       cacheMessages(response);
       appendChannelMessages({ channel, messages: response.map((message: Message) => message.id) });
-      setLoading(false);
+      setOldHeight(scrollerRef?.current?.scrollHeight);
     }
   }
 }
