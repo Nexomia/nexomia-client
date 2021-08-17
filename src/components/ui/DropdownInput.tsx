@@ -21,6 +21,7 @@ const Container = styled.div`
   outline: none;
   transition: .2s;
   cursor: pointer;
+  overflow: hidden;
 
   &.active {
     border: 2px solid var(--accent);
@@ -71,6 +72,7 @@ const Scrollable = styled.div`
   width: 100%;
   height: 256px;
   overflow-y: auto;
+  flex-shrink: 0;
 `
 
 const Text = styled.div`
