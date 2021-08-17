@@ -4,7 +4,7 @@ import { Fragment, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { useStore } from 'effector-react';
-import $GuildCacheStore, { setGuildRoles, setGuildMembers } from '../../store/GuildCacheStore';
+import $GuildCacheStore, { setGuildRoles, setGuildMembers, cacheGuilds } from '../../store/GuildCacheStore';
 import $ChannelStore, { setGuildChannels } from '../../store/ChannelStore';
 import $ChannelCacheStore, { cacheChannels } from '../../store/ChannelCacheStore';
 import { cacheUsers } from '../../store/UserCacheStore';
@@ -196,9 +196,11 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
     setLoading(true);
     const response = await ChannelsService.getGuildChannels(guildId);
     if (!response) return history.push('/home');
+    const guildResponse = await GuildsService.getFullGuild(guildId || '');
     const membersResponse = await GuildsService.getGuildMembers(guildId || '');
     const rolesResponse = await RolesService.getGuildRoles(guildId || '');
 
+    cacheGuilds([guildResponse]);
     cacheUsers([...membersResponse].map((member: any) => member.user));
     setGuildMembers({ guild: guildId, members: [...membersResponse].map((member: any) => member.id) });
     cacheMembers([...membersResponse].map((member: any) => {

@@ -151,4 +151,6 @@ export default interface Guild {
    * True if this guild is designated as NSFW
    */
   nsfw?: boolean;
+
+  default_channel?: string
 }

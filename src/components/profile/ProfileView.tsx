@@ -36,7 +36,7 @@ const AvatarCss = `
   background: var(--background-primary);
   line-height: 110px;
   text-align: center;
-  font-weight: 600;
+  font-weight: 900;
   color: var(--text-primary);
   background: var(--background-light);
   flex-shrink: 0;

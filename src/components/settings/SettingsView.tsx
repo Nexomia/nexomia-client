@@ -1,6 +1,7 @@
 import { styled } from 'linaria/lib/react';
 import { useParams } from 'react-router-dom';
 import CenteredContainer from '../layout/CenteredContainer';
+import GeneralView from './guild/GeneralView';
 import RolesView from './guild/RolesView';
 
 const Wrapper = styled.div`
@@ -21,6 +22,10 @@ function SettingsView() {
   return (
     <CenteredContainer>
       <Wrapper>
+        { channelId === 'general' && (
+          <GeneralView />
+        ) }
+
         { channelId === 'roles' && (
           <RolesView />
         ) }
