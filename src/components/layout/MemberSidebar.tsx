@@ -73,18 +73,20 @@ function MemberSidebar() {
       }) }
       <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` }>Offline</StyledText>
       {
-        GuildStore[guildId]?.members && GuildStore[guildId].members?.map((memberId: string) => {
-          if (
-            renderedUsers.includes(memberId)
-          ) return null;
-          renderedUsers.push(memberId);
+        (
+          GuildStore[guildId]?.members && GuildStore[guildId].members?.map((memberId: string) => {
+            if (
+              renderedUsers.includes(memberId)
+            ) return null;
+            renderedUsers.push(memberId);
 
-          return (
-            memberId && (PermissionCalculator.getUserPermissions(guildId, channelId, memberId) & ComputedPermissions.VIEW_CHANNEL) && (
-              <Member id={ memberId } key={ memberId } guild={ guildId } />
+            return (
+              memberId && (PermissionCalculator.getUserPermissions(guildId, channelId, memberId) & ComputedPermissions.VIEW_CHANNEL) && (
+                <Member id={ memberId } key={ memberId } guild={ guildId } />
+              )
             )
-          )
-        })
+          })
+        ) || null
       }
       { (renderedUsers = []) && null }
     </SidebarContainer>

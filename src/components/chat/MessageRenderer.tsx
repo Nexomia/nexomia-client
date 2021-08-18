@@ -11,8 +11,12 @@ import StyledText from '../ui/StyledText';
 import { setContextMenu } from '../../store/ContextMenuStore';
 import getMemberColor from '../../utils/getMemberColor';
 import getIconString from '../../utils/getIconString';
+import { RiArrowRightLine } from 'react-icons/ri';
+import StyledIconCss from '../css/StyledIconCss';
 
 const Spacer = styled.div`
+  display: flex;
+  justify-content: center;
   width: 72px;
   flex-shrink: 0;
   color: transparent;
@@ -63,6 +67,15 @@ const AvatarCss = `
   flex-shrink: 0;
 `
 
+const MessageIconCss = css`
+  width: 24px;
+  height: 24px;
+`
+
+const JoinColorCss = css`
+  color: var(--accent-green);
+`
+
 const Avatar = styled.img`${AvatarCss}`
 const LetterAvatar = styled.div`${AvatarCss}`
 
@@ -87,14 +100,18 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
 
   return (
     <Container className={ classNames({ [GroupedContainerCss]: grouped }) } onContextMenu={ openContextMenu } >
-      { !grouped ? (
+      { !grouped && !MessageCache[id].type ? (
         UserCache[MessageCache[id].author].avatar ? (
           <Avatar src={ UserCache[MessageCache[id].author].avatar } onClick={ showUserProfile } className={ css`background: transparent` }></Avatar>
         ) : (
           <LetterAvatar onClick={ showUserProfile }>{ getIconString(UserCache[MessageCache[id].author].username || '') }</LetterAvatar>
         )
-      ) : (
+      ) : !MessageCache[id].type ? (
         <Spacer>{ format(new Date(MessageCache[id].created), 'HH:mm') }</Spacer>
+      ) : (
+        <Spacer>
+          <RiArrowRightLine className={ classNames(StyledIconCss, MessageIconCss, JoinColorCss) } />
+        </Spacer>
       ) }
       <ContentContainer>
         { !grouped && (
@@ -103,7 +120,10 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
               className={ css`display: inline-block; cursor: pointer; &:hover { text-decoration: underline }` }
               style={{ color: getMemberColor(ChannelCache[channel].guild_id || '', MessageCache[id].author) }}
               onClick={ showUserProfile }
-            >{ UserCache[MessageCache[id].author].username }</div>
+            >
+              { UserCache[MessageCache[id].author].username }
+              <span className={ css`color: var(--text-primary)` }>{ MessageCache[id].type === 4 ? ' joined the server' : '' }</span>
+            </div>
             <StyledText className={ css`margin: 0 0 0 8px; color: var(--text-secondary); display: inline-block; font-size: 12px` }>
               { format(new Date(MessageCache[id].created), 'HH:mm') }
             </StyledText>

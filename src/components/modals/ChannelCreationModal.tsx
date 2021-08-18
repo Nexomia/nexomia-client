@@ -61,13 +61,13 @@ function ChannelCreationModal({ active }: ChannelCreationModalProps) {
   async function createChannel() {
     setLoading(true);
 
-    const response = await GuildsService.createGuildChannel(guildId, { name });
+    const response = await GuildsService.createGuildChannel(guildId, { name, type: 3 });
+    setLoading(false);
 
     if (!response) {
-      setError(true);
+      return setError(true);
     }
 
-    setLoading(false);
     setName('');
     if (inputRef.current)
       inputRef.current.value = '';

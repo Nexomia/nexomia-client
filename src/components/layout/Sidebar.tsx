@@ -191,13 +191,13 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             )
           ))),
           (
-            (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) &&
+            (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
             <Tab
               Icon={ RiAddFill }
               title={ 'New Channel' }
               tabId={ 'new' }
               onClick={ () => { setModalState({ channelCreation: true }) } }
-            />
+            /> : null
           )
         ]
       ) : loading ? (
@@ -205,7 +205,18 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
           <Dots />
         </CenteredContainer>
       ) : (
-        <StyledText className={ css`text-align: center` }>No channels</StyledText>
+        <Fragment>
+          <StyledText className={ css`text-align: center; margin-bottom: 16px` }>No channels</StyledText>
+          {
+            (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
+            <Tab
+              Icon={ RiAddFill }
+              title={ 'New Channel' }
+              tabId={ 'new' }
+              onClick={ () => { setModalState({ channelCreation: true }) } }
+            /> : null
+          }
+        </Fragment>
       )) }
     </SidebarContainer>
   );
