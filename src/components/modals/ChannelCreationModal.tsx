@@ -31,6 +31,7 @@ function ChannelCreationModal({ active }: ChannelCreationModalProps) {
   const { guildId } = useParams<RouteParams>();
 
   const layerRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
@@ -44,6 +45,7 @@ function ChannelCreationModal({ active }: ChannelCreationModalProps) {
         <InputField
           placeholder='Name'
           onChange={ (event) => { setName(event.target.value) } }
+          ref={ inputRef }
         />
         { (error && <StyledText className={ negativeColorCss }>Failed to create channel.</StyledText>) }
         <FilledButton onClick={ createChannel }>Create</FilledButton>
@@ -52,7 +54,7 @@ function ChannelCreationModal({ active }: ChannelCreationModalProps) {
   )
 
   function closeModal(event: any) {
-    if (event?.target !== layerRef?.current) return;
+    if (event.target !== layerRef.current) return;
     setModalState({ channelCreation: false });
   }
 
@@ -66,7 +68,10 @@ function ChannelCreationModal({ active }: ChannelCreationModalProps) {
     }
 
     setLoading(false);
-    closeModal({});
+    setName('');
+    if (inputRef.current)
+      inputRef.current.value = '';
+    setModalState({ channelCreation: false });
   }
 }
 

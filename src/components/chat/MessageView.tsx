@@ -51,8 +51,12 @@ function MessageView({ channel, onMessagesLoaded }: MessageViewProps) {
                 />
               );
 
-              prevMessage = message;
-              return rendered;
+              if (!MessageCacheStore[message].deleted) {
+                prevMessage = message;
+                return rendered;
+              } else {
+                return null;
+              }
             })
           )
         ) || ''

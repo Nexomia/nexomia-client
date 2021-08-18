@@ -2,7 +2,10 @@ import { useStore } from 'effector-react';
 import { styled } from 'linaria/react';
 import { Fragment } from 'react';
 import { useHistory } from 'react-router';
+import MessagesService from '../../services/api/messages/messages.service';
+import $ChannelCacheStore from '../../store/ChannelCacheStore';
 import $ContextMenuStore from '../../store/ContextMenuStore';
+import $MessageCacheStore from '../../store/MessageCacheStore';
 import { ComputedPermissions } from '../../store/models/ComputedPermissions';
 import PermissionCalculator from '../../utils/PermissionCalculator';
 import ContextTab from './ContextTab';
@@ -20,6 +23,8 @@ const Base = styled.div`
 function ContextMenu() {
   const { top, left, visible, type, id } = useStore($ContextMenuStore);
   const history = useHistory();
+  const MessageCache = useStore($MessageCacheStore);
+  const ChannelCache = useStore($ChannelCacheStore);
 
   return (
     <Fragment>
@@ -42,7 +47,16 @@ function ContextMenu() {
             <Fragment>
               <ContextTab title='Add Reaction' />
               <ContextTab title='Edit' />
-              <ContextTab title='Delete' />
+              { (
+                PermissionCalculator.getUserPermissions(
+                  ChannelCache[MessageCache[id || '']?.channel_id]?.guild_id || '',
+                  MessageCache[id || '']?.channel_id || '',
+                  ''
+                ) &
+                ComputedPermissions.MANAGE_MESSAGES
+              ) ? (
+                <ContextTab title='Delete' onClick={ deleteMessage } />
+              ) : null }
               <ContextTab title='Copy ID' />
             </Fragment>
           ) }
@@ -50,6 +64,10 @@ function ContextMenu() {
       ) }
     </Fragment>
   )
+
+  function deleteMessage() {
+    MessagesService.deleteMessage(MessageCache[id || '']?.channel_id || '', id || '');
+  }
 }
 
 export default ContextMenu;

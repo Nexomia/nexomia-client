@@ -3,7 +3,7 @@ import { createStore, createEvent } from 'effector-root';
 import Message from './models/Message';
 
 const cacheMessages = createEvent<Message[]>();
-
+const patchMessage = createEvent<any>();
 interface MessageCache {
   [key: string]: Message
 }
@@ -19,6 +19,10 @@ $MessageCacheStore
     });
     return modifiedState;
   })
+  .on(patchMessage, (state: MessageCache, patch: any) => ({
+    ...state,
+    [patch.id]: { ...state[patch.id], ...patch }
+  }))
 
 export default $MessageCacheStore;
-export { cacheMessages };
+export { cacheMessages, patchMessage };

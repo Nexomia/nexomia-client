@@ -54,6 +54,10 @@ class SocketManager {
         MesssageEventHandler.messageCreated(event);
         break;
 
+      case 'message.deleted':
+        MesssageEventHandler.messageDeleted(event);
+        break;
+
       case 'user.connected':
         UserEventHandler.userConnected(event);
         break

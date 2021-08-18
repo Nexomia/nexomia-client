@@ -1,7 +1,6 @@
-import $MessageCacheStore, { cacheMessages } from '../../../store/MessageCacheStore';
+import $MessageCacheStore, { cacheMessages, patchMessage } from '../../../store/MessageCacheStore';
 import $MessageStore, { addMessage } from '../../../store/MessageStore';
 import CustomMessageEvent from '../models/CustomMessageEvent';
-
 class MessageEventHandler {
   messageCreated(event: CustomMessageEvent) {
     const MessageCache = $MessageCacheStore.getState();
@@ -14,6 +13,10 @@ class MessageEventHandler {
 
     cacheMessages([event.info.data]);
     addMessage({ channel: event.info.data.channel_id, message: event.info.data.id });
+  }
+
+  messageDeleted(event: CustomMessageEvent) {
+    patchMessage({ id: event.info.data.id, deleted: true });
   }
 }
 
