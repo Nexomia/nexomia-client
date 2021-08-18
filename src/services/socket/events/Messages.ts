@@ -1,5 +1,5 @@
 import $MessageCacheStore, { cacheMessages, patchMessage } from '../../../store/MessageCacheStore';
-import $MessageStore, { addMessage } from '../../../store/MessageStore';
+import $MessageStore, { addMessage, deleteMessage } from '../../../store/MessageStore';
 import CustomMessageEvent from '../models/CustomMessageEvent';
 class MessageEventHandler {
   messageCreated(event: CustomMessageEvent) {
@@ -17,6 +17,7 @@ class MessageEventHandler {
 
   messageDeleted(event: CustomMessageEvent) {
     patchMessage({ id: event.info.data.id, deleted: true });
+    deleteMessage({ message: event.info.data.id, channel: event.info.data.channel_id });
   }
 }
 

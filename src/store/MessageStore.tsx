@@ -4,6 +4,7 @@ const setChannelMessages = createEvent<ChannelMessagesInfo>();
 const appendChannelMessages = createEvent<ChannelMessagesInfo>();
 const addMessage = createEvent<ChannelMessageInfo>();
 const clearLoadedMesssages = createEvent<string>();
+const deleteMessage = createEvent<ChannelMessageInfo>();
 
 interface ChannelMessagesInfo {
   channel: string,
@@ -35,7 +36,16 @@ $MessageStore
       ...state,
       [channel]: { ...state }[channel].slice(-50)
     }
-  ));
+  ))
+  .on(deleteMessage, (state: ChannelMessages, info: ChannelMessageInfo) => {
+    const modifiedChannel = { ...state }[info.channel];
+    modifiedChannel.splice(modifiedChannel.indexOf(info.message), 1);
+
+    return {
+      ...state,
+      [info.channel]: modifiedChannel
+    };
+  });
 
 export default $MessageStore;
-export { setChannelMessages, appendChannelMessages, addMessage, clearLoadedMesssages };
+export { setChannelMessages, appendChannelMessages, addMessage, deleteMessage, clearLoadedMesssages };
