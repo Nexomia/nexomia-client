@@ -9,6 +9,8 @@ import ChatView from '../chat/ChatView';
 import ProfileView from '../profile/ProfileView';
 import isTabGuild from '../../utils/isTabGuild';
 import SettingsView from '../settings/SettingsView';
+import { useStore } from 'effector-react';
+import $ChannelStore from '../../store/ChannelStore';
 
 const Container = styled.div`
   display: flex;
@@ -42,6 +44,7 @@ interface RouteParams {
 
 function Content() {
   const { path, guildId, channelId } = useParams<RouteParams>();
+  const Channels = useStore($ChannelStore);
 
   useEffect(() => console.log(path))
 
@@ -58,7 +61,9 @@ function Content() {
         ) }
 
         { !path && isTabGuild(guildId) && channelId && (
-          <ChatView channel={ channelId } />
+          Channels[guildId] ? (
+            <ChatView channel={ channelId } />
+          ) : null
         ) }
       </ContentBody>
     </Container>

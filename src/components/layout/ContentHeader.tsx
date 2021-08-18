@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { BiHash } from 'react-icons/bi';
 import {
   RiPushpinFill,
+  RiSearchLine,
   RiUserFill
 } from 'react-icons/ri';
 import classNames from 'classnames';
