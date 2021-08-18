@@ -81,9 +81,9 @@ function MemberSidebar() {
             renderedUsers.push(memberId);
 
             return (
-              memberId && (PermissionCalculator.getUserPermissions(guildId, channelId, memberId) & ComputedPermissions.VIEW_CHANNEL) && (
+              memberId && (PermissionCalculator.getUserPermissions(guildId, channelId, memberId) & ComputedPermissions.VIEW_CHANNEL) ? (
                 <Member id={ memberId } key={ memberId } guild={ guildId } />
-              )
+              ) : null
             )
           })
         ) || null

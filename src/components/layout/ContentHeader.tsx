@@ -1,10 +1,12 @@
 import { styled } from 'linaria/react';
 import { css } from 'linaria';
+import { Fragment } from 'react';
 
 import { useStore } from 'effector-react';
 import { useParams } from 'react-router-dom';
 import { BiHash } from 'react-icons/bi';
 import {
+  RiPushpinFill,
   RiUserFill
 } from 'react-icons/ri';
 import classNames from 'classnames';
@@ -12,6 +14,7 @@ import StyledIconCss from '../css/StyledIconCss';
 import $ChannelCacheStore from '../../store/ChannelCacheStore';
 import $UserCacheStore from '../../store/UserCacheStore';
 import isTabGuild from '../../utils/isTabGuild';
+import InputButton from '../chat/InputButton';
 
 const Header = styled.div`
   height: 48px;
@@ -37,6 +40,11 @@ const HeaderIconCss = css`
   margin-left: 8px;
 `
 
+const InputIconCss = css`
+  width: 24px;
+  height: 24px;
+`
+
 interface RouteParams {
   path: string,
   guildId: string,
@@ -59,7 +67,13 @@ function ContentHeader() {
       ) }
 
       { !path && isTabGuild(guildId) && channelId && (
-        <Content>{ channelsCache[channelId]?.name || '' }</Content>
+        <Fragment>
+          <Content>{ channelsCache[channelId]?.name || '' }</Content>
+          <div className={ css`flex-grow: 1` } />
+          <InputButton>
+            <RiPushpinFill className={ classNames(StyledIconCss, InputIconCss) } />
+          </InputButton>
+        </Fragment>
       ) }
 
       { path === 'profiles' && guildId !== 'people' && (

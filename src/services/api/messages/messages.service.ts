@@ -23,6 +23,16 @@ class MessagesService {
     return response.data;
   }
 
+  async pinMessage(channel: string, message: string) {
+    const response = await CommonRequestManager.apiRequest('PUT', `/channels/${channel}/pins/${message}`, {});
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
+
   async getChannelMessages(channel: string, offset: number = 0) {
     const response = await CommonRequestManager.apiRequest('GET', `/channels/${channel}/messages`, { offset });
 

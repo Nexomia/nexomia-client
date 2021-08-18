@@ -11,7 +11,7 @@ import StyledText from '../ui/StyledText';
 import { setContextMenu } from '../../store/ContextMenuStore';
 import getMemberColor from '../../utils/getMemberColor';
 import getIconString from '../../utils/getIconString';
-import { RiArrowRightLine } from 'react-icons/ri';
+import { RiArrowRightLine, RiPushpinFill } from 'react-icons/ri';
 import StyledIconCss from '../css/StyledIconCss';
 
 const Spacer = styled.div`
@@ -99,7 +99,7 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
   const history = useHistory();
 
   return (
-    <Container className={ classNames({ [GroupedContainerCss]: grouped }) } onContextMenu={ openContextMenu } >
+    <Container className={ classNames({ [GroupedContainerCss]: (grouped && !MessageCache[id].type) }) } onContextMenu={ openContextMenu } >
       { !grouped && !MessageCache[id].type ? (
         UserCache[MessageCache[id].author].avatar ? (
           <Avatar src={ UserCache[MessageCache[id].author].avatar } onClick={ showUserProfile } className={ css`background: transparent` }></Avatar>
@@ -110,11 +110,15 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
         <Spacer>{ format(new Date(MessageCache[id].created), 'HH:mm') }</Spacer>
       ) : (
         <Spacer>
-          <RiArrowRightLine className={ classNames(StyledIconCss, MessageIconCss, JoinColorCss) } />
+          { MessageCache[id].type === 4 ? (
+            <RiArrowRightLine className={ classNames(StyledIconCss, MessageIconCss, JoinColorCss) } />
+          ) : MessageCache[id].type === 3 ? (
+            <RiPushpinFill className={ classNames(StyledIconCss, MessageIconCss) } />
+          ) : null }
         </Spacer>
       ) }
       <ContentContainer>
-        { !grouped && (
+        { (!grouped || MessageCache[id].type) ? (
           <StyledText className={ css`margin: 0` }>
             <div
               className={ css`display: inline-block; cursor: pointer; &:hover { text-decoration: underline }` }
@@ -122,13 +126,16 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
               onClick={ showUserProfile }
             >
               { UserCache[MessageCache[id].author].username }
-              <span className={ css`color: var(--text-primary)` }>{ MessageCache[id].type === 4 ? ' joined the server' : '' }</span>
+              <span className={ css`color: var(--text-primary)` }>
+                { MessageCache[id].type === 4 ? ' joined the server' : '' }
+                { MessageCache[id].type === 3 ? ' pinned a message' : '' }
+              </span>
             </div>
             <StyledText className={ css`margin: 0 0 0 8px; color: var(--text-secondary); display: inline-block; font-size: 12px` }>
               { format(new Date(MessageCache[id].created), 'HH:mm') }
             </StyledText>
           </StyledText>
-        ) }
+        ) : null }
         <StyledText className={ css`margin: 0; padding-right: 16px; font-weight: 400; user-select: text; word-break: break-all` }>{ MessageCache[id].content }</StyledText>
       </ContentContainer>
     </Container>

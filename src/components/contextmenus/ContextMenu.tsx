@@ -7,6 +7,7 @@ import $ChannelCacheStore from '../../store/ChannelCacheStore';
 import $ContextMenuStore from '../../store/ContextMenuStore';
 import $MessageCacheStore from '../../store/MessageCacheStore';
 import { ComputedPermissions } from '../../store/models/ComputedPermissions';
+import $UserStore from '../../store/UserStore';
 import PermissionCalculator from '../../utils/PermissionCalculator';
 import ContextTab from './ContextTab';
 
@@ -25,6 +26,7 @@ function ContextMenu() {
   const history = useHistory();
   const MessageCache = useStore($MessageCacheStore);
   const ChannelCache = useStore($ChannelCacheStore);
+  const User = useStore($UserStore);
 
   return (
     <Fragment>
@@ -45,8 +47,34 @@ function ContextMenu() {
 
           { type === 'message' && (
             <Fragment>
-              <ContextTab title='Add Reaction' />
-              <ContextTab title='Edit' />
+              { (
+                PermissionCalculator.getUserPermissions(
+                  ChannelCache[MessageCache[id || '']?.channel_id]?.guild_id || '',
+                  MessageCache[id || '']?.channel_id || '',
+                  ''
+                ) &
+                ComputedPermissions.ADD_REACTIONS
+              ) ? (
+                <ContextTab title='Add Reaction' />
+              ) : null }
+
+              { (
+                MessageCache[id || ''].author === User.id
+              ) ? (
+                <ContextTab title='Edit' />
+              ) : null }
+
+              { (
+                PermissionCalculator.getUserPermissions(
+                  ChannelCache[MessageCache[id || '']?.channel_id]?.guild_id || '',
+                  MessageCache[id || '']?.channel_id || '',
+                  ''
+                ) &
+                ComputedPermissions.MANAGE_MESSAGES
+              ) ? (
+                <ContextTab title='Pin' onClick={ pinMessage } />
+              ) : null }
+
               { (
                 PermissionCalculator.getUserPermissions(
                   ChannelCache[MessageCache[id || '']?.channel_id]?.guild_id || '',
@@ -57,6 +85,7 @@ function ContextMenu() {
               ) ? (
                 <ContextTab title='Delete' onClick={ deleteMessage } />
               ) : null }
+
               <ContextTab title='Copy ID' />
             </Fragment>
           ) }
@@ -67,6 +96,10 @@ function ContextMenu() {
 
   function deleteMessage() {
     MessagesService.deleteMessage(MessageCache[id || '']?.channel_id || '', id || '');
+  }
+
+  function pinMessage() {
+    MessagesService.pinMessage(MessageCache[id || '']?.channel_id || '', id || '');
   }
 }
 

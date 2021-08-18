@@ -10,6 +10,7 @@ import { cacheMessages } from '../../store/MessageCacheStore';
 import StyledIconCss from '../css/StyledIconCss';
 
 import MessagesService from '../../services/api/messages/messages.service';
+import InputButton from './InputButton';
 
 const Container = styled.div`
   display: flex;
@@ -19,28 +20,6 @@ const Container = styled.div`
   height: 48px;
   flex-direction: row;
   z-index: 2;
-`
-
-const InputButton = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 46px;
-  height: 40px;
-  padding: 8px 11px;
-  margin: 4px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: .2s;
-
-  &:hover {
-    background: var(--background-light);
-  }
-  &:active, &.active {
-    transform: scale(0.93);
-  }
-  &.active {
-    opacity: .5;
-  }
 `
 
 const InputIconCss = css`
