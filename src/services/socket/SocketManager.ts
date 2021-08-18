@@ -7,6 +7,7 @@ import CustomMessageEvent from './models/CustomMessageEvent';
 import MesssageEventHandler from './events/Messages';
 import UserEventHandler from './events/Users';
 import RoleEventHandler from './events/Roles';
+import ChannelEventHandler from './events/Channels';
 
 class SocketManager {
   public socket: WebSocket | null = null;
@@ -63,6 +64,10 @@ class SocketManager {
 
       case 'guild.role_patched':
         RoleEventHandler.rolePatched(event);
+        break;
+
+      case 'guild.channel_created':
+        ChannelEventHandler.channelCreated(event);
         break;
     }
   }

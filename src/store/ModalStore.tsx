@@ -4,10 +4,12 @@ const setModalState = createEvent<object>();
 
 interface Modals {
   serverCreation: boolean,
+  channelCreation: boolean
 }
 
 const $ModalStore = createStore<Modals>({
-  serverCreation: false
+  serverCreation: false,
+  channelCreation: false
 });
 
 $ModalStore.on(setModalState, (state, modifiedState: object) => ({ ...state, ...modifiedState }));

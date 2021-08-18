@@ -33,6 +33,16 @@ class GuildsService {
     return response.data;
   }
 
+  async createGuildChannel(guild: string, info: object) {
+    const response = await CommonRequestManager.apiRequest('POST', `/guilds/${guild}/channels`, info);
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
+
   async joinGuild(inviteCode: string) {
     const response = await CommonRequestManager.apiRequest('GET', `/invites/${inviteCode}/accept`, {});
 

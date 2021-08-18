@@ -6,7 +6,7 @@ export default function getMemberColor(guildId: string, userId: string) {
   const RoleCache = $RoleCacheStore.getState();
 
   for (const role of (GuildCache[guildId]?.roles || [])) {
-    if (RoleCache[role].members.includes(userId) && RoleCache[role].color) {
+    if (RoleCache[role]?.members.includes(userId) && RoleCache[role]?.color) {
       return RoleCache[role].color;
     }
   }

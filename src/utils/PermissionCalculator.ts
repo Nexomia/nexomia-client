@@ -15,7 +15,7 @@ class PermissionCalculator {
     let result = 0;
 
     if (GuildStore[guild]?.owner_id === (user || UserStore.id)) {
-      return 1048575;
+      return 2097151;
     }
     
     [ ...(GuildStore[guild]?.roles || []) ]?.reverse().map((roleId) => {
@@ -36,11 +36,11 @@ class PermissionCalculator {
     result |= (MemberStore[(user || UserStore.id) + guild]?.permissions?.allow || 0);
 
     if (result & 1) {
-      return 1048575;
+      return 2097151;
     }
 
     if (result & 2) {
-      return 1048574;
+      return 2097150;
     }
     
     return result;

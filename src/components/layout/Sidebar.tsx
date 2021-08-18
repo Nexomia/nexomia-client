@@ -33,6 +33,7 @@ import RolesService from '../../services/api/roles/roles.service';
 import Role from '../../store/models/Role';
 import Tab from '../sidebar/Tab';
 import $UserStore from '../../store/UserStore';
+import { setModalState } from '../../store/ModalStore';
 
 
 const SidebarContainer = styled.div`
@@ -101,6 +102,11 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       }
     }
   }, [guildId]);
+
+  useEffect(() => {
+    const newGuildChannels = channels[guildId] || [];
+    setGuildChannelsValue(newGuildChannels);
+  }, [channels]);
 
   return (
     <SidebarContainer>
@@ -184,12 +190,15 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
               />
             )
           ))),
-          <Tab
-            Icon={ RiAddFill }
-            title={ 'New Channel' }
-            tabId={ 'new' }
-            onClick={ () => { history.push(`/guildsettings/${guildId}/general`) } }
-          />
+          (
+            (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) &&
+            <Tab
+              Icon={ RiAddFill }
+              title={ 'New Channel' }
+              tabId={ 'new' }
+              onClick={ () => { setModalState({ channelCreation: true }) } }
+            />
+          )
         ]
       ) : loading ? (
         <CenteredContainer>
