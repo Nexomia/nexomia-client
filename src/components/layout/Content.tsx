@@ -57,7 +57,9 @@ function Content() {
         ) }
 
         { path === 'guildsettings' && guildId && (
-          <SettingsView />
+          Channels[guildId] ? (
+            <SettingsView />
+          ) : null
         ) }
 
         { !path && isTabGuild(guildId) && channelId && (
