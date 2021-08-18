@@ -15,6 +15,7 @@ import { ComputedPermissions } from '../../store/models/ComputedPermissions';
 
 import { BiHash } from 'react-icons/bi';
 import {
+  RiAddFill,
   RiMessage3Fill,
   RiUserFill
 } from 'react-icons/ri';
@@ -171,17 +172,25 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       ) }
 
       { !path && isTabGuild(guildId) && type === 'channels' && (guildChannels && guildChannels.length && channelsCache[guildChannels[0]] ? (
-        guildChannels.map((channel: string) => (
-          (PermissionCalculator.getUserPermissions(guildId, channel, user.id) & ComputedPermissions.VIEW_CHANNEL) && (
-            <Tab
-              Icon={ BiHash }
-              title={ channelsCache[channel]?.name || '' }
-              tabId={ channelsCache[channel]?.id }
-              key={ channelsCache[channel]?.id }
-              onClick={ () => { history.push(`/channels/${guildId}/${channel}`) } }
-            />
-          )
-        ))
+        [
+          ...(guildChannels.map((channel: string) => (
+            (PermissionCalculator.getUserPermissions(guildId, channel, user.id) & ComputedPermissions.VIEW_CHANNEL) && (
+              <Tab
+                Icon={ BiHash }
+                title={ channelsCache[channel]?.name || '' }
+                tabId={ channelsCache[channel]?.id }
+                key={ channelsCache[channel]?.id }
+                onClick={ () => { history.push(`/channels/${guildId}/${channel}`) } }
+              />
+            )
+          ))),
+          <Tab
+            Icon={ RiAddFill }
+            title={ 'New Channel' }
+            tabId={ 'new' }
+            onClick={ () => { history.push(`/guildsettings/${guildId}/general`) } }
+          />
+        ]
       ) : loading ? (
         <CenteredContainer>
           <Dots />

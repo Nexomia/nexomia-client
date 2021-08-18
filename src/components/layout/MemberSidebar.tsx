@@ -38,7 +38,7 @@ function MemberSidebar() {
     <SidebarContainer>
       <SidebarHeader />
       { GuildStore[guildId]?.roles && GuildStore[guildId].roles?.map((role: string) => {
-        if (!RoleCacheStore[role].hoist) return null;
+        if (!RoleCacheStore[role]?.hoist) return null;
 
         const onlineMembers = GuildStore[guildId].members?.map((memberId) => (
           UserCacheStore[memberId].presence !== 4 &&
