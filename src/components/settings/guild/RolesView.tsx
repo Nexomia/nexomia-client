@@ -18,6 +18,7 @@ import PermissionEditor from '../ui/PermissionEditor';
 import Role from '../ui/Role';
 import PermissionCalculator from '../../../utils/PermissionCalculator';
 import { ComputedPermissions } from '../../../store/models/ComputedPermissions';
+import { useTranslation } from 'react-i18next';
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -89,6 +90,8 @@ function RolesView() {
   const GuildsCache = useStore($GuildCacheStore);
   const RolesCache = useStore($RoleCacheStore);
 
+  const { t } = useTranslation(['settings']);
+
   const [roleList, setRoleList] = useState<string[]>([]);
   
   useEffect(() => {
@@ -117,12 +120,11 @@ function RolesView() {
 
   return (
     <Fragment>
-      <LoadingPlaceholder title="Saving Changes..." active={ saveLoading } />
+      <LoadingPlaceholder title={ t('saving_changes') } active={ saveLoading } />
       { !roleSelected ? (
         <Fragment>
           <StyledText className={ css`text-align: center; margin: 32px 0` }>
-            Roles help you organize your server and configure permissions for your members.
-            <br />Role permissions are calculated from lowest (default) to highest role.
+            { t('server_roles.roles_description') }
           </StyledText>
           { 
             <List
@@ -149,7 +151,7 @@ function RolesView() {
                   </ColorDot>
                   <StyledText className={ css`margin: 0; font-weight: 900` }>{ RolesCache[value].name }</StyledText>
                   <Splitter />
-                  { RolesCache[value].default && (<StyledText className={ DefaultIconCss }>DEFAULT</StyledText>) }
+                  { RolesCache[value].default && (<StyledText className={ DefaultIconCss }>{ t('server_roles.default_role') }</StyledText>) }
                   <RiArrowRightSLine className={ classNames({ [StyledIconCss]: true, [RoleIconCss]: true }) } />
                 </Container>
               }
@@ -161,7 +163,7 @@ function RolesView() {
           <ButtonContainer onClick={ () => goBack() }>
             <RiArrowLeftLine className={ classNames({ [IconCss]: true, [StyledIconCss]: true }) } />
             <StyledText className={ css`margin: 0; font-weight: 900` }>
-              { !permissionsWasEdited ? 'Back' : 'Save & Go Back' }
+              { !permissionsWasEdited ? t('server_roles.back') : t('server_roles.save_back') }
             </StyledText>
           </ButtonContainer>
           <Role
@@ -171,10 +173,10 @@ function RolesView() {
             active={ true }
           />
           <StyledText className={ css`text-align: center; margin: 48px 0 24px 0; font-size: 22px; font-weight: 900` }>
-            Appearance
+            { t('server_roles.appearance') }
           </StyledText>
           <StyledText className={ css`text-align: left; margin: 4px; font-size: 14px; font-weight: 900` }>
-            Role Name
+            { t('server_roles.name') }
           </StyledText>
           <InputField
             className={ css`margin-top: 2px; margin-bottom: 16px` }
@@ -182,7 +184,7 @@ function RolesView() {
             onChange={ (event: ChangeEvent<HTMLInputElement>) => { setRoleName(event.target.value); setPermissionsWasEdited(true) } }
           />
           <StyledText className={ css`text-align: left; margin: 4px; font-size: 14px; font-weight: 900` }>
-            Role Color
+            { t('server_roles.color') }
           </StyledText>
           <InputField
             className={ css`margin-top: 2px; margin-bottom: 16px` }
@@ -190,10 +192,10 @@ function RolesView() {
             onChange={ (event: ChangeEvent<HTMLInputElement>) => { setRoleColor(event.target.value); setPermissionsWasEdited(true) } }
           />
           <StyledText className={ css`text-align: center; margin: 48px 0 24px 0; font-size: 22px; font-weight: 900` }>
-            Permissions
+            { t('server_roles.permissions') }
           </StyledText>
           <StyledText className={ css`text-align: center; margin: 0 0 24px 0` }>
-            Configure permissions carefully, forcing a lot of permissions to "allowed" state is a bad practice, though you are not restricted from doing this. Higher roles will inherit all permissions from this role and apply their overwrites to them.
+            { t('server_roles.permissions_description') }
           </StyledText>
           
           <PermissionEditor

@@ -34,6 +34,7 @@ import Role from '../../store/models/Role';
 import Tab from '../sidebar/Tab';
 import $UserStore from '../../store/UserStore';
 import { setModalState } from '../../store/ModalStore';
+import { useTranslation } from 'react-i18next';
 
 
 const SidebarContainer = styled.div`
@@ -84,6 +85,8 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
   const channelsCache = useStore<ChannelsCache>($ChannelCacheStore);
   const user = useStore($UserStore);
 
+  const { t } = useTranslation(['settings', 'chat']);
+
   const history = useHistory();
 
   const [loading, setLoading] = useState(false);
@@ -112,7 +115,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
     <SidebarContainer>
       { !path && guildId === '@me' && type === 'channels' && (
         <SidebarHeader>
-          <Content>Direct Messages</Content>
+          <Content>{ t('tabs.direct_messages') }</Content>
         </SidebarHeader>
       ) }
 
@@ -123,7 +126,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
           </SidebarHeader>
           <Tab
             Icon={ RiUserFill }
-            title={ 'People' }
+            title={ t('tabs.people') }
             tabId={ 'people' }
             active={ path === 'profiles' }
             onClick={ () => { history.push(`/discover/people`) } }
@@ -138,13 +141,13 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
           </SidebarHeader>
           <Tab
             Icon={ RiMessage3Fill }
-            title={ 'Feed' }
+            title={ t('tabs.feed') }
             tabId={ 'feed' }
             onClick={ () => { history.push(`/home/feed`) } }
           />
           <Tab
             Icon={ RiUserFill }
-            title={ 'Friends' }
+            title={ t('tabs.friends') }
             tabId={ 'friends' }
             onClick={ () => { history.push(`/home/friends`) } }
           />
@@ -157,12 +160,12 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             <Content>Server Settings</Content>
           </SidebarHeader>
           <Tab
-            title={ 'General' }
+            title={ t('tabs.general') }
             tabId={ 'general' }
             onClick={ () => { history.push(`/guildsettings/${guildId}/general`) } }
           />
           <Tab
-            title={ 'Roles' }
+            title={ t('tabs.roles') }
             tabId={ 'roles' }
             onClick={ () => { history.push(`/guildsettings/${guildId}/roles`) } }
           />
@@ -194,7 +197,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
             <Tab
               Icon={ RiAddFill }
-              title={ 'New Channel' }
+              title={ t('chat:channel_new') }
               tabId={ 'new' }
               onClick={ () => { setModalState({ channelCreation: true }) } }
             /> : null
@@ -211,7 +214,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
             <Tab
               Icon={ RiAddFill }
-              title={ 'New Channel' }
+              title={ t('chat:channel_new') }
               tabId={ 'new' }
               onClick={ () => { setModalState({ channelCreation: true }) } }
             /> : null

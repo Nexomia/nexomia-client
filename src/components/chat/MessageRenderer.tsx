@@ -13,6 +13,7 @@ import getMemberColor from '../../utils/getMemberColor';
 import getIconString from '../../utils/getIconString';
 import { RiArrowRightLine, RiPushpinFill } from 'react-icons/ri';
 import StyledIconCss from '../css/StyledIconCss';
+import { useTranslation } from 'react-i18next';
 
 const Spacer = styled.div`
   display: flex;
@@ -96,6 +97,8 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
   const MessageCache = useStore($MessageCacheStore);
   const ChannelCache = useStore($ChannelCacheStore);
 
+  const { t } = useTranslation(['chat']);
+
   const history = useHistory();
 
   return (
@@ -127,8 +130,8 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
             >
               { UserCache[MessageCache[id].author].username }
               <span className={ css`color: var(--text-primary)` }>
-                { MessageCache[id].type === 4 ? ' joined the server' : '' }
-                { MessageCache[id].type === 3 ? ' pinned a message' : '' }
+                { MessageCache[id].type === 4 ? ' ' + t('joined_the_server') : '' }
+                { MessageCache[id].type === 3 ? ' ' + t('pinned_a_message') : '' }
               </span>
             </div>
             <StyledText className={ css`margin: 0 0 0 8px; color: var(--text-secondary); display: inline-block; font-size: 12px` }>

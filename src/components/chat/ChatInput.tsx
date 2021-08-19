@@ -11,6 +11,7 @@ import StyledIconCss from '../css/StyledIconCss';
 
 import MessagesService from '../../services/api/messages/messages.service';
 import InputButton from './InputButton';
+import { useTranslation } from 'react-i18next';
 
 const Container = styled.div`
   display: flex;
@@ -50,6 +51,8 @@ interface ChatInputProps {
 function ChatInput({ channel, onMessageSent }: ChatInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const { t } = useTranslation(['chat']);
+
   const [sendLoading, setSendLoading] = useState(false);
 
   return (
@@ -57,7 +60,7 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
       <InputButton>
         <RiAddCircleFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
       </InputButton>
-      <Input placeholder="Type something here..." ref={ inputRef } onKeyPress={ handleKeyPress } />
+      <Input placeholder={ t('input_placeholder') }ref={ inputRef } onKeyPress={ handleKeyPress } />
       <InputButton className={ css`margin-right: 0` }>
         <RiEmotionLaughFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
       </InputButton>

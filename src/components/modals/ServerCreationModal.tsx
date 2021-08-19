@@ -18,6 +18,7 @@ import BigPageButton from '../ui/BigPageButton';
 import InputField from '../ui/InputField';
 import FilledButton from '../ui/FilledButton';
 import LoadingPlaceholder from '../ui/LoadingPlaceholder';
+import { useTranslation } from 'react-i18next';
 
 interface ServerCreationModalProps {
   active: boolean
@@ -29,6 +30,8 @@ const negativeColorCss = css`
 
 function ServerCreationModal({ active }: ServerCreationModalProps) {
   const layerRef = useRef(null);
+
+  const { t } = useTranslation(['settings']);
 
   const [modalPage, setModalPage] = useState(0);
   const [nameValue, setNameValue] = useState('');
@@ -52,30 +55,30 @@ function ServerCreationModal({ active }: ServerCreationModalProps) {
   return (
     <Layer className={ classNames({ [LayerBackgroundShadeCss]: true, [InactiveLayerCss]: !active }) } onClick={ (event) => { closeModal(event) } } ref={ layerRef }>
       <Modal className={ css`width: 440px` }>
-        <LoadingPlaceholder title={ (modalPage === 1 && 'Creating your server...') || 'Joining server...' } active={ loading } />
+        <LoadingPlaceholder title={ (modalPage === 1 && t('modals.server_creating')) || t('modals.server_joining') } active={ loading } />
         { modalPage === 0 && (
           <Fragment>
-            <ModalHeader>Join or create a server<br /><StyledText>Talk with friends in your private space or create a public community!</StyledText></ModalHeader>
-            <BigPageButton onClick={ () => setModalPage(1) }>Create a server</BigPageButton>
-            <BigPageButton onClick={ () => setModalPage(2) }>Join a server</BigPageButton>
+            <ModalHeader>{ t('modals.server_create_header') }<br /><StyledText>{ t('modals.server_create_description') }</StyledText></ModalHeader>
+            <BigPageButton onClick={ () => setModalPage(1) }>{ t('modals.server_action_create') }</BigPageButton>
+            <BigPageButton onClick={ () => setModalPage(2) }>{ t('modals.server_action_join') }</BigPageButton>
           </Fragment>
         ) }
 
         { modalPage === 1 && (
           <Fragment>
-            <ModalHeader>Name your server</ModalHeader>
-            <InputField placeholder="Server Name" onChange={ (event) => { setNameValue(event.target.value) } } />
-            { (createError && <StyledText className={ negativeColorCss }>Failed to create server.</StyledText>) }
-            <FilledButton onClick={ createServer }>Create</FilledButton>
+            <ModalHeader>{ t('modals.server_create_name_header') }</ModalHeader>
+            <InputField placeholder={ t('modals.server_create_name_placeholder') } onChange={ (event) => { setNameValue(event.target.value) } } />
+            { (createError && <StyledText className={ negativeColorCss }>{ t('modals.server_create_error') }</StyledText>) }
+            <FilledButton onClick={ createServer }>{ t('modals.create') }</FilledButton>
           </Fragment>
         ) }
 
         { modalPage === 2 && (
           <Fragment>
-            <ModalHeader>Enter your invite</ModalHeader>
-            <InputField placeholder="Invite Code" onChange={ (event) => { setInviteValue(event.target.value) } } />
-            { (joinError && <StyledText className={ negativeColorCss }>Failed to join this server. Invite code is invalid or you have been banned from that server.</StyledText>) }
-            <FilledButton onClick={ joinServer }>Join</FilledButton>
+            <ModalHeader>{ t('modals.server_join_header') }</ModalHeader>
+            <InputField placeholder={ t('modals.server_join_invite_placeholder') } onChange={ (event) => { setInviteValue(event.target.value) } } />
+            { (joinError && <StyledText className={ negativeColorCss }>{ t('modals.server_join_error') }</StyledText>) }
+            <FilledButton onClick={ joinServer }>{ t('modals.join') }</FilledButton>
           </Fragment>
         ) }
       </Modal>

@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
+import { useTranslation } from 'react-i18next';
 import { RiArrowRightSLine } from 'react-icons/ri';
 import StyledIconCss from '../../css/StyledIconCss';
 import StyledText from '../../ui/StyledText';
@@ -57,12 +58,14 @@ interface RoleProps {
 }
 
 function Role({ name, color, defaultRole, onClick, active = false, ref }: RoleProps) {
+  const { t } = useTranslation(['settings']);
+
   return (
     <Container onClick={ onClick } className={ classNames({ active }) } ref={ ref }>
       <ColorDot style={{ background: color }} />
       <StyledText className={ css`margin: 0; font-weight: 900` }>{ name }</StyledText>
       <Splitter />
-      { defaultRole && (<StyledText className={ DefaultIconCss }>DEFAULT</StyledText>) }
+      { defaultRole && (<StyledText className={ DefaultIconCss }>{ t('server_roles.default_role') }</StyledText>) }
       { !active && (<RiArrowRightSLine className={ classNames({ [StyledIconCss]: true, [IconCss]: true }) } />) }
     </Container>
   )

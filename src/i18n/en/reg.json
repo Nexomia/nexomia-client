@@ -1,7 +1,8 @@
 {
   "fields": {
     "username": "Username",
-    "password": "Password"
+    "password": "Password",
+    "email": "Email"
   },
   "errors": {
     "required_field": "This field is required.",

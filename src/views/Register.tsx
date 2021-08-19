@@ -59,22 +59,22 @@ function Register() {
 
           { registerState === 0 && (
             <Fragment>
-              <ModalHeader>{ t('reg:register') }<br /><StyledText>{ t('reg:welcomer_register') }</StyledText></ModalHeader>
-              <InputField placeholder="Email" ref={ emailInput } />
-              { (emailError && <StyledText className={ negativeColorCss }>{ t('reg:errors.required_field') }</StyledText>) }
-              <InputField placeholder={ t('reg:fields.username') } ref={ usernameInput } />
-              { (usernameError && <StyledText className={ negativeColorCss }>{ t('reg:errors.required_field') }</StyledText>) }
-              <InputField placeholder={ t('reg:fields.password') } type="password" ref={ passwordInput } hidden={ true } />
-              { (passwordError && <StyledText className={ negativeColorCss }>{ t('reg:errors.required_field') }</StyledText>) }
-              <StyledText>{ t('reg:has_account') } <Link to="/login">{ t('reg:log_in') }</Link></StyledText>
-              <FilledButton onClick={ register }>{ t('reg:continue') }</FilledButton>
+              <ModalHeader>{ t('register') }<br /><StyledText>{ t('welcomer_register') }</StyledText></ModalHeader>
+              <InputField placeholder={ t('fields.email') } ref={ emailInput } />
+              { (emailError && <StyledText className={ negativeColorCss }>{ t('errors.required_field') }</StyledText>) }
+              <InputField placeholder={ t('fields.username') } ref={ usernameInput } />
+              { (usernameError && <StyledText className={ negativeColorCss }>{ t('errors.required_field') }</StyledText>) }
+              <InputField placeholder={ t('fields.password') } type="password" ref={ passwordInput } hidden={ true } />
+              { (passwordError && <StyledText className={ negativeColorCss }>{ t('errors.required_field') }</StyledText>) }
+              <StyledText>{ t('has_account') } <Link to="/login">{ t('log_in') }</Link></StyledText>
+              <FilledButton onClick={ register }>{ t('continue') }</FilledButton>
             </Fragment>
           ) }
 
           { registerState === 1 && (
             <Fragment>
-              <ModalHeader>{ t('reg:account_created') }<br /><StyledText>{ t('reg:account_log_in') }</StyledText></ModalHeader>
-              <FilledButton onClick={ login }>{ t('reg:continue') }</FilledButton>
+              <ModalHeader>{ t('account_created') }<br /><StyledText>{ t('account_log_in') }</StyledText></ModalHeader>
+              <FilledButton onClick={ login }>{ t('continue') }</FilledButton>
             </Fragment>
           ) }
         </Modal>

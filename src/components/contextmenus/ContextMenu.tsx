@@ -1,6 +1,7 @@
 import { useStore } from 'effector-react';
 import { styled } from 'linaria/react';
 import { Fragment } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import MessagesService from '../../services/api/messages/messages.service';
 import $ChannelCacheStore from '../../store/ChannelCacheStore';
@@ -28,6 +29,8 @@ function ContextMenu() {
   const ChannelCache = useStore($ChannelCacheStore);
   const User = useStore($UserStore);
 
+  const { t } = useTranslation(['settings']);
+
   return (
     <Fragment>
       { visible && (
@@ -38,10 +41,10 @@ function ContextMenu() {
                 PermissionCalculator.getUserPermissions(id || '', '', '')
                 & ComputedPermissions.MANAGE_GUILD
               ) ? (
-                <ContextTab title='Settings' onClick={ () => history.push(`/guildsettings/${id}/general`) } />
+                <ContextTab title={ t('menu.settings') } onClick={ () => history.push(`/guildsettings/${id}/general`) } />
               ) : null }
-              <ContextTab title='Leave Server' />
-              <ContextTab title='Copy ID' />
+              <ContextTab title={ t('menu.leave_server') } />
+              <ContextTab title={ t('menu.copy_id') } />
             </Fragment>
           ) }
 
@@ -55,13 +58,13 @@ function ContextMenu() {
                 ) &
                 ComputedPermissions.ADD_REACTIONS
               ) ? (
-                <ContextTab title='Add Reaction' />
+                <ContextTab title={ t('menu.add_reaction') } />
               ) : null }
 
               { (
                 MessageCache[id || ''].author === User.id
               ) ? (
-                <ContextTab title='Edit' />
+                <ContextTab title={ t('menu.edit') } />
               ) : null }
 
               { (
@@ -72,7 +75,7 @@ function ContextMenu() {
                 ) &
                 ComputedPermissions.MANAGE_MESSAGES
               ) ? (
-                <ContextTab title='Pin' onClick={ pinMessage } />
+                <ContextTab title={ t('menu.pin') } onClick={ pinMessage } />
               ) : null }
 
               { (
@@ -83,10 +86,10 @@ function ContextMenu() {
                 ) &
                 ComputedPermissions.MANAGE_MESSAGES
               ) ? (
-                <ContextTab title='Delete' onClick={ deleteMessage } />
+                <ContextTab title={ t('menu.delete') } onClick={ deleteMessage } />
               ) : null }
 
-              <ContextTab title='Copy ID' />
+              <ContextTab title={ t('menu.copy_id') } />
             </Fragment>
           ) }
         </Base>

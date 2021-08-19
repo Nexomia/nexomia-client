@@ -4,6 +4,7 @@ import { ComputedPermissions } from '../../../store/models/ComputedPermissions';
 import PermissionOverwrites from '../../../store/models/PermissionOverwrites';
 import FilledButton from '../../ui/FilledButton';
 import Permission from './Permission';
+import { useTranslation } from 'react-i18next';
 
 interface PermissionProps {
   initialPermissions: PermissionOverwrites,
@@ -14,12 +15,14 @@ interface PermissionProps {
 function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionProps) {
   const [permissions, setPermissions] = useState(initialPermissions);
 
+  const { t } = useTranslation(['settings']);
+
   return (
     <Fragment>
-      <FilledButton onClick={ clearPermissions } className={ css`margin: 0 0 8px 0` }>Clear all permissions</FilledButton>
+      <FilledButton onClick={ clearPermissions } className={ css`margin: 0 0 8px 0` }>{ t('server_permissions.action_clear_permissions') }</FilledButton>
       <Permission 
-        name='Administrator'
-        description='Enables all permissions and bypasses channel restrictions.'
+        name={ t('server_permissions.administrator') }
+        description={ t('server_permissions.administrator_description') }
         active={ getPermissionState(ComputedPermissions.ADMINISTRATOR) }
         inherit={ inherit }
         onEnablePerm={ () => enablePermission(ComputedPermissions.ADMINISTRATOR) }
@@ -27,8 +30,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onInheritPerm={ () => inheritPermission(ComputedPermissions.ADMINISTRATOR) }
       />
       <Permission
-        name='Manage Guild'
-        description='Ability to edit general guild settings.'
+        name={ t('server_permissions.manage_guild') }
+        description={ t('server_permissions.manage_guild_description') }
         active={ getPermissionState(ComputedPermissions.MANAGE_GUILD) }
         inherit={ inherit }
         onEnablePerm={ () => enablePermission(ComputedPermissions.MANAGE_GUILD) }
@@ -36,8 +39,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onInheritPerm={ () => inheritPermission(ComputedPermissions.MANAGE_GUILD) }
       />
       <Permission
-        name='Manage Roles'
-        description='Ability to edit roles.'
+        name={ t('server_permissions.manage_roles') }
+        description={ t('server_permissions.manage_roles_description') }
         active={ getPermissionState(ComputedPermissions.MANAGE_ROLES) }
         inherit={ inherit }
         onEnablePerm={ () => enablePermission(ComputedPermissions.MANAGE_ROLES) }
@@ -45,8 +48,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onInheritPerm={ () => inheritPermission(ComputedPermissions.MANAGE_ROLES) }
       />
       <Permission
-        name='Manage Messages'
-        description='Ability to delete and pin messages.'
+        name={ t('server_permissions.manage_messages') }
+        description={ t('server_permissions.manage_messages_description') }
         active={ getPermissionState(ComputedPermissions.MANAGE_MESSAGES) }
         inherit={ inherit }
         onEnablePerm={ () => enablePermission(ComputedPermissions.MANAGE_MESSAGES) }
@@ -54,8 +57,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onInheritPerm={ () => inheritPermission(ComputedPermissions.MANAGE_MESSAGES) }
       />
       <Permission
-        name='Manage Emojis'
-        description='Ability to create and delete emojis.'
+        name={ t('server_permissions.manage_emojis') }
+        description={ t('server_permissions.manage_emojis_description') }
         active={ getPermissionState(ComputedPermissions.MANAGE_EMOJIS) }
         inherit={ inherit }
         onEnablePerm={ () => enablePermission(ComputedPermissions.MANAGE_EMOJIS) }
@@ -63,8 +66,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onInheritPerm={ () => inheritPermission(ComputedPermissions.MANAGE_EMOJIS) }
       />
       <Permission
-        name='View Channels'
-        description='Ability to view channels.'
+        name={ t('server_permissions.view_channels') }
+        description={ t('server_permissions.view_channels_description') }
         active={ getPermissionState(ComputedPermissions.VIEW_CHANNEL) }
         inherit={ inherit }
         onEnablePerm={ () => enablePermission(ComputedPermissions.VIEW_CHANNEL) }
@@ -72,8 +75,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onInheritPerm={ () => inheritPermission(ComputedPermissions.VIEW_CHANNEL) }
       />
       <Permission
-        name='Read Messages'
-        description='Ability to read messages.'
+        name={ t('server_permissions.read_messages') }
+        description={ t('server_permissions.read_messages_description') }
         active={ getPermissionState(ComputedPermissions.READ_MESSAGES) }
         inherit={ inherit }
         onEnablePerm={ () => enablePermission(ComputedPermissions.READ_MESSAGES) }
@@ -81,8 +84,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onInheritPerm={ () => inheritPermission(ComputedPermissions.READ_MESSAGES) }
       />
       <Permission
-        name='Send Messages'
-        description='Ability to send messages.'
+        name={ t('server_permissions.send_messages') }
+        description={ t('server_permissions.send_messages_description') }
         active={ getPermissionState(ComputedPermissions.WRITE_MESSAGES) }
         inherit={ inherit }
         onEnablePerm={ () => enablePermission(ComputedPermissions.WRITE_MESSAGES) }
@@ -90,8 +93,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onInheritPerm={ () => inheritPermission(ComputedPermissions.WRITE_MESSAGES) }
       />
       <Permission
-        name='Send Voice Messages'
-        description='Ability to send voice messages.'
+        name={ t('server_permissions.send_voice_messages') }
+        description={ t('server_permissions.send_voice_messages_description') }
         active={ getPermissionState(ComputedPermissions.VOICE_MESSAGES) }
         inherit={ inherit }
         onEnablePerm={ () => enablePermission(ComputedPermissions.VOICE_MESSAGES) }
@@ -99,8 +102,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onInheritPerm={ () => inheritPermission(ComputedPermissions.VOICE_MESSAGES) }
       />
       <Permission
-        name='Use Stickers'
-        description='Ability to use stickers.'
+        name={ t('server_permissions.use_stickers') }
+        description={ t('server_permissions.use_stickers_description') }
         active={ getPermissionState(ComputedPermissions.ATTACH_STICKERS) }
         inherit={ inherit }
         onEnablePerm={ () => enablePermission(ComputedPermissions.ATTACH_STICKERS) }
@@ -108,8 +111,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onInheritPerm={ () => inheritPermission(ComputedPermissions.ATTACH_STICKERS) }
       />
       <Permission
-        name='Add Attachments'
-        description='Ability to attach files, images and music to messages.'
+        name={ t('server_permissions.add_attachments') }
+        description={ t('server_permissions.add_attachments_description') }
         active={ getPermissionState(ComputedPermissions.ATTACH_FILES) }
         inherit={ inherit }
         onEnablePerm={ () => enablePermission(ComputedPermissions.ATTACH_FILES) }
@@ -117,8 +120,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onInheritPerm={ () => inheritPermission(ComputedPermissions.ATTACH_FILES) }
       />
       <Permission
-        name='Use Extended Markdown'
-        description='Ability to add tables, hyperlinks to messages and write large text.'
+        name={ t('server_permissions.use_extended_markdown') }
+        description={ t('server_permissions.use_extended_markdown_description') }
         active={ getPermissionState(ComputedPermissions.USE_EXTENDED_MARKDOWN) }
         inherit={ inherit }
         onEnablePerm={ () => enablePermission(ComputedPermissions.USE_EXTENDED_MARKDOWN) }
@@ -126,8 +129,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onInheritPerm={ () => inheritPermission(ComputedPermissions.USE_EXTENDED_MARKDOWN) }
       />
       <Permission
-        name='Forward Messages'
-        description='Ability to forward messages to external servers or direct messages.'
+        name={ t('server_permissions.forward_messages') }
+        description={ t('server_permissions.forward_messages_description') }
         active={ getPermissionState(ComputedPermissions.FORWARD_MESSAGES_FROM_SERVER) }
         inherit={ inherit }
         onEnablePerm={ () => enablePermission(ComputedPermissions.FORWARD_MESSAGES_FROM_SERVER) }
@@ -135,8 +138,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onInheritPerm={ () => inheritPermission(ComputedPermissions.FORWARD_MESSAGES_FROM_SERVER) }
       />
       <Permission
-        name='Change Nickname'
-        description='Ability to set a custom nickname.'
+        name={ t('server_permissions.change_nickname') }
+        description={ t('server_permissions.change_nickname_description') }
         active={ getPermissionState(ComputedPermissions.CHANGE_SELF_NICKNAME) }
         inherit={ inherit }
         onEnablePerm={ () => enablePermission(ComputedPermissions.CHANGE_SELF_NICKNAME) }
@@ -144,8 +147,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onInheritPerm={ () => inheritPermission(ComputedPermissions.CHANGE_SELF_NICKNAME) }
       />
       <Permission
-        name='Change Member Nicknames'
-        description='Ability to change nicknames of all members'
+        name={ t('server_permissions.change_member_nicknames') }
+        description={ t('server_permissions.change_member_nicknames_description') }
         active={ getPermissionState(ComputedPermissions.CHANGE_MEMBER_NICKNAMES) }
         inherit={ inherit }
         onEnablePerm={ () => enablePermission(ComputedPermissions.CHANGE_MEMBER_NICKNAMES) }
@@ -153,8 +156,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onInheritPerm={ () => inheritPermission(ComputedPermissions.CHANGE_MEMBER_NICKNAMES) }
       />
       <Permission
-        name='Add Reactions'
-        description='Ability to add reactions.'
+        name={ t('server_permissions.add_reactions') }
+        description={ t('server_permissions.add_reactions_description') }
         active={ getPermissionState(ComputedPermissions.ADD_REACTIONS) }
         inherit={ inherit }
         onEnablePerm={ () => enablePermission(ComputedPermissions.ADD_REACTIONS) }
@@ -162,8 +165,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onInheritPerm={ () => inheritPermission(ComputedPermissions.ADD_REACTIONS) }
       />
       <Permission
-        name='Add External Reactions'
-        description='Ability to add reactions from other servers.'
+        name={ t('server_permissions.add_external_reactions') }
+        description={ t('server_permissions.add_external_reactions_description') }
         active={ getPermissionState(ComputedPermissions.ADD_EXTERNAL_REACTIONS) }
         inherit={ inherit }
         onEnablePerm={ () => enablePermission(ComputedPermissions.ADD_EXTERNAL_REACTIONS) }
@@ -171,8 +174,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onInheritPerm={ () => inheritPermission(ComputedPermissions.ADD_EXTERNAL_REACTIONS) }
       />
       <Permission
-        name='Delete Multiple Messages'
-        description='Ability to delete multiple messages (it is also called purging).'
+        name={ t('server_permissions.delete_multiple_messages') }
+        description={ t('server_permissions.delete_multiple_messages_description') }
         active={ getPermissionState(ComputedPermissions.BULK_DELETE) }
         inherit={ inherit }
         onEnablePerm={ () => enablePermission(ComputedPermissions.BULK_DELETE) }

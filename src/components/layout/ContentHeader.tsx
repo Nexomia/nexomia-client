@@ -16,6 +16,7 @@ import $ChannelCacheStore from '../../store/ChannelCacheStore';
 import $UserCacheStore from '../../store/UserCacheStore';
 import isTabGuild from '../../utils/isTabGuild';
 import InputButton from '../chat/InputButton';
+import { useTranslation } from 'react-i18next';
 
 const Header = styled.div`
   height: 48px;
@@ -56,6 +57,7 @@ function ContentHeader() {
   const { path, guildId, channelId } = useParams<RouteParams>();
   const channelsCache = useStore($ChannelCacheStore);
   const usersCache = useStore($UserCacheStore);
+  const { t } = useTranslation(['settings']);
 
   return (
     <Header>
@@ -78,15 +80,15 @@ function ContentHeader() {
       ) }
 
       { path === 'profiles' && guildId !== 'people' && (
-        <Content>{ usersCache[guildId]?.username || '' }'s Profile</Content>
+        <Content>{ t('tabs.profile_header').replace('%username%', usersCache[guildId]?.username || '') }</Content>
       ) }
 
       { path === 'guildsettings' && channelId === 'general' && (
-        <Content>General</Content>
+        <Content>{ t('tabs.general') }</Content>
       ) }
 
       { path === 'guildsettings' && channelId === 'roles' && (
-        <Content>Roles</Content>
+        <Content>{ t('tabs.roles') }</Content>
       ) }
     </Header>
   );

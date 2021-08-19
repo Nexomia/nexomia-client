@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import { css } from 'linaria';
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 import GuildsService from '../../services/api/guilds/guilds.service';
 import { cacheChannels } from '../../store/ChannelCacheStore';
@@ -33,6 +34,8 @@ function ChannelCreationModal({ active }: ChannelCreationModalProps) {
   const layerRef = useRef(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const { t } = useTranslation(['settings']);
+
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [error, setError] = useState(false);
@@ -40,15 +43,15 @@ function ChannelCreationModal({ active }: ChannelCreationModalProps) {
   return (
     <Layer className={ classNames({ [LayerBackgroundShadeCss]: true, [InactiveLayerCss]: !active }) } onClick={ (event) => { closeModal(event) } } ref={ layerRef }>
       <Modal className={ css`width: 440px` }>
-        <LoadingPlaceholder title={ 'Creating Channel...' } active={ loading } />
-        <ModalHeader>Create a Channel</ModalHeader>
+        <LoadingPlaceholder title={ t('modals.channel_creating') } active={ loading } />
+        <ModalHeader>{ t('modals.channel_create_header') }</ModalHeader>
         <InputField
-          placeholder='Name'
+          placeholder={ t('modals.name') }
           onChange={ (event) => { setName(event.target.value) } }
           ref={ inputRef }
         />
-        { (error && <StyledText className={ negativeColorCss }>Failed to create channel.</StyledText>) }
-        <FilledButton onClick={ createChannel }>Create</FilledButton>
+        { (error && <StyledText className={ negativeColorCss }>{ t('modals.channel_create_error') }</StyledText>) }
+        <FilledButton onClick={ createChannel }>{ t('modals.create') }</FilledButton>
       </Modal>
     </Layer>
   )

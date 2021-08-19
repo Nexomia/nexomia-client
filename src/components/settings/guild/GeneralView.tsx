@@ -1,6 +1,7 @@
 import { useStore } from 'effector-react';
 import { css } from 'linaria';
 import { ChangeEvent, Fragment, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import GuildsService from '../../../services/api/guilds/guilds.service';
 import $ChannelCacheStore from '../../../store/ChannelCacheStore';
@@ -23,6 +24,8 @@ function GeneralView() {
   const Channels = useStore($ChannelStore);
   const ChannelsCache = useStore($ChannelCacheStore);
 
+  const { t } = useTranslation(['settings']);
+
   const [guildAvatar, setGuildAvatar] = useState('');
   const [guildBanner, setGuildBanner] = useState('');
   const [guildName, setGuildName] = useState('');
@@ -32,37 +35,37 @@ function GeneralView() {
 
   return (
     <Fragment>
-      <LoadingPlaceholder title="Saving Changes..." active={ saveLoading } />
-      { edited && <FilledButton onClick={ saveChanges }>Save Changes</FilledButton> }
+      <LoadingPlaceholder title={ t('saving_changes') } active={ saveLoading } />
+      { edited && <FilledButton onClick={ saveChanges }>{ t('save_changes') }</FilledButton> }
       <StyledText className={ css`text-align: center; margin: 48px 0 24px 0; font-size: 22px; font-weight: 900` }>
-        Appearance
+        { t('server_general.appearance') }
       </StyledText>
       <InputField
         className={ css`margin-top: 2px; margin-bottom: 16px` }
         defaultValue={ GuildsCache[guildId]?.icon }
-        placeholder='Server Icon URL (leave empty to remove)'
+        placeholder={ t('server_general.icon_url') }
         onChange={ (event: ChangeEvent<HTMLInputElement>) => { setGuildAvatar(event.target.value); setEdited(true) } }
       />
       <InputField
         className={ css`margin-top: 2px; margin-bottom: 16px` }
         defaultValue={ GuildsCache[guildId]?.banner }
-        placeholder='Server Banner URL (leave empty to remove)'
+        placeholder={ t('server_general.banner_url') }
         onChange={ (event: ChangeEvent<HTMLInputElement>) => { setGuildBanner(event.target.value); setEdited(true) } }
       />
       <InputField
         className={ css`margin-top: 2px; margin-bottom: 16px` }
         defaultValue={ GuildsCache[guildId]?.name }
-        placeholder='Server Name'
+        placeholder={ t('server_general.name') }
         onChange={ (event: ChangeEvent<HTMLInputElement>) => { setGuildName(event.target.value); setEdited(true) } }
       />
       <StyledText className={ css`text-align: center; margin: 48px 0 24px 0; font-size: 22px; font-weight: 900` }>
-        Default Channel
+        { t('server_general.default_channel') }
       </StyledText>
       <DropdownInput
         keys={ [
           {
             id: '0',
-            text: 'No default channel'
+            text: t('server_general.no_default_channel')
           },
           ...(
             Channels[guildId]?.map((channel) => ({
