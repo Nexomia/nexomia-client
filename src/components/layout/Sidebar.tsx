@@ -157,7 +157,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       { path === 'guildsettings' && type === 'channels' && (
         <Fragment>
           <SidebarHeader>
-            <Content>Server Settings</Content>
+            <Content>{ t('tabs.server_settings') }</Content>
           </SidebarHeader>
           <Tab
             title={ t('tabs.general') }

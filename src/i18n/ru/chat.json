@@ -1,0 +1,10 @@
+{
+  "channel_new": "Новый канал",
+  "input_placeholder": "Напишите что-нибудь...",
+  "joined_the_server": "присоединился к серверу",
+  "pinned_a_message": "закрепил сообщение",
+  "profile": {
+    "about_me": "Обо мне",
+    "badges": "Значки"
+  }
+}

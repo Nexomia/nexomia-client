@@ -63,7 +63,7 @@
     "view_channels": "View Channels",
     "view_channels_description": "Ability to view channels.",
     "read_messages": "Read Messages",
-    "read_messages_description": "Ability to read messages.",
+    "read_messages_description": "Ability to read messages and their history.",
     "send_messages": "Send Messages",
     "send_messages_description": "Ability to send messages.",
     "send_voice_messages": "Send Voice Messages",
@@ -95,6 +95,7 @@
     "friends": "Friends",
     "feed": "Feed",
     "people": "People",
-    "direct_messages": "Direct Messages"
+    "direct_messages": "Direct Messages",
+    "server_settings": "Server Settings"
   }
 }
