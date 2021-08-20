@@ -102,9 +102,11 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       
       if (!newGuildChannels.length && (!path || path === 'guildsettings')) {
         loadChannels();
+      } else if (!path && !channelId) {
+        history.push(`/channels/${guildId}/${newGuildChannels[newGuildChannels.indexOf(guilds[guildId]?.default_channel || '')] || newGuildChannels[0]}`);
       }
     }
-  }, [guildId]);
+  }, [guildId, path]);
 
   useEffect(() => {
     const newGuildChannels = channels[guildId] || [];
@@ -245,6 +247,13 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
     setGuildChannels({ guild: guildId, channels: response.map((channel: Channel) => channel.id) });
     setGuildChannelsValue(response.map((channel: Channel) => channel.id));
     setLoading(false);
+
+    if (response.length) {
+      const defaultChannel = response[response.findIndex((channel: Channel) => guildResponse?.default_channel === channel.id)]?.id || response[0].id;
+      if (defaultChannel && !channelId) {
+        history.push(`/channels/${guildId}/${defaultChannel}`);
+      }
+    }
   }
 }
 
