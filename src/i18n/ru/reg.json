@@ -1,12 +1,12 @@
 {
   "fields": {
-    "username": "Username",
-    "password": "Password",
-    "email": "Email"
+    "username": "Имя пользователя",
+    "password": "Пароль",
+    "email": "Эл. почта"
   },
   "errors": {
-    "required_field": "This field is required.",
-    "invalid_credentials": "Email or password is invalid."
+    "required_field": "Это поле обязательное.",
+    "invalid_credentials": "Эл. почта или пароль недействительны."
   },
   "log_in": "Вход",
   "register": "Регистрация",

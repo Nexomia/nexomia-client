@@ -2,6 +2,7 @@ import { useStore } from 'effector-react';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
 import { Fragment } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import $GuildCacheStore from '../../store/GuildCacheStore';
 import { ComputedPermissions } from '../../store/models/ComputedPermissions';
@@ -32,6 +33,8 @@ function MemberSidebar() {
   const RoleCacheStore = useStore($RoleCacheStore);
   const UserCacheStore = useStore($UserCacheStore);
 
+  const { t } = useTranslation(['chat']);
+
   let renderedUsers: string[] = [];
 
   return (
@@ -50,7 +53,7 @@ function MemberSidebar() {
 
         return (
           <Fragment key={ role }>
-            <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` } key={ role }>{ RoleCacheStore[role].name !== 'everyone' ? RoleCacheStore[role].name : 'Online' }</StyledText>
+            <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` } key={ role }>{ RoleCacheStore[role].name !== 'everyone' ? RoleCacheStore[role].name : t('online') }</StyledText>
             {
               GuildStore[guildId].members?.map((memberId: string) => {
                 if (
@@ -71,7 +74,7 @@ function MemberSidebar() {
           </Fragment>
         )
       }) }
-      <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` }>Offline</StyledText>
+      <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` }>{ t('offline') }</StyledText>
       {
         (
           GuildStore[guildId]?.members && GuildStore[guildId].members?.map((memberId: string) => {

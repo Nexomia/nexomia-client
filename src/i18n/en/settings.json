@@ -96,6 +96,8 @@
     "feed": "Feed",
     "people": "People",
     "direct_messages": "Direct Messages",
-    "server_settings": "Server Settings"
+    "server_settings": "Server Settings",
+    "discover": "Discover",
+    "home": "Home"
   }
 }

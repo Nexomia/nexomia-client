@@ -6,5 +6,7 @@
   "profile": {
     "about_me": "About me",
     "badges": "Badges"
-  }
+  },
+  "offline": "Offline",
+  "online": "Online"
 }

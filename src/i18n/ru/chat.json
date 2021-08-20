@@ -6,5 +6,7 @@
   "profile": {
     "about_me": "Обо мне",
     "badges": "Значки"
-  }
+  },
+  "offline": "Не в сети",
+  "online": "В сети"
 }

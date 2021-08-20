@@ -96,6 +96,8 @@
     "feed": "Лента",
     "people": "Люди",
     "direct_messages": "Личные сообщения",
-    "server_settings": "Настройки сервера"
+    "server_settings": "Настройки сервера",
+    "discover": "Поиск",
+    "home": "Главная"
   }
 }

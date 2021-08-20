@@ -122,7 +122,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       { (path === 'discover' || path === 'profiles') && type === 'channels' && (
         <Fragment>
           <SidebarHeader>
-            <Content>Discover</Content>
+            <Content>{ t('tabs.discover') }</Content>
           </SidebarHeader>
           <Tab
             Icon={ RiUserFill }
@@ -137,7 +137,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       { path === 'home' && type === 'channels' && (
         <Fragment>
           <SidebarHeader>
-            <Content>Home</Content>
+            <Content>{ t('tabs.home') }</Content>
           </SidebarHeader>
           <Tab
             Icon={ RiMessage3Fill }
