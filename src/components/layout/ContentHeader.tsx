@@ -1,6 +1,6 @@
 import { styled } from 'linaria/react';
 import { css } from 'linaria';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 
 import { useStore } from 'effector-react';
 import { useParams } from 'react-router-dom';
@@ -17,6 +17,7 @@ import $UserCacheStore from '../../store/UserCacheStore';
 import isTabGuild from '../../utils/isTabGuild';
 import InputButton from '../chat/InputButton';
 import { useTranslation } from 'react-i18next';
+import PinnedMessagesView from '../chat/PinnedMessagesView';
 
 const Header = styled.div`
   height: 48px;
@@ -59,6 +60,10 @@ function ContentHeader() {
   const usersCache = useStore($UserCacheStore);
   const { t } = useTranslation(['settings']);
 
+  const [pinsOpened, setPinsOpened] = useState(false);
+
+  useEffect(() => setPinsOpened(false), [channelId]);
+
   return (
     <Header>
       { path === 'profiles' && guildId !== 'people' && (
@@ -73,9 +78,10 @@ function ContentHeader() {
         <Fragment>
           <Content>{ channelsCache[channelId]?.name || '' }</Content>
           <div className={ css`flex-grow: 1` } />
-          <InputButton>
+          <InputButton onClick={ () => setPinsOpened(!pinsOpened) }>
             <RiPushpinFill className={ classNames(StyledIconCss, InputIconCss) } />
           </InputButton>
+          { pinsOpened && <PinnedMessagesView channel={ channelId } /> }
         </Fragment>
       ) }
 

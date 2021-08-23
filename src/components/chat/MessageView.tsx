@@ -13,10 +13,11 @@ import Message from '../../store/models/Message';
 
 interface MessageViewProps {
   channel: string,
-  onMessagesLoaded: any
+  onMessagesLoaded?: any,
+  type?: number
 }
 
-function MessageView({ channel, onMessagesLoaded }: MessageViewProps) {
+function MessageView({ channel, onMessagesLoaded = () => null, type = 0 }: MessageViewProps) {
   const [loading, setLoading] = useState(false);
   const MessageStore = useStore($MessageStore);
   const MessageCacheStore = useStore($MessageCacheStore);
@@ -25,8 +26,17 @@ function MessageView({ channel, onMessagesLoaded }: MessageViewProps) {
   let prevMessage = '';
 
   useEffect(() => {
-    if (!MessageStore[channel] || !MessageStore[channel].length) setLoading(true);
-    if ((!MessageStore[channel] || !MessageStore[channel].length) && CachedChannels[channel]) {
+    if (
+      !MessageStore[type === 0 ? channel : `0${channel}`] ||
+      !MessageStore[type === 0 ? channel : `0${channel}`].length
+    ) setLoading(true);
+    if (
+      (
+        !MessageStore[type === 0 ? channel : `0${channel}`] ||
+        !MessageStore[type === 0 ? channel : `0${channel}`].length
+      ) &&
+      CachedChannels[channel]
+    ) {
       loadMessages();
       return;
     }
@@ -40,8 +50,10 @@ function MessageView({ channel, onMessagesLoaded }: MessageViewProps) {
         </CenteredContainer>
       ) : (
         (
-          MessageStore[channel] && (MessageStore[channel].length && MessageStore[channel].length !== 0) && (
-            MessageStore[channel].map((message) => {
+          MessageStore[type === 0 ? channel : `0${channel}`] &&
+          (MessageStore[type === 0 ? channel : `0${channel}`].length &&
+          MessageStore[type === 0 ? channel : `0${channel}`].length !== 0) && (
+            MessageStore[type === 0 ? channel : `0${channel}`].map((message) => {
               const rendered =  (
                 <MessageRenderer
                   id={ message }
@@ -52,7 +64,7 @@ function MessageView({ channel, onMessagesLoaded }: MessageViewProps) {
               );
 
               if (!MessageCacheStore[message].deleted) {
-                prevMessage = message;
+                prevMessage = type === 0 ? message : '';
                 return rendered;
               } else {
                 return null;
@@ -65,10 +77,20 @@ function MessageView({ channel, onMessagesLoaded }: MessageViewProps) {
   )
 
   async function loadMessages() {
-    const response = await MessagesService.getChannelMessages(channel);
+    let response;
+
+    if (type === 1) {
+      response = await MessagesService.getChannelPins(channel);
+    } else {
+      response = await MessagesService.getChannelMessages(channel);
+    }
+
     if (!response) return;
     cacheMessages(response);
-    setChannelMessages({ channel, messages: response.map((message: Message) => message.id) });
+    setChannelMessages({
+      channel: type === 0 ? channel : `0${channel}`,
+      messages: (type === 0 ? response : response.reverse()).map((message: Message) => message.id)
+    });
     setLoading(false);
     onMessagesLoaded();
   }

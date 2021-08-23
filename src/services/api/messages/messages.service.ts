@@ -42,6 +42,16 @@ class MessagesService {
 
     return response.data;
   }
+
+  async getChannelPins(channel: string) {
+    const response = await CommonRequestManager.apiRequest('GET', `/channels/${channel}/pins`, {});
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
 }
 
 export default new MessagesService();
