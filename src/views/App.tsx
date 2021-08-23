@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useStore } from 'effector-react';
 import $AuthStore, { setToken } from '../store/AuthStore';
-import { setUser } from '../store/UserStore';
+import $UserStore, { setUser } from '../store/UserStore';
 import { setGuilds } from '../store/GuildStore';
 import { cacheGuilds } from '../store/GuildCacheStore';
 import { setContextMenu } from '../store/ContextMenuStore';
@@ -39,6 +39,7 @@ function App() {
   const { t } = useTranslation(['states']);
 
   const { token } = useStore($AuthStore);
+  const User = useStore($UserStore);
 
   const history = useHistory();
 
@@ -100,6 +101,12 @@ function App() {
           <Sidebar />
           <Content />
         </Route>
+
+        { User ? (
+          <Route path='/'>
+            { () => history.push('/home') }
+          </Route>
+        ) : null }
       </Switch>
     </div>
   );
