@@ -3,7 +3,7 @@ import { css } from 'linaria';
 import { styled } from 'linaria/react';
 import { useTranslation } from 'react-i18next';
 import $MessageStore from '../../store/MessageStore';
-import PopoutHeader from '../ui/ModalHeader';
+import PopoutHeader from '../ui/PopoutHeader';
 import MessageView from './MessageView';
 
 const Container = styled.div`

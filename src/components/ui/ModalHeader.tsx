@@ -1,11 +1,14 @@
 import { styled } from 'linaria/react';
 
-const PopoutHeader = styled.div`
+const ModalHeader = styled.div`
   display: block;
-  font-size: 18px;
+  margin-top: 32px;
+  margin-bottom: 32px;
+  font-size: 28px;
   font-weight: 800;
+  text-align: center;
   color: var(--text-primary);
   user-select: none;
 `
 
-export default PopoutHeader;
+export default ModalHeader;
