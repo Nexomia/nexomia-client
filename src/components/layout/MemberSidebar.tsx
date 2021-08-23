@@ -85,7 +85,7 @@ function MemberSidebar() {
 
             return (
               memberId && (PermissionCalculator.getUserPermissions(guildId, channelId, memberId) & ComputedPermissions.VIEW_CHANNEL) ? (
-                <Member id={ memberId } key={ memberId } guild={ guildId } />
+                <Member offline id={ memberId } key={ memberId } guild={ guildId } />
               ) : null
             )
           })

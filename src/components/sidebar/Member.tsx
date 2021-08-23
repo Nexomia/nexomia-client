@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { useStore } from 'effector-react';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
@@ -23,6 +24,14 @@ const Container = styled.div`
   }
   &:active {
     transform: scale(0.98);
+  }
+`
+
+const OfflineCss = css`
+  opacity: .5;
+
+  &:hover {
+    opacity: 1;
   }
 `
 
@@ -56,15 +65,16 @@ const Presence = styled.div`
 
 interface MemberProps {
   id: string,
-  guild?: string
+  guild?: string,
+  offline?: boolean
 }
 
-function Member({ id, guild }: MemberProps) {
+function Member({ id, guild, offline = false }: MemberProps) {
   const UserCache = useStore($UserCacheStore);
   const history = useHistory();
 
   return (
-    <Container onClick={ openProfile }>
+    <Container onClick={ openProfile } className={ classNames({ [OfflineCss]: offline }) }>
       {
         UserCache[id].avatar ? (
           <Avatar src={ UserCache[id].avatar } className={ css`background: transparent` } />
