@@ -11,6 +11,11 @@ class ChannelEventHandler {
     const response = await ChannelsService.getGuildChannels(event.info.data.guild_id);
     setGuildChannels({ guild: event.info.data.guild_id, channels: response.map((channel: Channel) => channel.id) });
   }
+
+  async channelDeleted(event: CustomMessageEvent) {
+    const response = await ChannelsService.getGuildChannels(event.info.data.guild_id);
+    setGuildChannels({ guild: event.info.data.guild_id, channels: response.map((channel: Channel) => channel.id) });
+  }
 }
 
 export default new ChannelEventHandler();

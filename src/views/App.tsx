@@ -12,7 +12,7 @@ import $AuthStore, { setToken } from '../store/AuthStore';
 import $UserStore, { setUser } from '../store/UserStore';
 import { setGuilds } from '../store/GuildStore';
 import { cacheGuilds } from '../store/GuildCacheStore';
-import { setContextMenu } from '../store/ContextMenuStore';
+import $ContextMenuStore, { setContextMenu } from '../store/ContextMenuStore';
 
 import UsersService from '../services/api/users/users.service';
 import GuildsService from '../services/api/guilds/guilds.service';
@@ -133,6 +133,7 @@ function App() {
   }
 
   function closeContextMenu() {
+    if ($ContextMenuStore.getState().lock) return;
     setContextMenu({ visible: false });
   }
 }

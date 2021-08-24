@@ -8,7 +8,7 @@ import $MessageCacheStore from '../../store/MessageCacheStore';
 import $UserCacheStore from '../../store/UserCacheStore';
 import $ChannelCacheStore from '../../store/ChannelCacheStore';
 import StyledText from '../ui/StyledText';
-import { setContextMenu } from '../../store/ContextMenuStore';
+import $ContextMenuStore, { setContextMenu } from '../../store/ContextMenuStore';
 import getMemberColor from '../../utils/getMemberColor';
 import getIconString from '../../utils/getIconString';
 import { RiArrowRightLine, RiPushpinFill } from 'react-icons/ri';
@@ -35,7 +35,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: row;
 
-  &:hover {
+  &:hover, &.active {
     background: var(--background-secondary-alt);
   }
 
@@ -96,13 +96,17 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
   const UserCache = useStore($UserCacheStore);
   const MessageCache = useStore($MessageCacheStore);
   const ChannelCache = useStore($ChannelCacheStore);
+  const ContextMenu = useStore($ContextMenuStore);
 
   const { t } = useTranslation(['chat']);
 
   const history = useHistory();
 
   return (
-    <Container className={ classNames({ [GroupedContainerCss]: (grouped && !MessageCache[id].type) }) } onContextMenu={ openContextMenu } >
+    <Container
+      className={ classNames({ [GroupedContainerCss]: (grouped && !MessageCache[id].type), active: ContextMenu?.id === id && ContextMenu?.visible }) }
+      onContextMenu={ openContextMenu }
+    >
       { !grouped && !MessageCache[id].type ? (
         UserCache[MessageCache[id].author].avatar ? (
           <Avatar src={ UserCache[MessageCache[id].author].avatar } onClick={ showUserProfile } className={ css`background: transparent` }></Avatar>

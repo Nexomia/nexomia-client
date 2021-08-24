@@ -6,7 +6,8 @@
     "delete": "Удалить",
     "pin": "Закрепить",
     "edit": "Редактировать",
-    "add_reaction": "Добавить реакцию"
+    "add_reaction": "Добавить реакцию",
+    "confirmation": "Вы уверены?"
   },
   "modals": {
     "channel_creating": "Создаем канал...",

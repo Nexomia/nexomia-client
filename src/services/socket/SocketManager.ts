@@ -77,6 +77,10 @@ class SocketManager {
       case 'guild.channel_created':
         ChannelEventHandler.channelCreated(event);
         break;
+
+      case 'guild.channel_deleted':
+        ChannelEventHandler.channelDeleted(event);
+        break;
     }
   }
 }

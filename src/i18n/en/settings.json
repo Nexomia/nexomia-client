@@ -6,7 +6,8 @@
     "delete": "Delete",
     "pin": "Pin",
     "edit": "Edit",
-    "add_reaction": "Add Reaction"
+    "add_reaction": "Add Reaction",
+    "confirmation": "Are you sure?"
   },
   "modals": {
     "channel_creating": "Creating Channel...",

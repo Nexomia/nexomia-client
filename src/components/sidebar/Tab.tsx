@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { IconType } from 'react-icons/lib';
 import StyledIconCss from '../css/StyledIconCss';
 import StyledText from '../ui/StyledText';
+import { setContextMenu } from '../../store/ContextMenuStore';
 
 const Container = styled.div`
   margin: 0 8px 8px 8px;
@@ -48,6 +49,7 @@ interface TabProps {
   title: string,
   active?: boolean,
   tabId?: string,
+  contextEnabled?: boolean,
   onClick?: any
 }
 
@@ -56,15 +58,24 @@ interface RouteParams {
   channelId: string
 }
 
-function Tab({ Icon, title, active, onClick, tabId }: TabProps) {
+function Tab({ Icon, title, active, onClick, tabId, contextEnabled = false }: TabProps) {
   const { guildId, channelId } = useParams<RouteParams>();
 
   return (
-    <Container onClick={ onClick } className={ classNames({ active: active || tabId === channelId || tabId === guildId }) }>
+    <Container
+      onClick={ onClick }
+      onContextMenu={ openContextMenu }
+      className={ classNames({ active: active || tabId === channelId || tabId === guildId }) }
+    >
       { Icon && <Icon className={ classNames({ [StyledIconCss]: true, [TabIconCss]: true }) } /> }
       <StyledText className={ TextCss }>{ title }</StyledText>
     </Container>
   );
+
+  function openContextMenu(event: any) {
+    event.preventDefault();
+    setContextMenu({ type: 'channel', top: event.pageY, left: event.pageX, visible: true, id: tabId });
+  }
 }
 
 export default Tab;

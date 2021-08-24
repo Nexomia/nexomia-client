@@ -192,6 +192,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
                 tabId={ channelsCache[channel]?.id }
                 key={ channelsCache[channel]?.id }
                 onClick={ () => { history.push(`/channels/${guildId}/${channel}`) } }
+                contextEnabled
               />
             )
           ))),

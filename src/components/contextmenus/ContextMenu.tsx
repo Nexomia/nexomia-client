@@ -1,11 +1,12 @@
 import { useStore } from 'effector-react';
 import { styled } from 'linaria/react';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
+import GuildsService from '../../services/api/guilds/guilds.service';
 import MessagesService from '../../services/api/messages/messages.service';
 import $ChannelCacheStore from '../../store/ChannelCacheStore';
-import $ContextMenuStore from '../../store/ContextMenuStore';
+import $ContextMenuStore, { setContextMenu } from '../../store/ContextMenuStore';
 import $MessageCacheStore from '../../store/MessageCacheStore';
 import { ComputedPermissions } from '../../store/models/ComputedPermissions';
 import $UserStore from '../../store/UserStore';
@@ -28,6 +29,8 @@ function ContextMenu() {
   const MessageCache = useStore($MessageCacheStore);
   const ChannelCache = useStore($ChannelCacheStore);
   const User = useStore($UserStore);
+
+  const [step, setStep] = useState(false);
 
   const { t } = useTranslation(['settings']);
 
@@ -74,7 +77,7 @@ function ContextMenu() {
                   ''
                 ) &
                 ComputedPermissions.MANAGE_MESSAGES
-              ) ? (
+              ) && !MessageCache[id || '']?.type ? (
                 <ContextTab title={ t('menu.pin') } onClick={ pinMessage } />
               ) : null }
 
@@ -92,6 +95,23 @@ function ContextMenu() {
               <ContextTab title={ t('menu.copy_id') } />
             </Fragment>
           ) }
+
+          { type === 'channel' && (
+            <Fragment>
+              { (
+                PermissionCalculator.getUserPermissions(
+                  ChannelCache[id || '']?.guild_id || '',
+                  id || '',
+                  ''
+                ) &
+                ComputedPermissions.MANAGE_CHANNELS
+              ) ? (
+                <ContextTab title={ step ? t('menu.confirmation') : t('menu.delete') } onClick={ deleteChannel } />
+              ) : null }
+
+              <ContextTab title={ t('menu.copy_id') } />
+            </Fragment>
+          ) }
         </Base>
       ) }
     </Fragment>
@@ -99,6 +119,17 @@ function ContextMenu() {
 
   function deleteMessage() {
     MessagesService.deleteMessage(MessageCache[id || '']?.channel_id || '', id || '');
+  }
+
+  async function deleteChannel() {
+    if (!step) {
+      setStep(true);
+      setContextMenu({ lock: true });
+    } else {
+      await GuildsService.deleteGuildChannel(ChannelCache[id || '']?.guild_id || '', id || '');
+      setStep(false);
+      setContextMenu({ visible: false, lock: false });
+    }
   }
 
   function pinMessage() {

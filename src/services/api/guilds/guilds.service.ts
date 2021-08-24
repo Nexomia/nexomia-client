@@ -43,6 +43,16 @@ class GuildsService {
     return response.data;
   }
 
+  async deleteGuildChannel(guild: string, channel: string) {
+    const response = await CommonRequestManager.apiRequest('DELETE', `/channels/${channel}`, {});
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
+
   async joinGuild(inviteCode: string) {
     const response = await CommonRequestManager.apiRequest('GET', `/invites/${inviteCode}/accept`, {});
 
