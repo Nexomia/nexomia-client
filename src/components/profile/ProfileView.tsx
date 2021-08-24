@@ -8,6 +8,7 @@ import { RiShieldCheckFill, RiCodeSSlashFill } from 'react-icons/ri';
 import markdown from 'snarkdown';
 import $UserCacheStore from '../../store/UserCacheStore';
 import getIconString from '../../utils/getIconString';
+import renderMessageContent from '../../utils/renderMessageContent';
 import StyledIconCss from '../css/StyledIconCss';
 import CenteredContainer from '../layout/CenteredContainer';
 import StyledText from '../ui/StyledText';
@@ -102,7 +103,7 @@ function ProfileView({ user }: ProfileViewProps) {
             { UserCache[user].description && (
               <InfoContainer>
                 <StyledText className={ css`font-size: 22px; margin: 0; font-weight: 900; margin-bottom: 16px` }>{ t('profile.about_me') }</StyledText>
-                <StyledText className={ css`font-size: 18px; margin: 0` } dangerouslySetInnerHTML={{ __html: markdown(UserCache[user].description || '') }}></StyledText>
+                <StyledText className={ css`font-size: 18px; margin: 0` } dangerouslySetInnerHTML={{ __html: renderMessageContent(UserCache[user].description || '') }}></StyledText>
               </InfoContainer>
             ) }
             { UserCache[user].verified && (

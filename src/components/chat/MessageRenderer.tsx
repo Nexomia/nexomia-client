@@ -14,6 +14,7 @@ import getIconString from '../../utils/getIconString';
 import { RiArrowRightLine, RiPushpinFill } from 'react-icons/ri';
 import StyledIconCss from '../css/StyledIconCss';
 import { useTranslation } from 'react-i18next';
+import renderMessageContent from '../../utils/renderMessageContent';
 
 const Spacer = styled.div`
   display: flex;
@@ -143,7 +144,10 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
             </StyledText>
           </StyledText>
         ) : null }
-        <StyledText className={ css`margin: 0; padding-right: 16px; font-weight: 400; user-select: text; word-break: break-all` }>{ MessageCache[id].content }</StyledText>
+        <StyledText
+          className={ css`margin: 0; padding-right: 16px; font-weight: 400; user-select: text; word-break: break-all` }
+          dangerouslySetInnerHTML={{ __html: renderMessageContent(MessageCache[id].content || '') }}
+        />
       </ContentContainer>
     </Container>
   )
