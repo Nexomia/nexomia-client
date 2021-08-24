@@ -13,6 +13,16 @@ class MessagesService {
     return response.data;
   }
 
+  async getMessage(channel: string, message: string) {
+    const response = await CommonRequestManager.apiRequest('GET', `/channels/${channel}/messages/${message}`, {});
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
+
   async deleteMessage(channel: string, message: string) {
     const response = await CommonRequestManager.apiRequest('DELETE', `/channels/${channel}/messages/${message}`, {});
 

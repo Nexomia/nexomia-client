@@ -3,6 +3,7 @@ import { createStore, createEvent } from 'effector-root';
 const setChannelMessages = createEvent<ChannelMessagesInfo>();
 const appendChannelMessages = createEvent<ChannelMessagesInfo>();
 const addMessage = createEvent<ChannelMessageInfo>();
+const preaddMessage = createEvent<ChannelMessageInfo>();
 const clearLoadedMesssages = createEvent<string>();
 const deleteMessage = createEvent<ChannelMessageInfo>();
 
@@ -31,6 +32,12 @@ $MessageStore
       [info.channel]: state[info.channel] ? state[info.channel].concat(info.message) : [info.message]
     }
   ))
+  .on(preaddMessage, (state: ChannelMessages, info: ChannelMessageInfo) => (
+    {
+      ...state,
+      [info.channel]: state[info.channel] ? [info.message, ...state[info.channel]] : [info.message]
+    }
+  ))
   .on(clearLoadedMesssages, (state: ChannelMessages, channel: string) => (
     {
       ...state,
@@ -48,4 +55,4 @@ $MessageStore
   });
 
 export default $MessageStore;
-export { setChannelMessages, appendChannelMessages, addMessage, deleteMessage, clearLoadedMesssages };
+export { setChannelMessages, appendChannelMessages, addMessage, preaddMessage, deleteMessage, clearLoadedMesssages };

@@ -58,6 +58,10 @@ class SocketManager {
         MesssageEventHandler.messageDeleted(event);
         break;
 
+      case 'message.pinned':
+        MesssageEventHandler.messagePinned(event);
+        break;
+
       case 'user.connected':
         UserEventHandler.userConnected(event);
         break
