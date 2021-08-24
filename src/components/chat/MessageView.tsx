@@ -64,7 +64,7 @@ function MessageView({ channel, onMessagesLoaded = () => null, type = 0 }: Messa
               );
 
               if (!MessageCacheStore[message].deleted) {
-                prevMessage = type === 0 ? message : '';
+                prevMessage = type === 0 && !MessageCacheStore[message]?.type ? message : '';
                 return rendered;
               } else {
                 return null;
