@@ -2,6 +2,7 @@
   "channel_new": "New Channel",
   "input_placeholder": "Type something here...",
   "joined_the_server": "joined the server",
+  "left_the_server": "left the server",
   "pinned_a_message": "pinned a message",
   "profile": {
     "about_me": "About me",

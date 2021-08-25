@@ -5,16 +5,19 @@ import { css } from 'linaria';
 import { styled } from 'linaria/react';
 import { useHistory } from 'react-router-dom';
 import $MessageCacheStore from '../../store/MessageCacheStore';
-import $UserCacheStore from '../../store/UserCacheStore';
+import $UserCacheStore, { cacheUsers } from '../../store/UserCacheStore';
 import $ChannelCacheStore from '../../store/ChannelCacheStore';
 import StyledText from '../ui/StyledText';
 import $ContextMenuStore, { setContextMenu } from '../../store/ContextMenuStore';
 import getMemberColor from '../../utils/getMemberColor';
 import getIconString from '../../utils/getIconString';
-import { RiArrowRightLine, RiPushpinFill } from 'react-icons/ri';
+import { RiArrowLeftLine, RiArrowRightLine, RiPushpinFill } from 'react-icons/ri';
 import StyledIconCss from '../css/StyledIconCss';
 import { useTranslation } from 'react-i18next';
 import renderMessageContent from '../../utils/renderMessageContent';
+import UsersService from '../../services/api/users/users.service';
+import { Fragment, useEffect } from 'react';
+import Dots from '../animations/Dots';
 
 const Spacer = styled.div`
   display: flex;
@@ -78,6 +81,10 @@ const JoinColorCss = css`
   color: var(--accent-green);
 `
 
+const LeaveColorCss = css`
+  color: var(--text-negative);
+`
+
 const Avatar = styled.img`${AvatarCss}`
 const LetterAvatar = styled.div`${AvatarCss}`
 
@@ -103,52 +110,66 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
 
   const history = useHistory();
 
+  useEffect(() => {
+    if (UserCache[MessageCache[id].author]) return;
+    loadUser(MessageCache[id].author);
+  }, []);
+
   return (
     <Container
       className={ classNames({ [GroupedContainerCss]: (grouped && !MessageCache[id].type), active: ContextMenu?.id === id && ContextMenu?.visible }) }
       onContextMenu={ openContextMenu }
     >
-      { !grouped && !MessageCache[id].type ? (
-        UserCache[MessageCache[id].author].avatar ? (
-          <Avatar src={ UserCache[MessageCache[id].author].avatar } onClick={ showUserProfile } className={ css`background: transparent` }></Avatar>
-        ) : (
-          <LetterAvatar onClick={ showUserProfile }>{ getIconString(UserCache[MessageCache[id].author].username || '') }</LetterAvatar>
-        )
-      ) : !MessageCache[id].type ? (
-        <Spacer>{ format(new Date(MessageCache[id].created), 'HH:mm') }</Spacer>
+      { UserCache[MessageCache[id].author] ? (
+        <Fragment>
+          { !grouped && !MessageCache[id].type ? (
+            UserCache[MessageCache[id].author].avatar ? (
+              <Avatar src={ UserCache[MessageCache[id].author].avatar } onClick={ showUserProfile } className={ css`background: transparent` }></Avatar>
+            ) : (
+              <LetterAvatar onClick={ showUserProfile }>{ getIconString(UserCache[MessageCache[id].author].username || '') }</LetterAvatar>
+            )
+          ) : !MessageCache[id].type ? (
+            <Spacer>{ format(new Date(MessageCache[id].created), 'HH:mm') }</Spacer>
+          ) : (
+            <Spacer>
+              { MessageCache[id].type === 5 ? (
+                <RiArrowLeftLine className={ classNames(StyledIconCss, MessageIconCss, LeaveColorCss) } />
+              ) : MessageCache[id].type === 4 ? (
+                <RiArrowRightLine className={ classNames(StyledIconCss, MessageIconCss, JoinColorCss) } />
+              ) : MessageCache[id].type === 3 ? (
+                <RiPushpinFill className={ classNames(StyledIconCss, MessageIconCss) } />
+              ) : null }
+            </Spacer>
+          ) }
+          <ContentContainer>
+            { (!grouped || MessageCache[id].type) ? (
+              <StyledText className={ css`margin: 0` }>
+                <div
+                  className={ css`display: inline-block; cursor: pointer; &:hover { text-decoration: underline }` }
+                  style={{ color: getMemberColor(ChannelCache[channel].guild_id || '', MessageCache[id].author) }}
+                  onClick={ showUserProfile }
+                >
+                  { UserCache[MessageCache[id].author].username }
+                  <span className={ css`color: var(--text-primary)` }>
+                    { MessageCache[id].type === 5 ? ' ' + t('left_the_server') : '' }
+                    { MessageCache[id].type === 4 ? ' ' + t('joined_the_server') : '' }
+                    { MessageCache[id].type === 3 ? ' ' + t('pinned_a_message') : '' }
+                  </span>
+                </div>
+                <StyledText className={ css`margin: 0 0 0 8px; color: var(--text-secondary); display: inline-block; font-size: 12px` }>
+                  { format(new Date(MessageCache[id].created), 'HH:mm') }
+                </StyledText>
+              </StyledText>
+            ) : null }
+            <StyledText
+              className={ css`margin: 0; padding-right: 16px; font-weight: 400; user-select: text; word-break: break-all; white-space: break-spaces;` }
+              dangerouslySetInnerHTML={{ __html: renderMessageContent(MessageCache[id].content || '') }}
+            />
+          </ContentContainer>
+        </Fragment>
       ) : (
-        <Spacer>
-          { MessageCache[id].type === 4 ? (
-            <RiArrowRightLine className={ classNames(StyledIconCss, MessageIconCss, JoinColorCss) } />
-          ) : MessageCache[id].type === 3 ? (
-            <RiPushpinFill className={ classNames(StyledIconCss, MessageIconCss) } />
-          ) : null }
-        </Spacer>
+        <Dots />
       ) }
-      <ContentContainer>
-        { (!grouped || MessageCache[id].type) ? (
-          <StyledText className={ css`margin: 0` }>
-            <div
-              className={ css`display: inline-block; cursor: pointer; &:hover { text-decoration: underline }` }
-              style={{ color: getMemberColor(ChannelCache[channel].guild_id || '', MessageCache[id].author) }}
-              onClick={ showUserProfile }
-            >
-              { UserCache[MessageCache[id].author].username }
-              <span className={ css`color: var(--text-primary)` }>
-                { MessageCache[id].type === 4 ? ' ' + t('joined_the_server') : '' }
-                { MessageCache[id].type === 3 ? ' ' + t('pinned_a_message') : '' }
-              </span>
-            </div>
-            <StyledText className={ css`margin: 0 0 0 8px; color: var(--text-secondary); display: inline-block; font-size: 12px` }>
-              { format(new Date(MessageCache[id].created), 'HH:mm') }
-            </StyledText>
-          </StyledText>
-        ) : null }
-        <StyledText
-          className={ css`margin: 0; padding-right: 16px; font-weight: 400; user-select: text; word-break: break-all; white-space: break-spaces;` }
-          dangerouslySetInnerHTML={{ __html: renderMessageContent(MessageCache[id].content || '') }}
-        />
-      </ContentContainer>
     </Container>
   )
 
@@ -159,6 +180,12 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
   function openContextMenu(event: any) {
     event.preventDefault();
     setContextMenu({ type: 'message', top: event.pageY, left: event.pageX, visible: true, id });
+  }
+
+  async function loadUser(id: string) {
+    const response = await UsersService.getUser(id);
+
+    if (response) cacheUsers([response]);
   }
 }
 
