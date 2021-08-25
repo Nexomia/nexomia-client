@@ -145,7 +145,7 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
           </StyledText>
         ) : null }
         <StyledText
-          className={ css`margin: 0; padding-right: 16px; font-weight: 400; user-select: text; word-break: break-all` }
+          className={ css`margin: 0; padding-right: 16px; font-weight: 400; user-select: text; word-break: break-all; white-space: break-spaces;` }
           dangerouslySetInnerHTML={{ __html: renderMessageContent(MessageCache[id].content || '') }}
         />
       </ContentContainer>

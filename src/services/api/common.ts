@@ -20,7 +20,6 @@ class CommonRequestManager {
       if (error.response?.status === 401) {
         try {
           await this.refreshToken();
-
           return this.apiRequest(method, path, data);
         } catch {
           return error;

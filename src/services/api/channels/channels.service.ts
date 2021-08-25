@@ -12,6 +12,10 @@ class ChannelsService {
 
     return response.data;
   }
+
+  async sendTyping(channel: string) {
+    await CommonRequestManager.apiRequest('POST', `/channels/${channel}/typing`, {});
+  }
 }
 
 export default new ChannelsService();

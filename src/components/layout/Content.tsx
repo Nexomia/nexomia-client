@@ -46,8 +46,6 @@ function Content() {
   const { path, guildId, channelId } = useParams<RouteParams>();
   const Channels = useStore($ChannelStore);
 
-  useEffect(() => console.log(path))
-
   return (
     <Container>
       <ContentHeader />

@@ -12,13 +12,15 @@ import StyledIconCss from '../css/StyledIconCss';
 import MessagesService from '../../services/api/messages/messages.service';
 import InputButton from './InputButton';
 import { useTranslation } from 'react-i18next';
+import ChannelsService from '../../services/api/channels/channels.service';
 
 const Container = styled.div`
   display: flex;
   margin: 16px;
   border-radius: 8px;
   background: var(--background-primary-alt);
-  height: 48px;
+  min-height: 48px;
+  max-height: 128px;
   flex-direction: row;
   z-index: 2;
 `
@@ -28,19 +30,30 @@ const InputIconCss = css`
   height: 24px;
 `
 
-const Input = styled.input`
-  display: flex;
+const Input = styled.div`
   flex-grow: 1;
   outline: none;
   background: transparent;
   border: 0px;
   font-weight: 400;
   font-size: 16px;
+  font-family: Inter;
+  resize: none;
   color: var(--text-primary);
-  &::placeholder {
-    color: var(--text-secondary);
-    user-select: none;
-  }
+`
+
+const ContentEditable = styled.div`
+  width: 100%;
+  min-height: 48px;
+  padding: 14px 0;
+  outline: none;
+  white-space: pre-wrap;
+`
+
+const Placeholder = styled.div`
+  color: var(--text-secondary);
+  position: absolute;
+  padding: 14px 0;
 `
 
 interface ChatInputProps {
@@ -49,18 +62,30 @@ interface ChatInputProps {
 }
 
 function ChatInput({ channel, onMessageSent }: ChatInputProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLDivElement>(null);
 
   const { t } = useTranslation(['chat']);
 
   const [sendLoading, setSendLoading] = useState(false);
+  const [typing, setTyping] = useState(false);
+  const [placeholder, setPlaceholder] = useState(true);
+  const [sendLocked, setSendLocked] = useState(false);
 
   return (
     <Container>
       <InputButton>
         <RiAddCircleFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
       </InputButton>
-      <Input placeholder={ t('input_placeholder') }ref={ inputRef } onKeyPress={ handleKeyPress } />
+      <Input>
+        { placeholder && <Placeholder>{ t('input_placeholder') }</Placeholder> }
+        <ContentEditable
+          contentEditable
+          ref={ inputRef }
+          onKeyDown={ handleKeyPress }
+          onKeyUp={ unlockInput }
+          onInput={ () => setPlaceholder(!inputRef?.current?.innerHTML) }
+        />
+      </Input>
       <InputButton className={ css`margin-right: 0` }>
         <RiEmotionLaughFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
       </InputButton>
@@ -74,8 +99,11 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
     if (sendLoading) return;
 
     setSendLoading(true);
-    const content = inputRef.current?.value;
-    if (inputRef.current) inputRef.current.value = '';
+    const content = inputRef.current?.innerHTML;
+    setImmediate(() => {
+      if (inputRef.current) inputRef.current.innerHTML = '';
+      setPlaceholder(true);
+    });
     const response = await MessagesService.sendMessage(channel, content || '');
 
     if (!response) return setSendLoading(false);
@@ -88,10 +116,20 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
     onMessageSent();
   }
 
-  function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
-    if (event.key === 'Enter') {
-      sendMessage();
-    }
+  function handleKeyPress(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'Enter' && !sendLocked) sendMessage();
+    if (event.key === 'Shift') setSendLocked(true);
+
+    /* if (typing) return;
+
+    setTyping(true);
+    setTimeout(() => setTyping(false), 3000);
+
+    ChannelsService.sendTyping(channel); */
+  }
+
+  function unlockInput(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'Shift') setSendLocked(false);
   }
 }
 
