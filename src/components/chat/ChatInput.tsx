@@ -129,12 +129,12 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
     }
     if (event.key === 'Shift') setSendLocked(true);
 
-    /* if (typing) return;
+    if (typing) return;
 
     setTyping(true);
-    setTimeout(() => setTyping(false), 3000);
+    setTimeout(() => setTyping(false), 2000);
 
-    ChannelsService.sendTyping(channel); */
+    ChannelsService.sendTyping(channel);
   }
 
   function unlockInput(event: KeyboardEvent<HTMLDivElement>) {

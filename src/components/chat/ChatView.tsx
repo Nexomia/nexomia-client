@@ -14,6 +14,12 @@ import MessagesService from '../../services/api/messages/messages.service';
 import ChatInput from './ChatInput';
 import MessageView from './MessageView';
 import Message from '../../store/models/Message';
+import $TypersStore from '../../store/TypersStore';
+import Dots from '../animations/Dots';
+import StyledText from '../ui/StyledText';
+import $UserCacheStore from '../../store/UserCacheStore';
+import getMemberColor from '../../utils/getMemberColor';
+import { useTranslation } from 'react-i18next';
 
 const MessageContainerWrapper = styled.div`
   flex-grow: 1;
@@ -43,8 +49,16 @@ const MessageWrapper = styled.div`
   flex-direction: column;
   flex-grow: 1;
   min-height: 100%;
-  padding-bottom: 32px;
+  padding-bottom: 8px;
   justify-content: flex-end;
+`
+
+const TypersContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  height: 16px;
+  padding-left: 15px;
+  margin-bottom: 20px;
 `
 
 interface ChatViewProps {
@@ -56,11 +70,15 @@ function ChatView({ channel }: ChatViewProps) {
   const Messages = useStore($MessageStore);
   const Channels = useStore($ChannelCacheStore);
   const Roles = useStore($RoleCacheStore);
+  const Users = useStore($UserCacheStore);
+  const Typers = useStore($TypersStore);
 
   const [inputVisible, setInputVisible] = useState(getSendPermission());
   const [loading, setLoading] = useState(false);
   const [oldHeight, setOldHeight] = useState(0);
   const [oldTop, setOldTop] = useState(0);
+
+  const { t } = useTranslation(['chat']);
 
   useEffect(() => {
     setInputVisible(getSendPermission());
@@ -82,6 +100,24 @@ function ChatView({ channel }: ChatViewProps) {
             <MessageWrapper>
               <MessageView channel={ channel } onMessagesLoaded={ scrollView } />
             </MessageWrapper>
+            <TypersContainer>
+              { !!Typers[channel]?.length && (
+                <Fragment>
+                  <Dots />
+                  <StyledText className={ css`margin-left: 15px; margin-top: 0;` }>
+                    { Typers[channel].map((user) => (
+                      <Fragment>
+                        <div style={{ color: getMemberColor(Channels[channel].guild_id || '', user), display: 'inline-block' }}>
+                          { Users[user].username }
+                        </div>
+                        { Typers[channel].indexOf(user) !== Typers[channel].length - 1 && ', ' }
+                      </Fragment>
+                    )) }
+                    { ' ' + (Typers[channel].length > 1 ? t('are_typing') : t('is_typing')) }
+                  </StyledText>
+                </Fragment>
+              ) }
+            </TypersContainer>
           </ScrollableContent>
         </MessageContainer>
       </MessageContainerWrapper>
@@ -102,6 +138,8 @@ function ChatView({ channel }: ChatViewProps) {
   }
 
   async function handleScroll() {
+    if (!Messages[channel]) return;
+
     if (
       scrollerRef?.current?.scrollTop &&
       scrollerRef?.current?.scrollTop < 400 &&

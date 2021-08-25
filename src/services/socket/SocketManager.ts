@@ -81,6 +81,10 @@ class SocketManager {
       case 'guild.channel_deleted':
         ChannelEventHandler.channelDeleted(event);
         break;
+
+      case 'channel.typing':
+        ChannelEventHandler.channelTyping(event);
+        break;
     }
   }
 }

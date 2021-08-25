@@ -9,5 +9,7 @@
     "badges": "Значки"
   },
   "offline": "Не в сети",
-  "online": "В сети"
+  "online": "В сети",
+  "are_typing": "печатают",
+  "is_typing": "печатает"
 }

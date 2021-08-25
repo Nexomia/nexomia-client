@@ -1,5 +1,6 @@
 import $MessageCacheStore, { cacheMessages, patchMessage } from '../../../store/MessageCacheStore';
 import $MessageStore, { preaddMessage, addMessage, deleteMessage } from '../../../store/MessageStore';
+import { removeTyper } from '../../../store/TypersStore';
 import MessagesService from '../../api/messages/messages.service';
 import CustomMessageEvent from '../models/CustomMessageEvent';
 class MessageEventHandler {
@@ -14,6 +15,7 @@ class MessageEventHandler {
 
     cacheMessages([event.info.data]);
     addMessage({ channel: event.info.data.channel_id, message: event.info.data.id });
+    removeTyper({ channel: event.info.data.channel_id, user: event.info.data.author });
   }
 
   messageDeleted(event: CustomMessageEvent) {

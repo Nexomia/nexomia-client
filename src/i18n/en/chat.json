@@ -9,5 +9,7 @@
     "badges": "Badges"
   },
   "offline": "Offline",
-  "online": "Online"
+  "online": "Online",
+  "are_typing": "are typing",
+  "is_typing": "is typing"
 }
