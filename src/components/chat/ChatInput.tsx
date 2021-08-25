@@ -1,5 +1,6 @@
 import { styled } from 'linaria/react';
 import { css } from 'linaria';
+import { htmlUnescape } from 'escape-goat';
 import classNames from 'classnames';
 import { KeyboardEvent, useRef, useState } from 'react';
 import { RiAddCircleFill, RiEmotionLaughFill, RiSendPlane2Fill } from 'react-icons/ri';
@@ -101,7 +102,7 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
     if (sendLoading) return;
 
     setSendLoading(true);
-    const content = inputRef.current?.innerHTML;
+    const content = htmlUnescape(inputRef.current?.innerHTML || '');
     setImmediate(() => {
       if (inputRef.current) inputRef.current.innerHTML = '';
       setPlaceholder(true);
