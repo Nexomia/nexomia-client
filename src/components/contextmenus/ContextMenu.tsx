@@ -54,7 +54,7 @@ function ContextMenu() {
                 <ContextTab title={ step ? t('menu.confirmation') : t('menu.leave_server') } onClick={ leaveGuild } />
               ) : null }
 
-              <ContextTab title={ t('menu.copy_id') } />
+              <ContextTab title={ t('menu.copy_id') } onClick={ copyId } />
             </Fragment>
           ) }
 
@@ -99,7 +99,7 @@ function ContextMenu() {
                 <ContextTab title={ t('menu.delete') } onClick={ deleteMessage } />
               ) : null }
 
-              <ContextTab title={ t('menu.copy_id') } />
+              <ContextTab title={ t('menu.copy_id') } onClick={ copyId } />
             </Fragment>
           ) }
 
@@ -116,13 +116,17 @@ function ContextMenu() {
                 <ContextTab title={ step ? t('menu.confirmation') : t('menu.delete') } onClick={ deleteChannel } />
               ) : null }
 
-              <ContextTab title={ t('menu.copy_id') } />
+              <ContextTab title={ t('menu.copy_id') } onClick={ copyId } />
             </Fragment>
           ) }
         </Base>
       ) }
     </Fragment>
   )
+
+  function copyId() {
+    navigator.clipboard.writeText(id || '');
+  }
 
   function deleteMessage() {
     MessagesService.deleteMessage(MessageCache[id || '']?.channel_id || '', id || '');
