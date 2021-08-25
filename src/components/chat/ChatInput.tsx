@@ -45,6 +45,8 @@ const Input = styled.div`
 const ContentEditable = styled.div`
   width: 100%;
   min-height: 48px;
+  max-height: 128px;
+  overflow: hidden auto;
   padding: 14px 0;
   outline: none;
   white-space: pre-wrap;
