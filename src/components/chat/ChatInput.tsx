@@ -103,11 +103,9 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
     if (sendLoading) return;
 
     setSendLoading(true);
-    const content = htmlUnescape(inputRef.current?.innerHTML || '');
-    setImmediate(() => {
-      if (inputRef.current) inputRef.current.innerHTML = '';
-      setPlaceholder(true);
-    });
+    const content = htmlUnescape(inputRef.current?.innerText || '');
+    if (inputRef.current) inputRef.current.innerHTML = '';
+    setPlaceholder(true);
     const response = await MessagesService.sendMessage(channel, content || '');
 
     if (!response) return setSendLoading(false);
@@ -121,7 +119,10 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
   }
 
   function handleKeyPress(event: KeyboardEvent<HTMLDivElement>) {
-    if (event.key === 'Enter' && !sendLocked) sendMessage();
+    if (event.key === 'Enter' && !sendLocked) {
+      event.preventDefault();
+      sendMessage();
+    }
     if (event.key === 'Shift') setSendLocked(true);
 
     /* if (typing) return;
