@@ -14,6 +14,7 @@ import MessagesService from '../../services/api/messages/messages.service';
 import InputButton from './InputButton';
 import { useTranslation } from 'react-i18next';
 import ChannelsService from '../../services/api/channels/channels.service';
+import renderMessageContent from '../../utils/renderMessageContent';
 
 const Container = styled.div`
   display: flex;
@@ -21,9 +22,11 @@ const Container = styled.div`
   border-radius: 8px;
   background: var(--background-primary-alt);
   min-height: 48px;
-  max-height: 128px;
+  max-height: calc(100vh - 400px);
+  transition: .2s;
   flex-direction: row;
   z-index: 2;
+  overflow: hidden;
 `
 
 const InputIconCss = css`
@@ -46,7 +49,7 @@ const Input = styled.div`
 const ContentEditable = styled.div`
   width: 100%;
   min-height: 48px;
-  max-height: 128px;
+  max-height: calc(100vh - 400px);
   overflow: hidden auto;
   padding: 14px 0;
   outline: none;
@@ -67,6 +70,7 @@ interface ChatInputProps {
 
 function ChatInput({ channel, onMessageSent }: ChatInputProps) {
   const inputRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const { t } = useTranslation(['chat']);
 
@@ -76,7 +80,7 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
   const [sendLocked, setSendLocked] = useState(false);
 
   return (
-    <Container>
+    <Container ref={ containerRef }>
       <InputButton>
         <RiAddCircleFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
       </InputButton>
@@ -87,7 +91,7 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
           ref={ inputRef }
           onKeyDown={ handleKeyPress }
           onKeyUp={ unlockInput }
-          onInput={ () => setPlaceholder(!inputRef?.current?.innerHTML) }
+          onInput={ handleInput }
         />
       </Input>
       <InputButton className={ css`margin-right: 0` }>
@@ -105,7 +109,7 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
     setSendLoading(true);
     const content = htmlUnescape(inputRef.current?.innerText || '');
     if (inputRef.current) inputRef.current.innerHTML = '';
-    setPlaceholder(true);
+    handleInput();
     const response = await MessagesService.sendMessage(channel, content || '');
 
     if (!response) return setSendLoading(false);
@@ -135,6 +139,11 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
 
   function unlockInput(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Shift') setSendLocked(false);
+  }
+
+  function handleInput() {
+    setPlaceholder(!inputRef?.current?.innerHTML);
+    if (containerRef.current) containerRef.current.style.height = inputRef?.current?.scrollHeight + 'px';
   }
 }
 
