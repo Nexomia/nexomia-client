@@ -55,7 +55,9 @@ function MemberSidebar() {
           <Fragment key={ role }>
             <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` } key={ role }>{ RoleCacheStore[role].name !== 'everyone' ? RoleCacheStore[role].name : t('online') }</StyledText>
             {
-              GuildStore[guildId].members?.map((memberId: string) => {
+              GuildStore[guildId].members?.sort(
+                (a: string, b: string) => UserCacheStore[a]?.username?.localeCompare(UserCacheStore[b]?.username || '') || 0
+              )?.map((memberId: string) => {
                 if (
                   !RoleCacheStore[role].members.includes(memberId) ||
                   renderedUsers.includes(memberId) ||
@@ -77,7 +79,10 @@ function MemberSidebar() {
       <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` }>{ t('offline') }</StyledText>
       {
         (
-          GuildStore[guildId]?.members && GuildStore[guildId].members?.map((memberId: string) => {
+          GuildStore[guildId]?.members &&
+          GuildStore[guildId].members?.sort(
+            (a: string, b: string) => UserCacheStore[a]?.username?.localeCompare(UserCacheStore[b]?.username || '') || 0
+          )?.map((memberId: string) => {
             if (
               renderedUsers.includes(memberId)
             ) return null;
