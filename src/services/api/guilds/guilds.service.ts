@@ -63,6 +63,10 @@ class GuildsService {
     return response.data;
   }
 
+  async leaveGuild(guild: string) {
+    return await CommonRequestManager.apiRequest('DELETE', `/users/@me/guilds/${guild}`, {});
+  }
+
   async patchGuild(guild: string, patch: object) {
     const response = await CommonRequestManager.apiRequest('PATCH', `/guilds/${guild}`, patch);
 

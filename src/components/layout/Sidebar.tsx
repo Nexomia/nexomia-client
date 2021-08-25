@@ -202,6 +202,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
               Icon={ RiAddFill }
               title={ t('chat:channel_new') }
               tabId={ 'new' }
+              key={ 'new' }
               onClick={ () => { setModalState({ channelCreation: true }) } }
             /> : null
           )

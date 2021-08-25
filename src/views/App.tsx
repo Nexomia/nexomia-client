@@ -133,7 +133,8 @@ function App() {
   }
 
   function closeContextMenu() {
-    if ($ContextMenuStore.getState().lock) return;
+    const menuState = $ContextMenuStore.getState();
+    if (menuState.lock || !menuState.visible) return;
     setContextMenu({ visible: false });
   }
 }

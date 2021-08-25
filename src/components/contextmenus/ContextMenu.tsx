@@ -7,6 +7,8 @@ import GuildsService from '../../services/api/guilds/guilds.service';
 import MessagesService from '../../services/api/messages/messages.service';
 import $ChannelCacheStore from '../../store/ChannelCacheStore';
 import $ContextMenuStore, { setContextMenu } from '../../store/ContextMenuStore';
+import $GuildCacheStore from '../../store/GuildCacheStore';
+import { removeGuild } from '../../store/GuildStore';
 import $MessageCacheStore from '../../store/MessageCacheStore';
 import { ComputedPermissions } from '../../store/models/ComputedPermissions';
 import $UserStore from '../../store/UserStore';
@@ -28,6 +30,7 @@ function ContextMenu() {
   const history = useHistory();
   const MessageCache = useStore($MessageCacheStore);
   const ChannelCache = useStore($ChannelCacheStore);
+  const GuildCache = useStore($GuildCacheStore);
   const User = useStore($UserStore);
 
   const [step, setStep] = useState(false);
@@ -46,7 +49,11 @@ function ContextMenu() {
               ) ? (
                 <ContextTab title={ t('menu.settings') } onClick={ () => history.push(`/guildsettings/${id}/general`) } />
               ) : null }
-              <ContextTab title={ t('menu.leave_server') } />
+
+              { GuildCache[id || '']?.owner_id !== User.id ? (
+                <ContextTab title={ step ? t('menu.confirmation') : t('menu.leave_server') } onClick={ leaveGuild } />
+              ) : null }
+
               <ContextTab title={ t('menu.copy_id') } />
             </Fragment>
           ) }
@@ -66,7 +73,7 @@ function ContextMenu() {
 
               { (
                 MessageCache[id || ''].author === User.id
-              ) ? (
+              ) && !MessageCache[id || '']?.type ? (
                 <ContextTab title={ t('menu.edit') } />
               ) : null }
 
@@ -127,6 +134,18 @@ function ContextMenu() {
       setContextMenu({ lock: true });
     } else {
       await GuildsService.deleteGuildChannel(ChannelCache[id || '']?.guild_id || '', id || '');
+      setStep(false);
+      setContextMenu({ visible: false, lock: false });
+    }
+  }
+
+  async function leaveGuild() {
+    if (!step) {
+      setStep(true);
+      setContextMenu({ lock: true });
+    } else {
+      await GuildsService.leaveGuild(id || '');
+      removeGuild(id || '');
       setStep(false);
       setContextMenu({ visible: false, lock: false });
     }

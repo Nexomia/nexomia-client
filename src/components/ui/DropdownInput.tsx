@@ -106,6 +106,7 @@ function DropdownInput({ keys, defaultKey, onChange = () => null }: DropdownProp
             <Item
               onClick={ () => { setSelected(keys.indexOf(key)); onChange(key) } }
               className={ classNames({ active: selected === keys.indexOf(key) }) }
+              key={ key.id }
             >{ key.text }</Item>
           ))
         }

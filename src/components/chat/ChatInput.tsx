@@ -57,6 +57,7 @@ const Placeholder = styled.div`
   color: var(--text-secondary);
   position: absolute;
   padding: 14px 0;
+  pointer-events: none;
 `
 
 interface ChatInputProps {
