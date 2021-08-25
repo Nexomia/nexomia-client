@@ -28,7 +28,8 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
     "snarkdown": "^2.0.0",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "uifx": "^2.0.7"
   },
   "scripts": {
     "start": "craco start",
