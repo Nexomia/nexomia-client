@@ -2,7 +2,9 @@ import { styled } from 'linaria/react';
 import { css } from 'linaria';
 import { htmlUnescape } from 'escape-goat';
 import classNames from 'classnames';
-import { KeyboardEvent, useRef, useState } from 'react';
+import { KeyboardEvent, useMemo, useRef, useState } from 'react';
+import { createEditor, BaseEditor, Descendant, Node } from 'slate';
+import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
 import { RiAddCircleFill, RiEmotionLaughFill, RiSendPlane2Fill } from 'react-icons/ri';
 
 import { addMessage } from '../../store/MessageStore';
@@ -16,6 +18,17 @@ import { useTranslation } from 'react-i18next';
 import ChannelsService from '../../services/api/channels/channels.service';
 import renderMessageContent from '../../utils/renderMessageContent';
 
+type CustomElement = { type: 'paragraph'; children: CustomText[] };
+type CustomText = { text: string };
+
+declare module 'slate' {
+  interface CustomTypes {
+    Editor: BaseEditor & ReactEditor,
+    Element: CustomElement,
+    Text: CustomText,
+  }
+};
+
 const Container = styled.div`
   display: flex;
   margin: 16px;
@@ -25,6 +38,7 @@ const Container = styled.div`
   max-height: calc(100vh - 400px);
   transition: .2s;
   flex-direction: row;
+  flex-grow: 0;
   z-index: 2;
   overflow: hidden;
 `
@@ -46,7 +60,7 @@ const Input = styled.div`
   color: var(--text-primary);
 `
 
-const ContentEditable = styled.div`
+const EditableCss = css`
   width: 100%;
   min-height: 48px;
   max-height: calc(100vh - 400px);
@@ -54,6 +68,7 @@ const ContentEditable = styled.div`
   padding: 14px 0;
   outline: none;
   white-space: pre-wrap;
+  word-break: break-all;
 `
 
 const Placeholder = styled.div`
@@ -76,23 +91,35 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
 
   const [sendLoading, setSendLoading] = useState(false);
   const [typing, setTyping] = useState(false);
-  const [placeholder, setPlaceholder] = useState(true);
   const [sendLocked, setSendLocked] = useState(false);
+
+  const editor = useMemo(() => withReact(createEditor()), []);
+  const initialValue: CustomElement[] = [
+    {
+      type: 'paragraph',
+      children: [{ text: '' }]
+    }
+  ];
+  const [value, setValue] = useState<Descendant[]>(initialValue);
 
   return (
     <Container ref={ containerRef }>
       <InputButton>
         <RiAddCircleFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
       </InputButton>
-      <Input>
-        { placeholder && <Placeholder>{ t('input_placeholder') }</Placeholder> }
-        <ContentEditable
-          contentEditable
-          ref={ inputRef }
-          onKeyDown={ handleKeyPress }
-          onKeyUp={ unlockInput }
-          onInput={ handleInput }
-        />
+      <Input ref={ inputRef }>
+        <Slate
+          editor={ editor }
+          value={ value }
+          onChange={ setValue }
+        >
+          <Editable
+            className={ EditableCss }
+            placeholder={ t('input_placeholder') }
+            onKeyDown={ handleKeyPress }
+            onKeyUp={ unlockInput }
+          />
+        </Slate>
       </Input>
       <InputButton className={ css`margin-right: 0` }>
         <RiEmotionLaughFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
@@ -107,9 +134,12 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
     if (sendLoading) return;
 
     setSendLoading(true);
-    const content = htmlUnescape(inputRef.current?.innerText || '');
-    if (inputRef.current) inputRef.current.innerHTML = '';
-    handleInput();
+
+    const output = value.map((child) => Node.string(child)).join('\n');
+
+    const content = htmlUnescape(output);
+    editor.insertBreak();
+    setValue(initialValue);
     const response = await MessagesService.sendMessage(channel, content || '');
 
     if (!response) return setSendLoading(false);
@@ -139,11 +169,6 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
 
   function unlockInput(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Shift') setSendLocked(false);
-  }
-
-  function handleInput() {
-    setPlaceholder(!inputRef?.current?.innerHTML);
-    if (containerRef.current) containerRef.current.style.height = inputRef?.current?.scrollHeight + 'px';
   }
 }
 

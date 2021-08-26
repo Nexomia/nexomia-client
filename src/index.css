@@ -32,3 +32,8 @@ code {
   background: var(--background-secondary);
   border-radius: 4px;
 }
+
+h2 {
+  margin: 0;
+  font-size: 24px;
+}

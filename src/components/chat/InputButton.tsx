@@ -3,6 +3,7 @@ import { styled } from 'linaria/react';
 export default styled.div`
   display: flex;
   flex-direction: row;
+  flex-shrink: 0;
   width: 48px;
   height: 40px;
   padding: 8px 11px;
