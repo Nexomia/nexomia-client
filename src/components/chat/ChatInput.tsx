@@ -3,7 +3,7 @@ import { css } from 'linaria';
 import { htmlUnescape } from 'escape-goat';
 import classNames from 'classnames';
 import { KeyboardEvent, useMemo, useRef, useState } from 'react';
-import { createEditor, BaseEditor, Descendant, Node } from 'slate';
+import { createEditor, BaseEditor, Descendant, Node, Text } from 'slate';
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
 import { RiAddCircleFill, RiEmotionLaughFill, RiSendPlane2Fill } from 'react-icons/ri';
 
@@ -17,6 +17,8 @@ import InputButton from './InputButton';
 import { useTranslation } from 'react-i18next';
 import ChannelsService from '../../services/api/channels/channels.service';
 import renderMessageContent from '../../utils/renderMessageContent';
+import getMessageMarkdownBounds from '../../utils/getMessageMarkdownBounds';
+import MarkdownLeaf from './markdown/MarkdownLeaf';
 
 type CustomElement = { type: 'paragraph'; children: CustomText[] };
 type CustomText = { text: string };
@@ -116,6 +118,8 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
           <Editable
             className={ EditableCss }
             placeholder={ t('input_placeholder') }
+            decorate={ decorate }
+            renderLeaf={ (props) => (<MarkdownLeaf { ...props } />) }
             onKeyDown={ handleKeyPress }
             onKeyUp={ unlockInput }
           />
@@ -129,6 +133,14 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
       </InputButton>
     </Container>
   );
+
+  function decorate([node, path]: Array<any>) {
+    if (!Text.isText(node)) {
+      return [];
+    }
+
+    return getMessageMarkdownBounds(node.text, path);
+  }
 
   async function sendMessage() {
     if (sendLoading) return;

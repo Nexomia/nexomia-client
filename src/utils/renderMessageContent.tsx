@@ -4,10 +4,12 @@ export default function renderMessageContent(content: string) {
   const output = [];
   const bounds = getMessageMarkdownBounds(content);
   let latestStart = 0;
-  let latestLength = 0;
 
   for (const bound of bounds) {
     output.push(content.slice(latestStart, bound.start));
+
+    console.log(content);
+    console.log(bound.start);
 
     switch (bound.type) {
       case 'bold':

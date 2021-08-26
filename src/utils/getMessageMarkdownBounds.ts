@@ -1,7 +1,7 @@
 import Prism from 'prismjs';
 import 'prismjs/components/prism-markdown';
 
-export default function getMessageMarkdownBounds(content: string, path?: any) {
+export default function getMessageMarkdownBounds(content: string, path?: any): any {
   const ranges = [];
 
   function getLength(token: any) {
@@ -24,7 +24,7 @@ export default function getMessageMarkdownBounds(content: string, path?: any) {
     if (typeof token !== 'string') {
       if (path) {
         ranges.push({
-          [token.type]: true,
+          type: token.type,
           anchor: { path, offset: start },
           focus: { path, offset: end }
         });
@@ -32,7 +32,7 @@ export default function getMessageMarkdownBounds(content: string, path?: any) {
         ranges.push({
           type: token.type,
           start,
-          length
+          length: end
         });
       }
     }
