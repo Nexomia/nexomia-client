@@ -2,7 +2,6 @@ import { Fragment } from 'react';
 
 
 function MarkdownLeaf({ attributes, children, leaf }: any) {
-  console.log(leaf);
   return (
     <Fragment>
       { leaf.type === 'bold'

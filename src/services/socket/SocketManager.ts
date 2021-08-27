@@ -8,6 +8,7 @@ import MesssageEventHandler from './events/Messages';
 import UserEventHandler from './events/Users';
 import RoleEventHandler from './events/Roles';
 import ChannelEventHandler from './events/Channels';
+import GuildEventHandler from './events/Guilds';
 
 class SocketManager {
   public socket: WebSocket | null = null;
@@ -80,6 +81,14 @@ class SocketManager {
 
       case 'guild.channel_deleted':
         ChannelEventHandler.channelDeleted(event);
+        break;
+
+      case 'guild.user_joined':
+        GuildEventHandler.memberJoined(event);
+        break;
+
+      case 'guild.user_left':
+        GuildEventHandler.memberLeft(event);
         break;
 
       case 'channel.typing':

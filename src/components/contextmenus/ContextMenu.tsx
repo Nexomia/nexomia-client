@@ -2,7 +2,7 @@ import { useStore } from 'effector-react';
 import { styled } from 'linaria/react';
 import { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import GuildsService from '../../services/api/guilds/guilds.service';
 import MessagesService from '../../services/api/messages/messages.service';
 import $ChannelCacheStore from '../../store/ChannelCacheStore';
@@ -25,7 +25,14 @@ const Base = styled.div`
   z-index: 10;
 `
 
+interface RouteParams {
+  path: string,
+  guildId: string,
+  channelId: string
+}
+
 function ContextMenu() {
+  const { guildId } = useParams<RouteParams>();
   const { top, left, visible, type, id } = useStore($ContextMenuStore);
   const history = useHistory();
   const MessageCache = useStore($MessageCacheStore);
@@ -152,6 +159,10 @@ function ContextMenu() {
       removeGuild(id || '');
       setStep(false);
       setContextMenu({ visible: false, lock: false });
+
+      if (guildId === id) {
+        history.push('/home');
+      }
     }
   }
 

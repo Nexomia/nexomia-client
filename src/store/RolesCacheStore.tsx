@@ -4,6 +4,8 @@ import Role from './models/Role';
 
 const cacheRoles = createEvent<Role[]>();
 const updateRole = createEvent<RoleUpdateInfo>();
+const addRoleMember = createEvent<RoleMemberInfo>();
+const removeRoleMember = createEvent<RoleMemberInfo>();
 
 interface RoleUpdateInfo {
   role: string,
@@ -12,6 +14,16 @@ interface RoleUpdateInfo {
 
 interface RoleCache {
   [key: string]: Role
+}
+
+interface RoleMembersInfo {
+  role: string,
+  members: string[]
+}
+
+interface RoleMemberInfo {
+  role: string,
+  member: string
 }
 
 const $RoleCacheStore = createStore<RoleCache>({});
@@ -30,6 +42,16 @@ $RoleCacheStore
     modifiedState = { ...modifiedState, [info.role]: { ...modifiedState[info.role], ...info.patch } };
     return modifiedState;
   })
+  .on(addRoleMember, (state: RoleCache, info: RoleMemberInfo) => {
+    const modifiedState = { ...state };
+    modifiedState[info.role].members = [...(state[info.role].members || []), info.member];
+    return modifiedState;
+  })
+  .on(removeRoleMember, (state: RoleCache, info: RoleMemberInfo) => {
+    const modifiedState = { ...state };
+    modifiedState[info.role].members.splice(modifiedState[info.role].members.indexOf(info.member), 1);
+    return modifiedState;
+  });
 
 export default $RoleCacheStore;
-export { cacheRoles, updateRole };
+export { cacheRoles, updateRole, addRoleMember, removeRoleMember };

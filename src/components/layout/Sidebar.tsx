@@ -185,7 +185,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       { !path && isTabGuild(guildId) && type === 'channels' && (guildChannels && guildChannels.length && channelsCache[guildChannels[0]] ? (
         [
           ...(guildChannels.map((channel: string) => (
-            (PermissionCalculator.getUserPermissions(guildId, channel, user.id) & ComputedPermissions.VIEW_CHANNEL) && (
+            !!(PermissionCalculator.getUserPermissions(guildId, channel, user.id) & ComputedPermissions.VIEW_CHANNEL) && (
               <Tab
                 Icon={ BiHash }
                 title={ channelsCache[channel]?.name || '' }

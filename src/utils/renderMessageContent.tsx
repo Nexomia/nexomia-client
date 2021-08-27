@@ -8,9 +8,6 @@ export default function renderMessageContent(content: string) {
   for (const bound of bounds) {
     output.push(content.slice(latestStart, bound.start));
 
-    console.log(content);
-    console.log(bound.start);
-
     switch (bound.type) {
       case 'bold':
         output.push(

@@ -64,9 +64,9 @@ function App() {
         active={ !loaded }
         solid={ true }
       />
-      <ContextMenu />
       <Switch>
         <Route path={`/channels/:guildId/:channelId`}>
+          <ContextMenu />
           <Modals />
           <Guilds />
           <Sidebar />
@@ -75,6 +75,7 @@ function App() {
         </Route>
 
         <Route path={`/channels/:guildId`}>
+          <ContextMenu />
           <Modals />
           <Guilds />
           <Sidebar />
@@ -82,6 +83,7 @@ function App() {
         </Route>
 
         <Route path={`/:path/:guildId/:channelId`}>
+          <ContextMenu />
           <Modals />
           <Guilds />
           <Sidebar />
@@ -89,6 +91,7 @@ function App() {
         </Route>
 
         <Route path={`/:path/:guildId`}>
+          <ContextMenu />
           <Modals />
           <Guilds />
           <Sidebar />
@@ -96,6 +99,7 @@ function App() {
         </Route>
 
         <Route path={`/:path`}>
+          <ContextMenu />
           <Modals />
           <Guilds />
           <Sidebar />

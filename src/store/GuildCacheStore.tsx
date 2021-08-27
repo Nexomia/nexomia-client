@@ -5,6 +5,8 @@ import Guild from './models/Guild';
 const cacheGuilds = createEvent<Guild[]>();
 const setGuildRoles = createEvent<GuildRolesInfo>();
 const setGuildMembers = createEvent<GuildMembersInfo>();
+const addGuildMembers = createEvent<GuildMembersInfo>();
+const removeGuildMember = createEvent<GuildMemberInfo>();
 
 interface GuildCache {
   [key: string]: Guild
@@ -18,6 +20,11 @@ interface GuildRolesInfo {
 interface GuildMembersInfo {
   guild: string,
   members: string[]
+}
+
+interface GuildMemberInfo {
+  guild: string,
+  member: string
 }
 
 const $GuildCacheStore = createStore<GuildCache>({});
@@ -41,6 +48,16 @@ $GuildCacheStore
     modifiedState[info.guild].members = info.members
     return modifiedState;
   })
+  .on(addGuildMembers, (state: GuildCache, info: GuildMembersInfo) => {
+    const modifiedState = { ...state };
+    modifiedState[info.guild].members = [...(state[info.guild].members || []), ...info.members];
+    return modifiedState;
+  })
+  .on(removeGuildMember, (state: GuildCache, info: GuildMemberInfo) => {
+    const modifiedState = { ...state };
+    modifiedState[info.guild]?.members?.splice(modifiedState[info.guild]?.members?.indexOf(info.member || '') || -1, 1);
+    return modifiedState;
+  });
 
 export default $GuildCacheStore;
-export { cacheGuilds, setGuildRoles, setGuildMembers };
+export { cacheGuilds, setGuildRoles, setGuildMembers, addGuildMembers, removeGuildMember };
