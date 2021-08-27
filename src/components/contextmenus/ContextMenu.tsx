@@ -1,6 +1,6 @@
 import { useStore } from 'effector-react';
 import { styled } from 'linaria/react';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
 import GuildsService from '../../services/api/guilds/guilds.service';
@@ -33,12 +33,17 @@ interface RouteParams {
 
 function ContextMenu() {
   const { guildId } = useParams<RouteParams>();
-  const { top, left, visible, type, id } = useStore($ContextMenuStore);
+  const ContextMenu = useStore($ContextMenuStore)
+  const { top, left, visible, type, id } = ContextMenu;
   const history = useHistory();
   const MessageCache = useStore($MessageCacheStore);
   const ChannelCache = useStore($ChannelCacheStore);
   const GuildCache = useStore($GuildCacheStore);
   const User = useStore($UserStore);
+
+  useEffect(() => {
+    if (!visible) setStep(false);
+  }, [ContextMenu]);
 
   const [step, setStep] = useState(false);
 
@@ -143,6 +148,7 @@ function ContextMenu() {
     if (!step) {
       setStep(true);
       setContextMenu({ lock: true });
+      setImmediate(() => setContextMenu({ lock: false }));
     } else {
       await GuildsService.deleteGuildChannel(ChannelCache[id || '']?.guild_id || '', id || '');
       setStep(false);
@@ -154,6 +160,7 @@ function ContextMenu() {
     if (!step) {
       setStep(true);
       setContextMenu({ lock: true });
+      setImmediate(() => setContextMenu({ lock: false }));
     } else {
       await GuildsService.leaveGuild(id || '');
       removeGuild(id || '');
