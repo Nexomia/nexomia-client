@@ -38,6 +38,7 @@ const Container = styled.div`
   padding: 4px 0;
   display: flex;
   flex-direction: row;
+  animation: appear .2s;
 
   &:hover, &.active {
     background: var(--background-secondary-alt);
@@ -45,6 +46,18 @@ const Container = styled.div`
 
   &:hover > ${Spacer} {
     color: var(--text-secondary);
+  }
+
+  @keyframes appear {
+    from {
+      transform: translateY(40px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0px);
+      opacity: 1;
+    }
   }
 `
 
