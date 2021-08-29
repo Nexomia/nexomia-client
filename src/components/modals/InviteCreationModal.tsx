@@ -70,6 +70,9 @@ function InviteCreationModal({ active }: ModalProps) {
 
   function closeModal(event: any) {
     if (event.target !== layerRef.current) return;
+
+    setCode('');
+    setSelected(null);
     setModalState({ inviteCreation: false });
   }
 
