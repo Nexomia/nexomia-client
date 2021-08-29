@@ -27,7 +27,12 @@
     "channel_create_header": "Create a Channel",
     "channel_create_error": "Failed to create channel.",
     "create": "Create",
-    "join": "Join"
+    "join": "Join",
+    "invite_creating": "Creating Invite...",
+    "invite_header": "Invite your friends!",
+    "invite_description": "Choose the channel to create invite in.",
+    "invite_created": "Here is your invite!",
+    "invite_created_description": "Click to copy it."
   },
   "server_general": {
     "no_default_channel": "No default channel",
@@ -49,6 +54,11 @@
     "color": "Role Color",
     "permissions": "Permissions",
     "permissions_description": "Configure permissions carefully, forcing a lot of permissions to \"allowed\" state is a bad practice, though you are not restricted from doing this. Higher roles will inherit all permissions from this role and apply their overwrites to them."
+  },
+  "server_invites": {
+    "description": "Active invites are displayed below.",
+    "uses": "uses",
+    "invite_create": "Create an invite"
   },
   "server_permissions": {
     "administrator": "Administrator",
@@ -100,6 +110,7 @@
     "server_settings": "Server Settings",
     "discover": "Discover",
     "home": "Home",
-    "pinned_messages": "Pinned Messages"
+    "pinned_messages": "Pinned Messages",
+    "invites": "Invites"
   }
 }

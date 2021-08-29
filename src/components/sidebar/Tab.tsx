@@ -33,11 +33,12 @@ const Container = styled.div`
 const TabIconCss = css`
   width: 24px;
   height: 24px;
+  margin-right: 3px;
 `
 
 const TextCss = css`
   margin-top: 1px;
-  margin-left: 4px;
+  margin-left: 2px;
   font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;

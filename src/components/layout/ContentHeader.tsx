@@ -35,12 +35,14 @@ const Content = styled.div`
   font-size: 18px;
   padding: 0 8px;
   user-select: none;
+  margin-left: 7px;
 `
 
 const HeaderIconCss = css`
   width: 28px;
   height: 28px;
-  margin-left: 8px;
+  margin-left: 14px;
+  margin-right: -7px;
 `
 
 const InputIconCss = css`
@@ -95,6 +97,10 @@ function ContentHeader() {
 
       { path === 'guildsettings' && channelId === 'roles' && (
         <Content>{ t('tabs.roles') }</Content>
+      ) }
+
+      { path === 'guildsettings' && channelId === 'invites' && (
+        <Content>{ t('tabs.invites') }</Content>
       ) }
     </Header>
   );

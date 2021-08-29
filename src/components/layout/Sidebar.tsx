@@ -35,6 +35,7 @@ import Tab from '../sidebar/Tab';
 import $UserStore from '../../store/UserStore';
 import { setModalState } from '../../store/ModalStore';
 import { useTranslation } from 'react-i18next';
+import classNames from 'classnames';
 
 
 const SidebarContainer = styled.div`
@@ -43,7 +44,12 @@ const SidebarContainer = styled.div`
   flex-shrink: 0;
   flex-direction: column;
   align-self: stretch;
-  background: var(--background-secondary-alt)
+  background: var(--background-secondary-alt);
+`
+
+const WideSidebarCss = css`
+  width: calc(50vw - 298px);
+  padding-left: calc(50vw - 538px);
 `
 
 const Content = styled.div`
@@ -106,6 +112,10 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
         history.push(`/channels/${guildId}/${newGuildChannels[newGuildChannels.indexOf(guilds[guildId]?.default_channel || '')] || newGuildChannels[0]}`);
       }
     }
+
+    if (!['channels', 'guildsettings'].includes(path)) {
+      document.title = 'Nexomia';
+    }
   }, [guildId, path]);
 
   useEffect(() => {
@@ -114,7 +124,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
   }, [channels]);
 
   return (
-    <SidebarContainer>
+    <SidebarContainer className={ classNames({ [WideSidebarCss]: path === 'guildsettings' }) }>
       { !path && guildId === '@me' && type === 'channels' && (
         <SidebarHeader>
           <Content>{ t('tabs.direct_messages') }</Content>
@@ -170,6 +180,11 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             title={ t('tabs.roles') }
             tabId={ 'roles' }
             onClick={ () => { history.push(`/guildsettings/${guildId}/roles`) } }
+          />
+          <Tab
+            title={ t('tabs.invites') }
+            tabId={ 'invites' }
+            onClick={ () => { history.push(`/guildsettings/${guildId}/invites`) } }
           />
         </Fragment>
       ) }
@@ -230,32 +245,33 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
 
   async function loadChannels() {
     setLoading(true);
-    const response = await ChannelsService.getGuildChannels(guildId);
-    if (!response) return history.push('/home');
-    const guildResponse = await GuildsService.getFullGuild(guildId || '');
+    const response = await GuildsService.getFullGuild(guildId || '');
     const membersResponse = await GuildsService.getGuildMembers(guildId || '');
-    const rolesResponse = await RolesService.getGuildRoles(guildId || '');
+    if (!response) return history.push('/home');
 
-    cacheGuilds([guildResponse]);
+    const { channels, members, roles, ...guild } = response;
+
+    cacheGuilds([guild]);
     cacheUsers([...membersResponse].map((member: any) => member.user));
     setGuildMembers({ guild: guildId, members: [...membersResponse].map((member: any) => member.id) });
     cacheMembers([...membersResponse].map((member: any) => {
       delete member.user;
       return { ...member, guild: guildId };
     }));
-    cacheRoles(rolesResponse);
-    setGuildRoles({ guild: guildId, roles: rolesResponse.sort((a: Role, b: Role) => (a.position || 0) - (b.position || 0)).map((role: Role) => role.id) });
-    cacheChannels(response);
-    setGuildChannels({ guild: guildId, channels: response.map((channel: Channel) => channel.id) });
-    setGuildChannelsValue(response.map((channel: Channel) => channel.id));
-    setLoading(false);
+    cacheRoles(roles);
+    setGuildRoles({ guild: guildId, roles: roles.sort((a: Role, b: Role) => (a.position || 0) - (b.position || 0)).map((role: Role) => role.id) });
+    cacheChannels(channels);
+    setGuildChannels({ guild: guildId, channels: channels.map((channel: Channel) => channel.id) });
+    setGuildChannelsValue(channels.map((channel: Channel) => channel.id));
 
-    if (response.length) {
-      const defaultChannel = response[response.findIndex((channel: Channel) => guildResponse?.default_channel === channel.id)]?.id || response[0].id;
+    if (channels.length) {
+      const defaultChannel = channels[channels.findIndex((channel: Channel) => guild?.default_channel === channel.id)]?.id || channels[0].id;
       if (defaultChannel && !channelId) {
         history.push(`/channels/${guildId}/${defaultChannel}`);
       }
     }
+
+    setLoading(false);
   }
 }
 

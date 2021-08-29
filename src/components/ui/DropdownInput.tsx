@@ -1,16 +1,23 @@
 import classNames from 'classnames';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { RiArrowDownSLine } from 'react-icons/ri';
 import StyledIconCss from '../css/StyledIconCss';
 import DropdownKey from '../interfaces/DropdownKey';
 
-const Container = styled.div`
+const PhysicalContainer = styled.div`
   display: flex;
   width: 100%;
   height: 48px;
   margin-top: 16px;
+`
+
+const Container = styled.div`
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 48px;
   flex-direction: column;
   border: 2px solid var(--background-secondary-alt);
   background: var(--background-secondary-alt);
@@ -95,23 +102,29 @@ function DropdownInput({ keys, defaultKey, onChange = () => null }: DropdownProp
   const [selected, setSelected] = useState(defaultKey || 0);
 
   return (
-    <Container onClick={ () => setActive(!active) } className={ classNames({ active }) }>
-      <Header>
-        <Text className={ classNames({ active }) }>{ keys[selected].text }</Text>
-        <RiArrowDownSLine className={ classNames(StyledIconCss, DropIconCss, { active }) } />
-      </Header>
-      <Scrollable>
-        {
-          keys.map((key) => (
-            <Item
-              onClick={ () => { setSelected(keys.indexOf(key)); onChange(key) } }
-              className={ classNames({ active: selected === keys.indexOf(key) }) }
-              key={ key.id }
-            >{ key.text }</Item>
-          ))
-        }
-      </Scrollable>
-    </Container>
+    <PhysicalContainer>
+      <Container onClick={ () => setActive(!active) } className={ classNames({ active }) }>
+        <Header>
+          { !!keys.length && (
+            <Fragment>
+              <Text className={ classNames({ active }) }>{ keys[selected]?.text }</Text>
+              <RiArrowDownSLine className={ classNames(StyledIconCss, DropIconCss, { active }) } />
+            </Fragment>
+          ) }
+        </Header>
+        <Scrollable>
+          {
+            keys.map((key) => (
+              <Item
+                onClick={ () => { setSelected(keys.indexOf(key)); onChange(key) } }
+                className={ classNames({ active: selected === keys.indexOf(key) }) }
+                key={ key.id }
+              >{ key.text }</Item>
+            ))
+          }
+        </Scrollable>
+      </Container>
+    </PhysicalContainer>
   )
 }
 

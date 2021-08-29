@@ -16,7 +16,7 @@ import Modal from '../ui/Modal';
 import ModalHeader from '../ui/ModalHeader';
 import StyledText from '../ui/StyledText';
 
-interface ChannelCreationModalProps {
+interface ModalProps {
   active: boolean
 }
 
@@ -28,7 +28,7 @@ const negativeColorCss = css`
   color: var(--text-negative);
 `
 
-function ChannelCreationModal({ active }: ChannelCreationModalProps) {
+function ChannelCreationModal({ active }: ModalProps) {
   const { guildId } = useParams<RouteParams>();
 
   const layerRef = useRef(null);

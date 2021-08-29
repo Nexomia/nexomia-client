@@ -38,6 +38,8 @@ class MessageEventHandler {
   async messagePinned(event: CustomMessageEvent) {
     const MessageCache = $MessageCacheStore.getState();
 
+    if (!MessageCache[`0${event.info.data.channel_id}`]) return;
+
     if (!MessageCache[event.info.data.id]) {
       const response = await MessagesService.getMessage(event.info.data.channel_id, event.info.data.id);
       cacheMessages([response]);

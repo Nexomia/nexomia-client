@@ -21,7 +21,7 @@ import LoadingPlaceholder from '../ui/LoadingPlaceholder';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 
-interface ServerCreationModalProps {
+interface ModalProps {
   active: boolean
 }
 
@@ -29,7 +29,7 @@ const negativeColorCss = css`
   color: var(--text-negative);
 `
 
-function ServerCreationModal({ active }: ServerCreationModalProps) {
+function ServerCreationModal({ active }: ModalProps) {
   const layerRef = useRef(null);
 
   const history = useHistory();

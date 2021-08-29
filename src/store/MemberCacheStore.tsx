@@ -19,6 +19,7 @@ $MemberCacheStore
     });
     return modifiedState;
   })
+  
 
 export default $MemberCacheStore;
 export { cacheMembers };

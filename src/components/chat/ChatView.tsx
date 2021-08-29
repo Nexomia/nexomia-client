@@ -86,7 +86,8 @@ function ChatView({ channel }: ChatViewProps) {
 
   useEffect(() => {
     if (!loading) {
-      scrollView()
+      scrollView();
+      document.title = `#${Channels[channel].name} - Nexomia`;
     } else {
       setLoading(false);
     }

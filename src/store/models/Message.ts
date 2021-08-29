@@ -1,12 +1,14 @@
 import Attachment from './Attachment';
 import Reaction from './Reaction';
 import Embed from './Embed';
+import User from './User';
 
 export default interface Message {
   id: string;
   type: number;
   channel_id: string;
   author: string;
+  user?: User;
   content?: string;
   created: number;
   edited: boolean;

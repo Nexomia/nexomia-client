@@ -16,6 +16,16 @@ class ChannelsService {
   async sendTyping(channel: string) {
     await CommonRequestManager.apiRequest('POST', `/channels/${channel}/typing`, {});
   }
+
+  async createInvite(channel: string) {
+    const response = await CommonRequestManager.apiRequest('POST', `/channels/${channel}/invites`, {});
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
 }
 
 export default new ChannelsService();

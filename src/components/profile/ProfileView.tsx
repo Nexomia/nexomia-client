@@ -101,7 +101,7 @@ function ProfileView({ user }: ProfileViewProps) {
             <StyledText className={ css`font-size: 18px` }>{ UserCache[user].status }</StyledText>
             { UserCache[user].description && (
               <InfoContainer>
-                <StyledText className={ css`font-size: 22px; margin: 0; font-weight: 900; margin-bottom: 16px` }>{ t('profile.about_me') }</StyledText>
+                <StyledText className={ css`font-size: 22px; margin: 0; font-weight: 900; margin-bottom: 16px; white-space: break-spaces` }>{ t('profile.about_me') }</StyledText>
                 <StyledText className={ css`font-size: 18px; margin: 0` }>{ renderMessageContent(UserCache[user].description || '') }</StyledText>
               </InfoContainer>
             ) }

@@ -1,7 +1,11 @@
-import { styled } from 'linaria/lib/react';
+import { useStore } from 'effector-react';
+import { styled } from 'linaria/react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import $GuildCacheStore from '../../store/GuildCacheStore';
 import CenteredContainer from '../layout/CenteredContainer';
 import GeneralView from './guild/GeneralView';
+import InvitesView from './guild/InvitesView';
 import RolesView from './guild/RolesView';
 
 const Wrapper = styled.div`
@@ -13,24 +17,33 @@ const Wrapper = styled.div`
 `
 
 interface RouteParams {
+  guildId: string,
   channelId: string
 }
 
 function SettingsView() {
-  const { channelId } = useParams<RouteParams>();
+  const { guildId, channelId } = useParams<RouteParams>();
+
+  const Guilds = useStore($GuildCacheStore);
+
+  useEffect(() => {
+    document.title = `${Guilds[guildId]?.name} settings - Nexomia`;
+  }, [])
 
   return (
-    <CenteredContainer>
-      <Wrapper>
-        { channelId === 'general' && (
-          <GeneralView />
-        ) }
+    <Wrapper>
+      { channelId === 'general' && (
+        <GeneralView />
+      ) }
 
-        { channelId === 'roles' && (
-          <RolesView />
-        ) }
-      </Wrapper>
-    </CenteredContainer>
+      { channelId === 'roles' && (
+        <RolesView />
+      ) }
+
+      { channelId === 'invites' && (
+        <InvitesView />
+      ) }
+    </Wrapper>
   ) 
 }
 

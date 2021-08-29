@@ -110,11 +110,6 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
 
   const history = useHistory();
 
-  useEffect(() => {
-    if (UserCache[MessageCache[id].author]) return;
-    loadUser(MessageCache[id].author);
-  }, []);
-
   return (
     <Container
       className={ classNames({ [GroupedContainerCss]: (grouped && !MessageCache[id].type), active: ContextMenu?.id === id && ContextMenu?.visible }) }
@@ -179,12 +174,6 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
   function openContextMenu(event: any) {
     event.preventDefault();
     setContextMenu({ type: 'message', top: event.pageY, left: event.pageX, visible: true, id });
-  }
-
-  async function loadUser(id: string) {
-    const response = await UsersService.getUser(id);
-
-    if (response) cacheUsers([response]);
   }
 }
 

@@ -86,6 +86,16 @@ class GuildsService {
 
     return response.data;
   }
+
+  async getGuildInvites(guild: string) {
+    const response = await CommonRequestManager.apiRequest('GET', `/guilds/${guild}/invites`, {});
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
 }
 
 export default new GuildsService();

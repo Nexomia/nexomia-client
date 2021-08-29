@@ -64,54 +64,56 @@ function App() {
         active={ !loaded }
         solid={ true }
       />
-      <Switch>
-        <Route path={`/channels/:guildId/:channelId`}>
-          <ContextMenu />
-          <Modals />
-          <Guilds />
-          <Sidebar />
-          <Content />
-          <MemberSidebar />
-        </Route>
-
-        <Route path={`/channels/:guildId`}>
-          <ContextMenu />
-          <Modals />
-          <Guilds />
-          <Sidebar />
-          <Content />
-        </Route>
-
-        <Route path={`/:path/:guildId/:channelId`}>
-          <ContextMenu />
-          <Modals />
-          <Guilds />
-          <Sidebar />
-          <Content />
-        </Route>
-
-        <Route path={`/:path/:guildId`}>
-          <ContextMenu />
-          <Modals />
-          <Guilds />
-          <Sidebar />
-          <Content />
-        </Route>
-
-        <Route path={`/:path`}>
-          <ContextMenu />
-          <Modals />
-          <Guilds />
-          <Sidebar />
-          <Content />
-        </Route>
-
-        { User ? (
-          <Route path='/'>
-            { () => history.push('/home') }
+      { loaded && (
+        <Switch>
+          <Route path={`/channels/:guildId/:channelId`}>
+            <ContextMenu />
+            <Modals />
+            <Guilds />
+            <Sidebar />
+            <Content />
+            <MemberSidebar />
           </Route>
-        ) : null }
-      </Switch>
+
+          <Route path={`/channels/:guildId`}>
+            <ContextMenu />
+            <Modals />
+            <Guilds />
+            <Sidebar />
+            <Content />
+          </Route>
+
+          <Route path={`/:path/:guildId/:channelId`}>
+            <ContextMenu />
+            <Modals />
+            <Guilds />
+            <Sidebar />
+            <Content />
+          </Route>
+
+          <Route path={`/:path/:guildId`}>
+            <ContextMenu />
+            <Modals />
+            <Guilds />
+            <Sidebar />
+            <Content />
+          </Route>
+
+          <Route path={`/:path`}>
+            <ContextMenu />
+            <Modals />
+            <Guilds />
+            <Sidebar />
+            <Content />
+          </Route>
+
+          { User ? (
+            <Route path='/'>
+              { () => history.push('/home') }
+            </Route>
+          ) : null }
+        </Switch>
+      ) }
     </div>
   );
 

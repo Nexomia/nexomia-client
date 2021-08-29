@@ -1,18 +1,18 @@
 import { createStore, createEvent } from 'effector-root';
 
-const setModalState = createEvent<object>();
+const setModalState = createEvent<Modals>();
 
 interface Modals {
-  serverCreation: boolean,
-  channelCreation: boolean
+  [key: string]: boolean
 }
 
 const $ModalStore = createStore<Modals>({
   serverCreation: false,
-  channelCreation: false
+  channelCreation: false,
+  inviteCreation: false
 });
 
-$ModalStore.on(setModalState, (state, modifiedState: object) => ({ ...state, ...modifiedState }));
+$ModalStore.on(setModalState, (state, modifiedState: Modals) => ({ ...state, ...modifiedState }));
 
 export default $ModalStore;
 export { setModalState };

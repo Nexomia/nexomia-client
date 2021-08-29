@@ -10,6 +10,7 @@ import $ContextMenuStore, { setContextMenu } from '../../store/ContextMenuStore'
 import $GuildCacheStore from '../../store/GuildCacheStore';
 import { removeGuild } from '../../store/GuildStore';
 import $MessageCacheStore from '../../store/MessageCacheStore';
+import { setModalState } from '../../store/ModalStore';
 import { ComputedPermissions } from '../../store/models/ComputedPermissions';
 import $UserStore from '../../store/UserStore';
 import PermissionCalculator from '../../utils/PermissionCalculator';
@@ -60,6 +61,13 @@ function ContextMenu() {
                 & ComputedPermissions.MANAGE_GUILD
               ) ? (
                 <ContextTab title={ t('menu.settings') } onClick={ () => history.push(`/guildsettings/${id}/general`) } />
+              ) : null }
+
+              { (
+                PermissionCalculator.getUserPermissions(id || '', '', '')
+                & ComputedPermissions.CREATE_INVITES
+              ) ? (
+                <ContextTab title={ t('server_invites.invite_create') } onClick={ () => setModalState({ inviteCreation: true }) } />
               ) : null }
 
               { GuildCache[id || '']?.owner_id !== User.id ? (
