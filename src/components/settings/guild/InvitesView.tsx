@@ -47,7 +47,7 @@ function InvitesView() {
     if (!Guilds[guildId]?.invites?.length) {
       loadInvites();
     }
-  })
+  }, []);
 
   return (
     <Fragment>
