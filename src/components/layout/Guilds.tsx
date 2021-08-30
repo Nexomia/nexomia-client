@@ -20,6 +20,7 @@ import PanelButton from '../guilds/PanelButton';
 import StyledText from '../ui/StyledText';
 import PanelIconCss from '../css/PanelIconCss';
 import getIconString from '../../utils/getIconString';
+import $ChannelStore from '../../store/ChannelStore';
 
 const GuildsContainer = styled.div`
   display: flex;
@@ -67,6 +68,7 @@ function Guilds() {
 
   const guildList = useStore($GuildStore);
   const guilds = useStore($GuildCacheStore);
+  const channels = useStore($ChannelStore);
 
   return (
     <GuildsContainer>
@@ -101,7 +103,11 @@ function Guilds() {
   );
 
   function switchGuild(id: string) {
-    history.push(`/channels/${id}`);
+    if (channels[id]) {
+      history.push(`/channels/${id}/${channels[id][channels[id].indexOf(guilds[id]?.default_channel || '')] || channels[id][0]}`);
+    } else {
+      history.push(`/channels/${id}`);
+    }
   }
 
   function openContextMenu(event: any, id: string) {
