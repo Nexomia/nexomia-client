@@ -11,5 +11,7 @@
   "offline": "Offline",
   "online": "Online",
   "are_typing": "are typing",
-  "is_typing": "is typing"
+  "is_typing": "is typing",
+  "conv_start": "Start the conversation by sending your first message!",
+  "conv_start_pin": "No one has pinned something yet."
 }

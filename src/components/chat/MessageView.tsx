@@ -10,6 +10,8 @@ import $ChannelCacheStore from '../../store/ChannelCacheStore';
 import $MessageCacheStore, { cacheMessages } from '../../store/MessageCacheStore';
 import MessagesService from '../../services/api/messages/messages.service';
 import Message from '../../store/models/Message';
+import StyledText from '../ui/StyledText';
+import { useTranslation } from 'react-i18next';
 
 interface MessageViewProps {
   channel: string,
@@ -22,6 +24,8 @@ function MessageView({ channel, onMessagesLoaded = () => null, type = 0 }: Messa
   const MessageStore = useStore($MessageStore);
   const MessageCacheStore = useStore($MessageCacheStore);
   const CachedChannels = useStore($ChannelCacheStore);
+
+  const { t } = useTranslation(['chat']);
 
   let prevMessage = '';
 
@@ -52,7 +56,7 @@ function MessageView({ channel, onMessagesLoaded = () => null, type = 0 }: Messa
         (
           MessageStore[type === 0 ? channel : `0${channel}`] &&
           (MessageStore[type === 0 ? channel : `0${channel}`].length &&
-          MessageStore[type === 0 ? channel : `0${channel}`].length !== 0) && (
+          MessageStore[type === 0 ? channel : `0${channel}`].length !== 0) ? (
             MessageStore[type === 0 ? channel : `0${channel}`].map((message) => {
               const rendered =  (
                 <MessageRenderer
@@ -70,8 +74,16 @@ function MessageView({ channel, onMessagesLoaded = () => null, type = 0 }: Messa
                 return null;
               }
             })
+          ) : (
+            <StyledText className={ css`margin-left: 16px` }>
+              { type === 0 ? (
+                t('conv_start')
+              ) : (
+                t('conv_start_pin')
+              ) }
+            </StyledText>
           )
-        ) || ''
+        )
       ) }
     </Fragment>
   )
