@@ -36,6 +36,7 @@ import $UserStore from '../../store/UserStore';
 import { setModalState } from '../../store/ModalStore';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
+import Member from '../sidebar/Member';
 
 
 const SidebarContainer = styled.div`
@@ -102,13 +103,12 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
   useEffect(() => {
     setLoading(false);
     if (type === 'channels') {
-      if (!isTabGuild(guildId)) return;
       const newGuildChannels = channels[guildId] || [];
       setGuildChannelsValue(newGuildChannels);
       
-      if (!newGuildChannels.length && (!path || path === 'guildsettings')) {
+      if (!newGuildChannels.length && (!path || path === 'guildsettings') && isTabGuild(guildId)) {
         loadChannels();
-      } else if (!path && !channelId) {
+      } else if (!path && !channelId && guildId !== '@me') {
         history.push(`/channels/${guildId}/${newGuildChannels[newGuildChannels.indexOf(guilds[guildId]?.default_channel || '')] || newGuildChannels[0]}`);
       }
     }
@@ -197,6 +197,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
         </Fragment>
       ) }
 
+      { /* Guild Channels */ }
       { !path && isTabGuild(guildId) && type === 'channels' && (guildChannels && guildChannels.length && channelsCache[guildChannels[0]] ? (
         [
           ...(guildChannels.map((channel: string) => (
@@ -240,6 +241,19 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
           }
         </Fragment>
       )) }
+
+      { /* DM Channels */ }
+      { !path && guildId === '@me' && type === 'channels' && (
+        guildChannels.map((channel: string) => (
+          <Member
+            id={ channelsCache[channel]?.recipients?.filter((id: string) => id !== user.id)[0] || '' }
+            tab={ true }
+            key={ channel }
+            active={ channelId === channel }
+            onClick={ () => { history.push(`/channels/@me/${channel}`) } }
+          />
+        ))
+      ) }
     </SidebarContainer>
   );
 
@@ -266,7 +280,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
 
     if (channels.length) {
       const defaultChannel = channels[channels.findIndex((channel: Channel) => guild?.default_channel === channel.id)]?.id || channels[0].id;
-      if (defaultChannel && !channelId) {
+      if (defaultChannel && !channelId && guildId !== '@me') {
         history.push(`/channels/${guildId}/${defaultChannel}`);
       }
     }

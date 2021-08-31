@@ -13,7 +13,7 @@ export default interface Channel {
   bitrate?: number,
   user_limit?: number,
   rate_limit_per_user?: number,
-  /* recipients?: User[], */
+  recipients?: string[],
   icon?: string,
   owner_id?: string,
   application_id?: string,

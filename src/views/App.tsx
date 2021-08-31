@@ -16,6 +16,7 @@ import $ContextMenuStore, { setContextMenu } from '../store/ContextMenuStore';
 
 import UsersService from '../services/api/users/users.service';
 import GuildsService from '../services/api/guilds/guilds.service';
+import ChannelsService from '../services/api/channels/channels.service';
 import CommonRequestManager from '../services/api/common';
 
 import SocketManager from '../services/socket/SocketManager';
@@ -34,6 +35,9 @@ import Modals from '../components/layout/Modals';
 import preloaders from '../i18n/preloaders.json';
 import Guild from '../store/models/Guild';
 import ContextMenu from '../components/contextmenus/ContextMenu';
+import Channel from '../store/models/Channel';
+import { cacheChannels } from '../store/ChannelCacheStore';
+import { setGuildChannels } from '../store/ChannelStore';
 
 function App() {
   const { t } = useTranslation(['states']);
@@ -128,10 +132,14 @@ function App() {
     }
 
     const guilds = await GuildsService.getUserGuilds();
+    const dmChannels = await ChannelsService.getDMChannels();
 
     setUser(userInfo);
     setGuilds(guilds.map((guild: Guild) => guild.id));
     cacheGuilds(guilds);
+
+    cacheChannels(dmChannels);
+    setGuildChannels({ guild: '@me', channels: dmChannels.map((channel: Channel) => channel.id) });
 
     SocketManager.init();
 

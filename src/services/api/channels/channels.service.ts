@@ -13,6 +13,16 @@ class ChannelsService {
     return response.data;
   }
 
+  async getDMChannels() {
+    const response = await CommonRequestManager.apiRequest('GET', `/users/@me/channels`, {});
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
+
   async sendTyping(channel: string) {
     await CommonRequestManager.apiRequest('POST', `/channels/${channel}/typing`, {});
   }

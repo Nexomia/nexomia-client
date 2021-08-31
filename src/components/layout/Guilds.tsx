@@ -103,7 +103,7 @@ function Guilds() {
   );
 
   function switchGuild(id: string) {
-    if (channels[id]) {
+    if (channels[id] && channels[id].length) {
       history.push(`/channels/${id}/${channels[id][channels[id].indexOf(guilds[id]?.default_channel || '')] || channels[id][0]}`);
     } else {
       history.push(`/channels/${id}`);

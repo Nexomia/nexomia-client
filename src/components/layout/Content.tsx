@@ -60,7 +60,7 @@ function Content() {
           ) : null
         ) }
 
-        { !path && isTabGuild(guildId) && channelId && (
+        { !path && channelId && (
           Channels[guildId] ? (
             <ChatView channel={ channelId } />
           ) : null
