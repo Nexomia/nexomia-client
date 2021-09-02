@@ -140,7 +140,9 @@ function ChatView({ channel }: ChatViewProps) {
   }
 
   function getSendPermission() {
-    return !!(PermissionCalculator.getUserPermissions(Channels[channel]?.guild_id || '', channel, '') & ComputedPermissions.WRITE_MESSAGES);
+    return !!(
+      PermissionCalculator.getUserPermissions(Channels[channel]?.guild_id || '', channel, '') & ComputedPermissions.WRITE_MESSAGES
+    ) || Channels[channel]?.recipients?.length;
   }
 
   async function handleScroll() {

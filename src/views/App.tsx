@@ -38,6 +38,7 @@ import ContextMenu from '../components/contextmenus/ContextMenu';
 import Channel from '../store/models/Channel';
 import { cacheChannels } from '../store/ChannelCacheStore';
 import { setGuildChannels } from '../store/ChannelStore';
+import { cacheUsers } from '../store/UserCacheStore';
 
 function App() {
   const { t } = useTranslation(['states']);
@@ -130,6 +131,8 @@ function App() {
       history.push('/login');
       return;
     }
+
+    cacheUsers([userInfo]);
 
     const guilds = await GuildsService.getUserGuilds();
     const dmChannels = await ChannelsService.getDMChannels();
