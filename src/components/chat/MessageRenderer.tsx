@@ -107,13 +107,33 @@ const ContentContainer = styled.div`
   flex-grow: 1;
 `
 
+const ForwardsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const ForwardDivider = styled.div`
+  width: 4px;
+  border-radius: 2px;
+  margin: 8px 12px 8px 8px;
+  background: var(--accent);
+`
+
+const ForwardedMessagesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin-top: -8px;
+`
+
 interface MessageProps {
   id: string,
   grouped: boolean,
+  avatar?: boolean,
   channel: string
 }
 
-function MessageRenderer({ id, grouped, channel }: MessageProps) {
+function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) {
   const UserCache = useStore($UserCacheStore);
   const MessageCache = useStore($MessageCacheStore);
   const ChannelCache = useStore($ChannelCacheStore);
@@ -131,11 +151,11 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
       { UserCache[MessageCache[id].author] ? (
         <Fragment>
           { !grouped && !MessageCache[id].type ? (
-            UserCache[MessageCache[id].author].avatar ? (
+            UserCache[MessageCache[id].author].avatar && avatar ? (
               <Avatar src={ UserCache[MessageCache[id].author].avatar } onClick={ showUserProfile } className={ css`background: transparent` }></Avatar>
-            ) : (
+            ) : avatar ? (
               <LetterAvatar onClick={ showUserProfile }>{ getIconString(UserCache[MessageCache[id].author].username || '') }</LetterAvatar>
-            )
+            ) : null
           ) : !MessageCache[id].type ? (
             <Spacer>{ format(new Date(MessageCache[id].created), 'HH:mm') }</Spacer>
           ) : (
@@ -169,6 +189,24 @@ function MessageRenderer({ id, grouped, channel }: MessageProps) {
                 </StyledText>
               </StyledText>
             ) : null }
+            { !!(MessageCache[id].forwarded_ids && MessageCache[id].forwarded_ids.length) && (
+              <ForwardsContainer>
+                <ForwardDivider />
+                <ForwardedMessagesContainer>
+                  {
+                    MessageCache[id].forwarded_ids.map((forwarded) => (
+                      <MessageRenderer
+                        id={ forwarded }
+                        key={ forwarded }
+                        grouped={ false }
+                        channel={ channel }
+                        avatar={ false }
+                      />
+                    ))
+                  }
+                </ForwardedMessagesContainer>
+              </ForwardsContainer>
+            ) }
             <StyledText
               className={ css`margin: 0; padding-right: 16px; font-weight: 400; user-select: text; word-break: break-all; white-space: break-spaces;` }
             >{ renderMessageContent(MessageCache[id].content || '') }</StyledText>

@@ -7,7 +7,8 @@
     "pin": "Закрепить",
     "edit": "Редактировать",
     "add_reaction": "Добавить реакцию",
-    "confirmation": "Вы уверены?"
+    "confirmation": "Вы уверены?",
+    "reply": "Ответить"
   },
   "modals": {
     "channel_creating": "Создаем канал...",

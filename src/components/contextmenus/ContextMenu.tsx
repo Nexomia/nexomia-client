@@ -9,6 +9,7 @@ import $ChannelCacheStore from '../../store/ChannelCacheStore';
 import $ContextMenuStore, { setContextMenu } from '../../store/ContextMenuStore';
 import $GuildCacheStore from '../../store/GuildCacheStore';
 import { removeGuild } from '../../store/GuildStore';
+import { addForwards } from '../../store/InputStore';
 import $MessageCacheStore from '../../store/MessageCacheStore';
 import { setModalState } from '../../store/ModalStore';
 import { ComputedPermissions } from '../../store/models/ComputedPermissions';
@@ -87,14 +88,8 @@ function ContextMenu() {
                   ''
                 ) &
                 ComputedPermissions.ADD_REACTIONS
-              ) ? (
+              ) || ChannelCache[MessageCache[id || '']?.channel_id]?.recipients?.length ? (
                 <ContextTab title={ t('menu.add_reaction') } />
-              ) : null }
-
-              { (
-                MessageCache[id || ''].author === User.id
-              ) && !MessageCache[id || '']?.type ? (
-                <ContextTab title={ t('menu.edit') } />
               ) : null }
 
               { (
@@ -103,8 +98,25 @@ function ContextMenu() {
                   MessageCache[id || '']?.channel_id || '',
                   ''
                 ) &
-                ComputedPermissions.MANAGE_MESSAGES
+                ComputedPermissions.WRITE_MESSAGES
+              ) || ChannelCache[MessageCache[id || '']?.channel_id]?.recipients?.length ? (
+                <ContextTab title={ t('menu.reply') } onClick={ addReply } />
+              ) : null }
+
+              { (
+                MessageCache[id || ''].author === User.id
               ) && !MessageCache[id || '']?.type ? (
+                <ContextTab title={ t('menu.edit') } />
+              ) : null }
+
+              { ((
+                PermissionCalculator.getUserPermissions(
+                  ChannelCache[MessageCache[id || '']?.channel_id]?.guild_id || '',
+                  MessageCache[id || '']?.channel_id || '',
+                  ''
+                ) &
+                ComputedPermissions.MANAGE_MESSAGES
+              ) && !MessageCache[id || '']?.type) || ChannelCache[MessageCache[id || '']?.channel_id]?.recipients?.length ? (
                 <ContextTab title={ t('menu.pin') } onClick={ pinMessage } />
               ) : null }
 
@@ -115,7 +127,7 @@ function ContextMenu() {
                   ''
                 ) &
                 ComputedPermissions.MANAGE_MESSAGES
-              ) ? (
+              ) || ChannelCache[MessageCache[id || '']?.channel_id]?.recipients?.length ? (
                 <ContextTab title={ t('menu.delete') } onClick={ deleteMessage } />
               ) : null }
 
@@ -183,6 +195,10 @@ function ContextMenu() {
 
   function pinMessage() {
     MessagesService.pinMessage(MessageCache[id || '']?.channel_id || '', id || '');
+  }
+
+  function addReply() {
+    addForwards({ channel: MessageCache[id || '']?.channel_id || '', forwards: [id || ''] });
   }
 }
 

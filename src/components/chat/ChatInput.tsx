@@ -2,7 +2,7 @@ import { styled } from 'linaria/react';
 import { css } from 'linaria';
 import { htmlUnescape } from 'escape-goat';
 import classNames from 'classnames';
-import { KeyboardEvent, useMemo, useRef, useState } from 'react';
+import { Fragment, KeyboardEvent, useMemo, useRef, useState } from 'react';
 import { createEditor, BaseEditor, Descendant, Node, Text } from 'slate';
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
 import { RiAddCircleFill, RiEmotionLaughFill, RiSendPlane2Fill } from 'react-icons/ri';
@@ -19,6 +19,9 @@ import ChannelsService from '../../services/api/channels/channels.service';
 import renderMessageContent from '../../utils/renderMessageContent';
 import getMessageMarkdownBounds from '../../utils/getMessageMarkdownBounds';
 import MarkdownLeaf from './markdown/MarkdownLeaf';
+import { useStore } from 'effector-react';
+import $InputStore, { updateInputInfo } from '../../store/InputStore';
+import MessageRenderer from './MessageRenderer';
 
 type CustomElement = { type: 'paragraph'; children: CustomText[] };
 type CustomText = { text: string };
@@ -31,9 +34,15 @@ declare module 'slate' {
   }
 };
 
-const Container = styled.div`
+const OuterContainer = styled.div`
   display: flex;
   margin: 16px;
+  flex-direction: column;
+  z-index: 2;
+`
+
+const Container = styled.div`
+  display: flex;
   border-radius: 8px;
   background: var(--background-primary-alt);
   min-height: 48px;
@@ -41,7 +50,6 @@ const Container = styled.div`
   transition: .2s;
   flex-direction: row;
   flex-grow: 0;
-  z-index: 2;
   overflow: hidden;
 `
 
@@ -80,6 +88,24 @@ const Placeholder = styled.div`
   pointer-events: none;
 `
 
+const ForwardsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const ForwardDivider = styled.div`
+  width: 4px;
+  border-radius: 2px;
+  margin: 16px 12px 0 12px;
+  background: var(--accent);
+`
+
+const ForwardedMessagesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+`
+
 interface ChatInputProps {
   channel: string,
   onMessageSent: any
@@ -88,6 +114,8 @@ interface ChatInputProps {
 function ChatInput({ channel, onMessageSent }: ChatInputProps) {
   const inputRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const InputCache = useStore($InputStore);
 
   const { t } = useTranslation(['chat']);
 
@@ -105,33 +133,53 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
   const [value, setValue] = useState<Descendant[]>(initialValue);
 
   return (
-    <Container ref={ containerRef }>
-      <InputButton>
-        <RiAddCircleFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
-      </InputButton>
-      <Input ref={ inputRef }>
-        <Slate
-          editor={ editor }
-          value={ value }
-          onChange={ setValue }
-        >
-          <Editable
-            className={ EditableCss }
-            placeholder={ t('input_placeholder') }
-            decorate={ decorate }
-            renderLeaf={ (props) => (<MarkdownLeaf { ...props } />) }
-            onKeyDown={ handleKeyPress }
-            onKeyUp={ unlockInput }
-          />
-        </Slate>
-      </Input>
-      <InputButton className={ css`margin-right: 0` }>
-        <RiEmotionLaughFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
-      </InputButton>
-      <InputButton onClick={ sendMessage } className={ classNames({ active: sendLoading }) } >
-        <RiSendPlane2Fill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
-      </InputButton>
-    </Container>
+    <OuterContainer>
+      <Container ref={ containerRef }>
+        <InputButton>
+          <RiAddCircleFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
+        </InputButton>
+        <Input ref={ inputRef }>
+          <Slate
+            editor={ editor }
+            value={ value }
+            onChange={ setValue }
+          >
+            <Editable
+              className={ EditableCss }
+              placeholder={ t('input_placeholder') }
+              decorate={ decorate }
+              renderLeaf={ (props) => (<MarkdownLeaf { ...props } />) }
+              onKeyDown={ handleKeyPress }
+              onKeyUp={ unlockInput }
+            />
+          </Slate>
+        </Input>
+        <InputButton className={ css`margin-right: 0` }>
+          <RiEmotionLaughFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
+        </InputButton>
+        <InputButton onClick={ sendMessage } className={ classNames({ active: sendLoading }) } >
+          <RiSendPlane2Fill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
+        </InputButton>
+      </Container>
+      { !!(InputCache[channel] && InputCache[channel]?.forwards?.length) && (
+        <ForwardsContainer>
+          <ForwardDivider />
+          <ForwardedMessagesContainer>
+            {
+              InputCache[channel].forwards.map((forwarded) => (
+                <MessageRenderer
+                  id={ forwarded }
+                  key={ forwarded }
+                  grouped={ false }
+                  channel={ channel }
+                  avatar={ false }
+                />
+              ))
+            }
+          </ForwardedMessagesContainer>
+        </ForwardsContainer>
+      ) }
+    </OuterContainer>
   );
 
   function decorate([node, path]: Array<any>) {
@@ -145,6 +193,8 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
   async function sendMessage() {
     if (sendLoading) return;
 
+    const forwards = [ ...InputCache[channel]?.forwards ];
+
     setSendLoading(true);
 
     const output = value.map((child) => Node.string(child)).join('\n');
@@ -152,7 +202,9 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
     const content = htmlUnescape(output);
     editor.insertBreak();
     setValue(initialValue);
-    const response = await MessagesService.sendMessage(channel, content || '');
+    updateInputInfo({ channel, forwards: [] });
+
+    const response = await MessagesService.sendMessage(channel, content || '', forwards);
 
     if (!response) return setSendLoading(false);
 
