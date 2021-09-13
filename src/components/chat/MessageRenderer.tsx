@@ -5,7 +5,7 @@ import { css } from 'linaria';
 import { styled } from 'linaria/react';
 import { useHistory } from 'react-router-dom';
 import $MessageCacheStore from '../../store/MessageCacheStore';
-import $UserCacheStore, { cacheUsers } from '../../store/UserCacheStore';
+import $UserCacheStore from '../../store/UserCacheStore';
 import $ChannelCacheStore from '../../store/ChannelCacheStore';
 import StyledText from '../ui/StyledText';
 import $ContextMenuStore, { setContextMenu } from '../../store/ContextMenuStore';
@@ -15,9 +15,9 @@ import { RiArrowLeftLine, RiArrowRightLine, RiPushpinFill } from 'react-icons/ri
 import StyledIconCss from '../css/StyledIconCss';
 import { useTranslation } from 'react-i18next';
 import renderMessageContent from '../../utils/renderMessageContent';
-import UsersService from '../../services/api/users/users.service';
-import { Fragment, useEffect } from 'react';
+import { Fragment } from 'react';
 import Dots from '../animations/Dots';
+import $InputStore from '../../store/InputStore';
 
 const Spacer = styled.div`
   display: flex;
@@ -38,6 +38,7 @@ const Container = styled.div`
   padding: 4px 0;
   display: flex;
   flex-direction: row;
+  overflow: hidden;
   animation: appear .2s;
 
   &:hover, &.active {
@@ -119,6 +120,13 @@ const ForwardDivider = styled.div`
   background: var(--accent);
 `
 
+const FloatingDivider = styled.div`
+  width: 4px;
+  border-radius: 2px;
+  margin: 2px -10px 2px 6px;
+  background: var(--accent);
+`
+
 const ForwardedMessagesContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -139,15 +147,18 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
   const ChannelCache = useStore($ChannelCacheStore);
   const ContextMenu = useStore($ContextMenuStore);
 
+  const InputCache = useStore($InputStore);
+
   const { t } = useTranslation(['chat']);
 
   const history = useHistory();
 
   return (
     <Container
-      className={ classNames({ [GroupedContainerCss]: (grouped && !MessageCache[id].type), active: ContextMenu?.id === id && ContextMenu?.visible }) }
+      className={ classNames({ [GroupedContainerCss]: (grouped && !MessageCache[id].type), active: ContextMenu?.id === id && ContextMenu?.visible && avatar }) }
       onContextMenu={ openContextMenu }
     >
+      { InputCache[channel] && InputCache[channel]?.forwards?.includes(id) && avatar && <FloatingDivider /> }
       { UserCache[MessageCache[id].author] ? (
         <Fragment>
           { !grouped && !MessageCache[id].type ? (
@@ -209,7 +220,9 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
             ) }
             <StyledText
               className={ css`margin: 0; padding-right: 16px; font-weight: 400; user-select: text; word-break: break-all; white-space: break-spaces;` }
-            >{ renderMessageContent(MessageCache[id].content || '') }</StyledText>
+            >
+              { renderMessageContent(MessageCache[id].content || '') }
+            </StyledText>
           </ContentContainer>
         </Fragment>
       ) : (

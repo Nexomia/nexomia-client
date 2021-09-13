@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { Fragment, KeyboardEvent, useMemo, useRef, useState } from 'react';
 import { createEditor, BaseEditor, Descendant, Node, Text } from 'slate';
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
-import { RiAddCircleFill, RiEmotionLaughFill, RiSendPlane2Fill } from 'react-icons/ri';
+import { RiAddCircleFill, RiCloseLine, RiEmotionLaughFill, RiSendPlane2Fill } from 'react-icons/ri';
 
 import { addMessage } from '../../store/MessageStore';
 import { cacheMessages } from '../../store/MessageCacheStore';
@@ -22,6 +22,7 @@ import MarkdownLeaf from './markdown/MarkdownLeaf';
 import { useStore } from 'effector-react';
 import $InputStore, { updateInputInfo } from '../../store/InputStore';
 import MessageRenderer from './MessageRenderer';
+import StyledText from '../ui/StyledText';
 
 type CustomElement = { type: 'paragraph'; children: CustomText[] };
 type CustomText = { text: string };
@@ -56,6 +57,11 @@ const Container = styled.div`
 const InputIconCss = css`
   width: 24px;
   height: 24px;
+`
+
+const SmallInputIconCss = css`
+  width: 18px;
+  height: 18px;
 `
 
 const Input = styled.div`
@@ -166,17 +172,27 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
           <ForwardDivider />
           <ForwardedMessagesContainer>
             {
-              InputCache[channel].forwards.map((forwarded) => (
-                <MessageRenderer
-                  id={ forwarded }
-                  key={ forwarded }
-                  grouped={ false }
-                  channel={ channel }
-                  avatar={ false }
-                />
-              ))
+              InputCache[channel]?.forwards?.length < 2 ? (
+                InputCache[channel].forwards.map((forwarded) => (
+                  <MessageRenderer
+                    id={ forwarded }
+                    key={ forwarded }
+                    grouped={ false }
+                    channel={ channel }
+                    avatar={ false }
+                  />
+                ))
+              ) : (
+                <StyledText className={ css`margin: 20px 0 0 0` }>{ InputCache[channel]?.forwards?.length } { t('forwarded_messages') }</StyledText>
+              )
             }
           </ForwardedMessagesContainer>
+          <InputButton
+            className={ css`height: 34px; width: 34px; padding: 8px; margin-top: 8px;` }
+            onClick={ () => updateInputInfo({ channel, forwards: [] }) }
+          >
+            <RiCloseLine className={ classNames({ [StyledIconCss]: true, [SmallInputIconCss]: true }) } />
+          </InputButton>
         </ForwardsContainer>
       ) }
     </OuterContainer>
