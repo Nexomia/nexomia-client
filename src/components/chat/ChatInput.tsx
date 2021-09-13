@@ -193,7 +193,7 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
   async function sendMessage() {
     if (sendLoading) return;
 
-    const forwards = [ ...InputCache[channel]?.forwards ];
+    const forwards = [ ...(InputCache[channel]?.forwards || []) ];
 
     setSendLoading(true);
 
