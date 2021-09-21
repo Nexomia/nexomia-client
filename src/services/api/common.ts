@@ -45,6 +45,10 @@ class CommonRequestManager {
   setToken(token: string) {
     this.token = token;
   }
+
+  getToken() {
+    return this.token;
+  }
 }
 
 export default new CommonRequestManager();

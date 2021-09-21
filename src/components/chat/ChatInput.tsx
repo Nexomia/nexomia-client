@@ -99,6 +99,11 @@ const ForwardsContainer = styled.div`
   flex-direction: row;
 `
 
+const AttachmentsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
 const ForwardDivider = styled.div`
   width: 4px;
   border-radius: 2px;
@@ -189,7 +194,7 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
           </ForwardedMessagesContainer>
           <InputButton
             className={ css`height: 34px; width: 34px; padding: 8px; margin-top: 8px;` }
-            onClick={ () => updateInputInfo({ channel, forwards: [] }) }
+            onClick={ () => updateInputInfo({ channel, forwards: [], attachments: [] }) }
           >
             <RiCloseLine className={ classNames({ [StyledIconCss]: true, [SmallInputIconCss]: true }) } />
           </InputButton>
@@ -218,7 +223,7 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
     const content = htmlUnescape(output);
     editor.insertBreak();
     setValue(initialValue);
-    updateInputInfo({ channel, forwards: [] });
+    updateInputInfo({ channel, forwards: [], attachments: [] });
 
     const response = await MessagesService.sendMessage(channel, content || '', forwards);
 

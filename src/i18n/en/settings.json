@@ -41,7 +41,9 @@
     "icon_url": "Server Icon URL (leave empty to remove)",
     "banner_url": "Server Banner URL (leave empty to remove)",
     "name": "Server Name",
-    "default_channel": "Default Channel"
+    "description": "Tell people more about your server!",
+    "default_channel": "Default Channel",
+    "edit": "Edit"
   },
   "saving_changes": "Saving Changes...",
   "save_changes": "Save Changes",

@@ -13,6 +13,10 @@ const PhysicalContainer = styled.div`
   margin-top: 16px;
 `
 
+const NoMargin = css`
+  margin: 0;
+`
+
 const Container = styled.div`
   position: relative;
   display: flex;
@@ -94,15 +98,16 @@ const Text = styled.div`
 interface DropdownProps {
   keys: DropdownKey[],
   defaultKey?: number,
+  noMargin?: boolean,
   onChange?: any
 }
 
-function DropdownInput({ keys, defaultKey, onChange = () => null }: DropdownProps) {
+function DropdownInput({ keys, defaultKey, noMargin = false, onChange = () => null }: DropdownProps) {
   const [active, setActive] = useState(false);
   const [selected, setSelected] = useState(defaultKey || 0);
 
   return (
-    <PhysicalContainer>
+    <PhysicalContainer className={ classNames(noMargin && NoMargin) }>
       <Container onClick={ () => setActive(!active) } className={ classNames({ active }) }>
         <Header>
           { !!keys.length && (

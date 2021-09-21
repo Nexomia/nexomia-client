@@ -1,11 +1,11 @@
 import { styled } from 'linaria/react';
 
-const InputField = styled.input`
+const MultilineField = styled.textarea`
   display: flex;
   width: 100%;
   height: 48px;
   margin-top: 16px;
-  padding: 0 14px;
+  padding: 14px;
   border: 2px solid var(--background-secondary-alt);
   background: var(--background-secondary-alt);
   border-radius: 4px;
@@ -16,6 +16,7 @@ const InputField = styled.input`
   outline: none;
   transition: .2s;
   -moz-appearance: textfield;
+  resize: none;
 
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
@@ -37,4 +38,4 @@ const InputField = styled.input`
   }
 `
 
-export default InputField;
+export default MultilineField;
