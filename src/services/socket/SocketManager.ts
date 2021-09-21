@@ -75,6 +75,11 @@ class SocketManager {
         RoleEventHandler.rolePatched(event);
         break;
 
+      case 'guild.role_created':
+        RoleEventHandler.roleCreated(event);
+        RoleEventHandler.rolePatched(event);
+        break;
+
       case 'guild.channel_created':
         ChannelEventHandler.channelCreated(event);
         break;

@@ -180,6 +180,8 @@ function GeneralView() {
 
     setSaveLoading(false);
     setEdited(false);
+    setAvatarEdited(false);
+    setBannerEdited(false);
   }
 }
 

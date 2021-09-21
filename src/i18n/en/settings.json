@@ -48,6 +48,7 @@
   "saving_changes": "Saving Changes...",
   "save_changes": "Save Changes",
   "server_roles": {
+    "create": "Create a role",
     "roles_description": "Roles help you organize your server and configure permissions for your members. Role permissions are calculated from lowest (default) to highest role.",
     "default_role": "DEFAULT",
     "back": "Back",

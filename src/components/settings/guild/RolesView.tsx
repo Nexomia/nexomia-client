@@ -19,6 +19,7 @@ import Role from '../ui/Role';
 import PermissionCalculator from '../../../utils/PermissionCalculator';
 import { ComputedPermissions } from '../../../store/models/ComputedPermissions';
 import { useTranslation } from 'react-i18next';
+import FilledButton from '../../ui/FilledButton';
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -126,6 +127,10 @@ function RolesView() {
           <StyledText className={ css`text-align: center; margin: 32px 0` }>
             { t('server_roles.roles_description') }
           </StyledText>
+          <FilledButton
+            className={ css`margin: 0 0 8px 0` }
+            onClick={ createRole }
+          >{ t('server_roles.create') }</FilledButton>
           { 
             <List
               lockVertically
@@ -243,6 +248,10 @@ function RolesView() {
   async function updateRolePosition(index: number, updatedRoleList: string[]) {
     setGuildRoles({ guild: guildId, roles: updatedRoleList });
     await RolesService.patchRole(guildId, updatedRoleList[index], { position: index + 1 });
+  }
+
+  async function createRole() {
+    RolesService.createRole(guildId);
   }
 }
 
