@@ -171,7 +171,7 @@ function GeneralView() {
       const uploadUrl = await FilesService.createFile(3);
       const fileInfo = await FilesService.uploadFile(uploadUrl, bannerResult.plainFiles[0]);
 
-      guildPatch.avatar = fileInfo.id;
+      guildPatch.banner = fileInfo.id;
     }
 
     const response = await GuildsService.patchGuild(guildId, guildPatch);
