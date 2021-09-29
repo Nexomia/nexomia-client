@@ -200,15 +200,15 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
                 </StyledText>
               </StyledText>
             ) : null }
-            { !!(MessageCache[id].forwarded_ids && MessageCache[id].forwarded_ids.length) && (
+            { !!(MessageCache[id].forwarded_messages && MessageCache[id].forwarded_messages.length) && (
               <ForwardsContainer>
                 <ForwardDivider />
                 <ForwardedMessagesContainer>
                   {
-                    MessageCache[id].forwarded_ids.map((forwarded) => (
+                    MessageCache[id].forwarded_messages.map((forwarded) => (
                       <MessageRenderer
-                        id={ forwarded }
-                        key={ forwarded }
+                        id={ '$' + forwarded.id }
+                        key={ '$' +  forwarded.id }
                         grouped={ false }
                         channel={ channel }
                         avatar={ false }

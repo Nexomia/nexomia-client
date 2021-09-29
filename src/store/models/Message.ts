@@ -22,5 +22,6 @@ export default interface Message {
   sticker?: string;
   deleted: boolean;
   embeds?: Embed[] | null;
-  forwarded_ids: string[]
+  forwarded_ids: string[];
+  forwarded_messages: Message[]
 }
