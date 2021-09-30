@@ -7,13 +7,13 @@ export default interface Attachment {
   /**
    * Name of file attached
    */
-  filename: string;
+  name: string;
 
   /**
    * The attachment's media type
    * https://en.wikipedia.org/wiki/Media_type
    */
-  content_type?: string;
+  mime_type: string;
 
   /**
    * Size of file in bytes
@@ -24,11 +24,6 @@ export default interface Attachment {
    * Source url of file
    */
   url: string;
-  
-  /**
-   * A proxied url of file
-   */
-  proxy_url: string;
 
   /**
    * Height of file (if image)

@@ -3,8 +3,8 @@ import axios from 'axios';
 import CommonRequestManager from '../common';
 
 class MessagesService {
-  async sendMessage(channel: string, content: string, forwards: string[]) {
-    const response = await CommonRequestManager.apiRequest('POST', `/channels/${channel}/messages`, { content, forwarded_messages: forwards });
+  async sendMessage(channel: string, content: string, forwards: string[], attachments: string[]) {
+    const response = await CommonRequestManager.apiRequest('POST', `/channels/${channel}/messages`, { content, forwarded_messages: forwards, attachments });
 
     if (axios.isAxiosError(response)) {
       return false;

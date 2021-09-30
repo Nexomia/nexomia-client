@@ -2,7 +2,7 @@ import { styled } from 'linaria/react';
 import { css } from 'linaria';
 import { htmlUnescape } from 'escape-goat';
 import classNames from 'classnames';
-import { Fragment, KeyboardEvent, useMemo, useRef, useState } from 'react';
+import { Fragment, KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { createEditor, BaseEditor, Descendant, Node, Text } from 'slate';
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
 import { RiAddCircleFill, RiCloseLine, RiEmotionLaughFill, RiSendPlane2Fill } from 'react-icons/ri';
@@ -23,6 +23,10 @@ import { useStore } from 'effector-react';
 import $InputStore, { updateInputInfo } from '../../store/InputStore';
 import MessageRenderer from './MessageRenderer';
 import StyledText from '../ui/StyledText';
+import { useFilePicker } from 'use-file-picker';
+import AttachmentPreview from './AttachmentPreview';
+import { FileContent } from 'use-file-picker/dist/interfaces';
+import FilesService from '../../services/api/files/files.service';
 
 type CustomElement = { type: 'paragraph'; children: CustomText[] };
 type CustomText = { text: string };
@@ -102,6 +106,9 @@ const ForwardsContainer = styled.div`
 const AttachmentsContainer = styled.div`
   display: flex;
   flex-direction: row;
+  margin: -8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
 `
 
 const ForwardDivider = styled.div`
@@ -122,6 +129,14 @@ interface ChatInputProps {
   onMessageSent: any
 }
 
+interface InputAttachment {
+  content: FileContent,
+  plain: File,
+  progress: number,
+  ready: boolean,
+  id: string
+}
+
 function ChatInput({ channel, onMessageSent }: ChatInputProps) {
   const inputRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -133,6 +148,7 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
   const [sendLoading, setSendLoading] = useState(false);
   const [typing, setTyping] = useState(false);
   const [sendLocked, setSendLocked] = useState(false);
+  const [attachments, setAttachments]: any[] = useState([]);
 
   const editor = useMemo(() => withReact(createEditor()), []);
   const initialValue: CustomElement[] = [
@@ -143,10 +159,38 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
   ];
   const [value, setValue] = useState<Descendant[]>(initialValue);
 
+  const [openFilePicker, { filesContent, plainFiles, loading }] = useFilePicker({
+    readAs: 'DataURL'
+  });
+
+  useEffect(() => {
+    if (loading) return;
+
+    let modifiedAttachments = [ ...attachments ];
+    for (const i in filesContent) {
+      const newFile = {
+        content: filesContent[i],
+        plain: plainFiles[i],
+        progress: 0,
+        ready: false,
+        id: ''
+      };
+
+      modifiedAttachments = [
+        ...modifiedAttachments,
+        newFile
+      ];
+
+      uploadAttachment(newFile, modifiedAttachments);
+    }
+
+    setAttachments(modifiedAttachments);
+  }, [loading]);
+
   return (
     <OuterContainer>
       <Container ref={ containerRef }>
-        <InputButton>
+        <InputButton onClick={ openFilePicker }>
           <RiAddCircleFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
         </InputButton>
         <Input ref={ inputRef }>
@@ -200,6 +244,16 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
           </InputButton>
         </ForwardsContainer>
       ) }
+      <AttachmentsContainer>
+        { !!attachments?.length && attachments.map((attachment: InputAttachment) => (
+          <AttachmentPreview
+            file={ attachment.content }
+            plainFile={ attachment.plain }
+            ready={ attachment.ready }
+            progress={ attachment.progress }
+          />
+        )) }
+      </AttachmentsContainer>
     </OuterContainer>
   );
 
@@ -215,6 +269,7 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
     if (sendLoading) return;
 
     const forwards = [ ...(InputCache[channel]?.forwards || []) ];
+    const attaches = [ ...attachments ].map((attachment) => attachment.id);
 
     setSendLoading(true);
 
@@ -224,8 +279,9 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
     editor.insertBreak();
     setValue(initialValue);
     updateInputInfo({ channel, forwards: [], attachments: [] });
+    setAttachments([]);
 
-    const response = await MessagesService.sendMessage(channel, content || '', forwards);
+    const response = await MessagesService.sendMessage(channel, content || '', forwards, attaches);
 
     if (!response) return setSendLoading(false);
 
@@ -254,6 +310,22 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
 
   function unlockInput(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Shift') setSendLocked(false);
+  }
+
+  async function uploadAttachment(file: InputAttachment, modifiedAttachments: InputAttachment[]) {
+    const uploadUrl = await FilesService.createFile(1);
+    const fileInfo = await FilesService.uploadFile(uploadUrl, file.plain, (progress: any) => {
+      let newAttachments = [ ...modifiedAttachments ];
+      newAttachments[newAttachments.findIndex((attachment) => attachment.content === file.content)].progress = (progress.loaded / progress.total) * 100;
+      setAttachments(newAttachments);
+    });
+
+    let newAttachments = [ ...modifiedAttachments ];
+
+    const index = newAttachments.findIndex((attachment) => attachment.content === file.content);
+    newAttachments[index].ready = true;
+    newAttachments[index].id = fileInfo.id;
+    setAttachments(newAttachments);
   }
 }
 

@@ -18,6 +18,8 @@ import renderMessageContent from '../../utils/renderMessageContent';
 import { Fragment } from 'react';
 import Dots from '../animations/Dots';
 import $InputStore from '../../store/InputStore';
+import Attachment from '../../store/models/Attachment';
+import ImageRenderer from './attachments/ImageRenderer';
 
 const Spacer = styled.div`
   display: flex;
@@ -218,11 +220,18 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
                 </ForwardedMessagesContainer>
               </ForwardsContainer>
             ) }
-            <StyledText
-              className={ css`margin: 0; padding-right: 16px; font-weight: 400; user-select: text; word-break: break-all; white-space: break-spaces;` }
-            >
-              { renderMessageContent(MessageCache[id].content || '') }
-            </StyledText>
+            { !!MessageCache[id].content && (
+              <StyledText
+                className={ css`margin: 0; padding-right: 16px; font-weight: 400; user-select: text; word-break: break-all; white-space: break-spaces;` }
+              >
+                { renderMessageContent(MessageCache[id].content || '') }
+              </StyledText>
+            ) }
+            { !!MessageCache[id]?.attachments?.length && MessageCache[id]?.attachments?.map((attachment: Attachment) => (
+              attachment.mime_type.startsWith('image') ? (
+                <ImageRenderer file={ attachment } />
+              ) : null
+            )) }
           </ContentContainer>
         </Fragment>
       ) : (
