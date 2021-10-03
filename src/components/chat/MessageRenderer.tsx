@@ -20,6 +20,7 @@ import Dots from '../animations/Dots';
 import $InputStore from '../../store/InputStore';
 import Attachment from '../../store/models/Attachment';
 import ImageRenderer from './attachments/ImageRenderer';
+import AudioRenderer from './attachments/AudioRenderer';
 
 const Spacer = styled.div`
   display: flex;
@@ -230,6 +231,8 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
             { !!MessageCache[id]?.attachments?.length && MessageCache[id]?.attachments?.map((attachment: Attachment) => (
               attachment.mime_type.startsWith('image') ? (
                 <ImageRenderer file={ attachment } />
+              ) : attachment.mime_type.startsWith('audio') ? (
+                <AudioRenderer file={ attachment } />
               ) : null
             )) }
           </ContentContainer>

@@ -34,4 +34,6 @@ export default interface Attachment {
    * Width of file (if image)
    */
   width?: number;
+
+  data: any;
 }
