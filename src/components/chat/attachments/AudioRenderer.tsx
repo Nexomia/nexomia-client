@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
 import { useEffect, useRef, useState } from 'react';
-import { RiFileMusicFill, RiPauseFill, RiPlayFill } from 'react-icons/ri';
+import { RiFileDownloadFill, RiFileMusicFill, RiPauseFill, RiPlayFill } from 'react-icons/ri';
 import Attachment from '../../../store/models/Attachment';
 import StyledIconCss from '../../css/StyledIconCss';
 import StyledText from '../../ui/StyledText';
@@ -100,10 +100,27 @@ function AudioRenderer({ file }: AudioRendererProps) {
               />
             ) }
           </InputButton>
+          <InputButton
+            className={ css`height: 34px; width: 34px; padding: 8px; margin-top: 8px;` }
+            onClick={ downloadAudio }
+          >
+            <RiFileDownloadFill className={ classNames({ [StyledIconCss]: true, [SmallInputIconCss]: true }) } />
+          </InputButton>
         </Player>
       </div>
     </Container>
   )
+
+  function downloadAudio() {
+    // cringe
+    const anchor = document.createElement('a');
+    anchor.href = file.url;
+    anchor.download = file.name;
+    anchor.target = '_blank';
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+  }
 }
 
 export default AudioRenderer;
