@@ -21,6 +21,7 @@ import $InputStore from '../../store/InputStore';
 import Attachment from '../../store/models/Attachment';
 import ImageRenderer from './attachments/ImageRenderer';
 import AudioRenderer from './attachments/AudioRenderer';
+import GenericRenderer from './attachments/GenericRenderer';
 
 const Spacer = styled.div`
   display: flex;
@@ -233,7 +234,9 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
                 <ImageRenderer file={ attachment } />
               ) : attachment.mime_type.startsWith('audio') ? (
                 <AudioRenderer file={ attachment } />
-              ) : null
+              ) : (
+                <GenericRenderer file={ attachment } />
+              )
             )) }
           </ContentContainer>
         </Fragment>
