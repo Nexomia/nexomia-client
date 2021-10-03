@@ -51,21 +51,8 @@ interface GenericRendererProps {
 }
 
 function GenericRenderer({ file }: GenericRendererProps) {
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-  const [playing, setPlaying] = useState(false);
-
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.onloadedmetadata = () => {
-
-      }
-    }
-  });
-
   return (
     <Container>
-      <audio src={ file.url } preload="metadata" ref={ audioRef } />
       <NoPreviewContainer>
         <RiFileUnknowFill className={ classNames(StyledIconCss, AttachmentIconCss) } />
       </NoPreviewContainer>

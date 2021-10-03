@@ -12,10 +12,9 @@ import InputButton from '../InputButton';
 const Container = styled.div`
   display: flex;
   flex-direction: row;
-  max-width: 400px;
+  width: 400px;
   border-radius: 4px;
   background: var(--background-secondary-alt);
-  overflow: hidden;
   margin: 2px 0;
 `
 
@@ -62,14 +61,6 @@ function AudioRenderer({ file }: AudioRendererProps) {
 
   const [playing, setPlaying] = useState(false);
 
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.onloadedmetadata = () => {
-
-      }
-    }
-  });
-
   return (
     <Container>
       <audio src={ file.url } preload="metadata" ref={ audioRef } />
@@ -82,7 +73,7 @@ function AudioRenderer({ file }: AudioRendererProps) {
       ) }
       <div>
         <StyledText
-          className={ css`font-weight: 900; font-size: 22px; margin-top: 22px; text-overflow: ellipsis; white-space: nowrap;` }
+          className={ css`font-weight: 900; font-size: 22px; margin-top: 22px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; width: 250px` }
         >{ file.name }</StyledText>
         <Player>
           <InputButton
