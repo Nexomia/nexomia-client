@@ -7,7 +7,10 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import {
   RiAddFill
-} from 'react-icons/ri'
+} from 'react-icons/ri';
+
+import ReactFreezeframe from 'react-freezeframe';
+import { Freeze } from 'freezeframe/types';
 
 import { useStore } from 'effector-react';
 import { setModalState } from '../../store/ModalStore';
@@ -82,7 +85,9 @@ function Guilds() {
             key={ guildListId }
             className={ classNames({ active: guildId === guildListId }) }
           >
-            { guilds[guildListId]?.icon && <AvatarImg src={ guilds[guildListId]?.icon } /> }
+            { guilds[guildListId]?.icon && (
+              <ReactFreezeframe className={ css`width: 100%; height: 100%` } src={ guilds[guildListId]?.icon } />
+            ) }
             {
               !guilds[guildListId]?.icon &&
               (

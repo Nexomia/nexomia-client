@@ -47,7 +47,7 @@ const Container = styled.div`
   animation: appear .2s;
 
   &:hover, &.active {
-    background: var(--background-secondary-alt);
+    background: var(--background-secondary-alt2);
   }
 
   &:hover > ${Spacer} {
