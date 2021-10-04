@@ -10,7 +10,6 @@ import {
 } from 'react-icons/ri';
 
 import ReactFreezeframe from 'react-freezeframe';
-import { Freeze } from 'freezeframe/types';
 
 import { useStore } from 'effector-react';
 import { setModalState } from '../../store/ModalStore';
