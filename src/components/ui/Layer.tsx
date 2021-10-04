@@ -9,7 +9,7 @@ const Layer = styled.div`
   justify-content: center;
   padding: 16px;
   opacity: 1;
-  transition: .4s;
+  transition: .25s;
   z-index: 10;
 `
 
