@@ -15,7 +15,7 @@ import { RiArrowLeftLine, RiArrowRightLine, RiPushpinFill } from 'react-icons/ri
 import StyledIconCss from '../css/StyledIconCss';
 import { useTranslation } from 'react-i18next';
 import renderMessageContent from '../../utils/renderMessageContent';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import Dots from '../animations/Dots';
 import $InputStore from '../../store/InputStore';
 import Attachment from '../../store/models/Attachment';
@@ -154,6 +154,8 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
 
   const InputCache = useStore($InputStore);
 
+  const [hovered, setHovered] = useState(false);
+
   const { t } = useTranslation(['chat']);
 
   const history = useHistory();
@@ -162,6 +164,8 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
     <Container
       className={ classNames({ [GroupedContainerCss]: (grouped && !MessageCache[id].type), active: ContextMenu?.id === id && ContextMenu?.visible && avatar }) }
       onContextMenu={ openContextMenu }
+      onMouseEnter={ () => setHovered(true) }
+      onMouseLeave={ () => setHovered(false) }
     >
       { InputCache[channel] && InputCache[channel]?.forwards?.includes(id) && avatar && <FloatingDivider /> }
       { UserCache[MessageCache[id].author] ? (
@@ -232,7 +236,7 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
             ) }
             { !!MessageCache[id]?.attachments?.length && MessageCache[id]?.attachments?.map((attachment: Attachment) => (
               attachment.mime_type.startsWith('image') ? (
-                <ImageRenderer file={ attachment } />
+                <ImageRenderer file={ attachment } hovered={ hovered } />
               ) : attachment.mime_type.startsWith('audio') ? (
                 <AudioRenderer file={ attachment } />
               ) : attachment.mime_type.startsWith('text') ? (

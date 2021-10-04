@@ -1,7 +1,8 @@
 import { styled } from 'linaria/react';
+import { useEffect, useRef } from 'react';
 import ReactFreezeframe from 'react-freezeframe';
+import { Freeze } from 'freezeframe/types'
 import Attachment from '../../../store/models/Attachment';
-
 
 const Container = styled.div`
   display: inline-block;
@@ -13,13 +14,31 @@ const Container = styled.div`
 `
 
 interface ImageRendererProps {
-  file: Attachment
+  file: Attachment,
+  hovered: boolean
 }
 
-function ImageRenderer({ file }: ImageRendererProps) {
+function ImageRenderer({ file, hovered }: ImageRendererProps) {
+  const freezeRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (hovered) {
+      freezeRef.current.start();
+    } else {
+      freezeRef.current.stop();
+    }
+  }, [hovered]);
+
   return (
     <Container style={ calculateSizes() }>
-      <ReactFreezeframe src={ file.url } />
+      <ReactFreezeframe
+        ref={ freezeRef }
+        src={ file.url }
+        options={{
+          trigger: false,
+          overlay: false
+        }}
+      />
     </Container>
   )
 
