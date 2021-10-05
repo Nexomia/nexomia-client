@@ -45,6 +45,9 @@
     "default_channel": "Default Channel",
     "edit": "Edit"
   },
+  "user_general": {
+    "description": "Tell people more about yourself!"
+  },
   "saving_changes": "Saving Changes...",
   "save_changes": "Save Changes",
   "server_roles": {
@@ -112,9 +115,12 @@
     "people": "People",
     "direct_messages": "Direct Messages",
     "server_settings": "Server Settings",
+    "app_settings": "Settings",
     "discover": "Discover",
     "home": "Home",
     "pinned_messages": "Pinned Messages",
-    "invites": "Invites"
+    "invites": "Invites",
+    "user_divider": "User",
+    "profile": "Profile"
   }
 }

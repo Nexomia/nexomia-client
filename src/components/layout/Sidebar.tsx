@@ -124,7 +124,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
   }, [channels]);
 
   return (
-    <SidebarContainer className={ classNames({ [WideSidebarCss]: path === 'guildsettings' }) }>
+    <SidebarContainer className={ classNames({ [WideSidebarCss]: path === 'guildsettings' || path === 'settings' }) }>
       { !path && guildId === '@me' && type === 'channels' && (
         <SidebarHeader>
           <Content>{ t('tabs.direct_messages') }</Content>
@@ -162,6 +162,20 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             title={ t('tabs.friends') }
             tabId={ 'friends' }
             onClick={ () => { history.push(`/home/friends`) } }
+          />
+        </Fragment>
+      ) }
+
+      { path === 'settings' && type === 'channels' && (
+        <Fragment>
+          <SidebarHeader>
+            <Content>{ t('tabs.app_settings') }</Content>
+          </SidebarHeader>
+          <StyledText className={ css`margin: 2px 0px 2px 12px; color: var(--text-secondary)` }>{ t('tabs.user_divider') }</StyledText>
+          <Tab
+            title={ t('tabs.profile') }
+            tabId={ 'general' }
+            onClick={ () => { history.push(`/settings/general`) } }
           />
         </Fragment>
       ) }

@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import $GuildCacheStore from '../../store/GuildCacheStore';
 import CenteredContainer from '../layout/CenteredContainer';
+import GeneralUserView from './app/GeneralUserView';
 import GeneralView from './guild/GeneralView';
 import InvitesView from './guild/InvitesView';
 import RolesView from './guild/RolesView';
@@ -32,6 +33,12 @@ function SettingsView() {
 
   return (
     <Wrapper>
+      { /* App */ }
+      { guildId === 'general' && (
+        <GeneralUserView />
+      ) }
+
+      { /* Guild */ }
       { channelId === 'general' && (
         <GeneralView />
       ) }

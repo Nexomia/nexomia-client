@@ -20,6 +20,16 @@ class UsersService {
 
     return response.data;
   }
+
+  async patchMe(patch: object) {
+    const response = await CommonRequestManager.apiRequest('PATCH', `/users/@me`, patch);
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
 }
 
 export default new UsersService();

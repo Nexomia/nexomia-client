@@ -45,6 +45,9 @@
     "default_channel": "Стандартный канал",
     "edit": "Редактировать"
   },
+  "user_general": {
+    "description": "Расскажите людям больше о вас!"
+  },
   "saving_changes": "Сохраняем изменения...",
   "save_changes": "Сохранить изменения",
   "server_roles": {
@@ -112,9 +115,12 @@
     "people": "Люди",
     "direct_messages": "Личные сообщения",
     "server_settings": "Настройки сервера",
+    "app_settings": "Настройки",
     "discover": "Поиск",
     "home": "Главная",
     "pinned_messages": "Закрепленные сообщения",
-    "invites": "Приглашения"
+    "invites": "Приглашения",
+    "user_divider": "Пользователь",
+    "profile": "Профиль"
   }
 }

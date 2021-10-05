@@ -60,6 +60,10 @@ function Content() {
           ) : null
         ) }
 
+        { path === 'settings' && (
+          <SettingsView />
+        ) }
+
         { !path && channelId && (
           Channels[guildId] ? (
             <ChatView channel={ channelId } />
