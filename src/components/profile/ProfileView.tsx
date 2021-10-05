@@ -2,10 +2,11 @@ import classNames from 'classnames';
 import { useStore } from 'effector-react';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RiShieldCheckFill, RiCodeSSlashFill } from 'react-icons/ri';
-import $UserCacheStore from '../../store/UserCacheStore';
+import UsersService from '../../services/api/users/users.service';
+import $UserCacheStore, { cacheUsers } from '../../store/UserCacheStore';
 import getIconString from '../../utils/getIconString';
 import renderMessageContent from '../../utils/renderMessageContent';
 import StyledIconCss from '../css/StyledIconCss';
@@ -79,6 +80,16 @@ function ProfileView({ user }: ProfileViewProps) {
 
   const { t } = useTranslation(['chat']);
 
+  useEffect(() => {
+    if (
+      !UserCache[user] ||
+      (
+        !UserCache[user].banner &&
+        !UserCache[user].description
+      )
+    ) loadUserInfo();
+  }, []);
+
   return (
     <Container>
       { UserCache[user] && (
@@ -117,6 +128,11 @@ function ProfileView({ user }: ProfileViewProps) {
       ) }
     </Container>
   )
+
+  async function loadUserInfo() {
+    const userInfo = await UsersService.getUser(user);
+    cacheUsers([userInfo]);
+  }
 }
 
 export default ProfileView;
