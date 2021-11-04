@@ -12,7 +12,7 @@ export default styled.div`
   cursor: pointer;
   transition: .2s;
 
-  &:hover {
+  &:hover, &.hover {
     background: var(--background-light);
   }
   &:active, &.active {

@@ -1,5 +1,28 @@
 import { Fragment } from 'react';
+import { css } from 'linaria';
 
+import { parse } from 'twemoji-parser';
+import emojis from 'emojibase-data/en/data.json';
+
+const EmoteImage = css`
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin: -3px 1px;
+  transform: translateY(2px);
+  padding: 4px;
+  overflow: hidden;
+
+  & > * {
+    dispay: block;
+    width: 40px;
+    height: 40px;
+    opacity: 0;
+    overflow: hidden;
+  }
+`
+
+let optimizeParsed: any = null;
 
 function MarkdownLeaf({ attributes, children, leaf }: any) {
   return (
@@ -26,7 +49,15 @@ function MarkdownLeaf({ attributes, children, leaf }: any) {
       ? (
         <code style={{ display: 'block', padding: '12px' }} { ...attributes }>{ children }</code>
       )
-      : <span { ...attributes }>{ children }</span> }
+      : leaf.type === 'tag' &&
+        (leaf.text.startsWith('<i') ||
+        leaf.text.startsWith('<e')) &&
+        (optimizeParsed = parse(
+          emojis.find((e: any) => e?.label === leaf.text.split(':')[1].split('>')[0])?.emoji || ''
+        ))
+      ? (
+        <div { ...attributes } className={ EmoteImage } style={{ background: `url(${optimizeParsed[0]?.url})` }}>{ children }</div>
+      ) : <span { ...attributes }>{ children }</span> }
     </Fragment>
   )
 }

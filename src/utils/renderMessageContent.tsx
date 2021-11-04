@@ -1,4 +1,17 @@
+import { css } from 'linaria';
 import getMessageMarkdownBounds from './getMessageMarkdownBounds';
+import { parse } from 'twemoji-parser';
+import emojis from 'emojibase-data/en/data.json';
+
+const EmoteImage = css`
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin: -3px 1px;
+  transform: translateY(2px);
+  padding: 4px;
+  overflow: hidden;
+`
 
 export default function renderMessageContent(content: string) {
   const output = [];
@@ -45,6 +58,33 @@ export default function renderMessageContent(content: string) {
         output.push(
           <code style={{ display: 'block', padding: '12px' }}>{ content.slice(bound.start + 3, bound.length - 3).trim() }</code>
         );
+        break;
+
+      case 'tag':
+        let optimizeParsed: any = null;
+        if (
+          (
+            content.slice(bound.start, bound.length).startsWith('<i') ||
+            content.slice(bound.start, bound.length).startsWith('<e')
+          ) &&
+          (optimizeParsed = parse(
+            emojis.find((e: any) => e?.label === content.slice(bound.start, bound.length).split(':')[1].split('>')[0])?.emoji || ''
+          ))
+        ) {
+          output.push(
+            <div className={ EmoteImage } style={{
+              background: `url(${optimizeParsed[0]?.url})`,
+              ...(
+                bounds.find((e: any) => e.type !== 'tag') ? {} : {
+                  width: '40px',
+                  height: '40px'
+                }
+              )
+            }} />
+          )
+        } else {
+          output.push(content.slice(bound.start, bound.length));
+        }
         break;
     
       default:

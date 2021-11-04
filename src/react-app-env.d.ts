@@ -6,4 +6,6 @@ declare module '*.opus' {
   export default src;
 }
 
-declare module 'react-freezeframe'
+declare module 'react-freezeframe';
+declare module 'emojis-list';
+declare module 'twemoji-basename';

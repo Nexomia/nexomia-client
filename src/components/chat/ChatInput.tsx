@@ -27,6 +27,7 @@ import { useFilePicker } from 'use-file-picker';
 import AttachmentPreview from './AttachmentPreview';
 import { FileContent } from 'use-file-picker/dist/interfaces';
 import FilesService from '../../services/api/files/files.service';
+import ContentPicker from './ContentPicker';
 
 type CustomElement = { type: 'paragraph'; children: CustomText[] };
 type CustomText = { text: string };
@@ -140,6 +141,7 @@ interface InputAttachment {
 function ChatInput({ channel, onMessageSent }: ChatInputProps) {
   const inputRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const editableRef = useRef(null);
 
   const InputCache = useStore($InputStore);
 
@@ -149,6 +151,7 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
   const [typing, setTyping] = useState(false);
   const [sendLocked, setSendLocked] = useState(false);
   const [attachments, setAttachments]: any[] = useState([]);
+  const [pickerOpened, setPickerOpened] = useState(false);
 
   const editor = useMemo(() => withReact(createEditor()), []);
   const initialValue: CustomElement[] = [
@@ -209,7 +212,7 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
             />
           </Slate>
         </Input>
-        <InputButton className={ css`margin-right: 0` }>
+        <InputButton onClick={ () => setPickerOpened(!pickerOpened) } className={ classNames(css`margin-right: 0`, { hover: pickerOpened }) }>
           <RiEmotionLaughFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
         </InputButton>
         <InputButton onClick={ sendMessage } className={ classNames({ active: sendLoading }) } >
@@ -254,6 +257,7 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
           />
         )) }
       </AttachmentsContainer>
+      { pickerOpened && <ContentPicker onSelect={ addEmojiText } /> }
     </OuterContainer>
   );
 
@@ -326,6 +330,10 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
     newAttachments[index].ready = true;
     newAttachments[index].id = fileInfo.id;
     setAttachments(newAttachments);
+  }
+
+  function addEmojiText(text: string) {
+    editor.insertText('<i:' + text + '>');
   }
 }
 
