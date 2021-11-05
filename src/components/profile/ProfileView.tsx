@@ -6,6 +6,7 @@ import { Fragment, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RiShieldCheckFill, RiCodeSSlashFill } from 'react-icons/ri';
 import UsersService from '../../services/api/users/users.service';
+import { setModalState } from '../../store/ModalStore';
 import $UserCacheStore, { cacheUsers } from '../../store/UserCacheStore';
 import getIconString from '../../utils/getIconString';
 import renderMessageContent from '../../utils/renderMessageContent';
@@ -26,6 +27,7 @@ const Banner = styled.div`
   height: 400px;
   background-size: cover;
   background-position: center;
+  cursor: pointer;
 `
 
 const AvatarCss = `
@@ -43,6 +45,7 @@ const AvatarCss = `
   background: var(--background-light);
   flex-shrink: 0;
   font-size: 48px;
+  cursor: pointer;
 `
 
 const Avatar = styled.img`${AvatarCss}`
@@ -95,13 +98,13 @@ function ProfileView({ user }: ProfileViewProps) {
       { UserCache[user] && (
         <Fragment>
           { UserCache[user].banner ? (
-            <Banner style={{ background: `url(${ UserCache[user].banner })`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+            <Banner style={{ background: `url(${ UserCache[user].banner })`, backgroundSize: 'cover', backgroundPosition: 'center' }} onClick={ () => openModal(UserCache[user].banner) } />
           ) : (
             <Banner className={ css`background: var(--accent-dark)` } />
           ) }
           <CenteredContainer className={ css`flex-direction: column; margin: 0 16px` }>
             { UserCache[user].avatar ? (
-              <Avatar src={ UserCache[user].avatar } />
+              <Avatar src={ UserCache[user].avatar } onClick={ () => openModal(UserCache[user].avatar) } />
             ) : (
               <LetterAvatar>{ getIconString(UserCache[user].username || '') }</LetterAvatar>
             ) }
@@ -132,6 +135,10 @@ function ProfileView({ user }: ProfileViewProps) {
   async function loadUserInfo() {
     const userInfo = await UsersService.getUser(user);
     cacheUsers([userInfo]);
+  }
+
+  function openModal(url: any) {
+    setModalState({ imagePreview: [true, url] });
   }
 }
 

@@ -3,13 +3,14 @@ import { createStore, createEvent } from 'effector-root';
 const setModalState = createEvent<Modals>();
 
 interface Modals {
-  [key: string]: boolean
+  [key: string]: any
 }
 
 const $ModalStore = createStore<Modals>({
   serverCreation: false,
   channelCreation: false,
-  inviteCreation: false
+  inviteCreation: false,
+  imagePreview: [false, '']
 });
 
 $ModalStore.on(setModalState, (state, modifiedState: Modals) => ({ ...state, ...modifiedState }));

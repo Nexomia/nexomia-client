@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import ReactFreezeframe from 'react-freezeframe';
 import { Freeze } from 'freezeframe/types'
 import Attachment from '../../../store/models/Attachment';
+import { setModalState } from '../../../store/ModalStore';
 
 const Container = styled.div`
   display: inline-block;
@@ -11,6 +12,7 @@ const Container = styled.div`
   border-radius: 4px;
   background: var(--background-secondary-alt);
   overflow: hidden;
+  cursor: pointer;
 `
 
 interface ImageRendererProps {
@@ -30,7 +32,7 @@ function ImageRenderer({ file, hovered }: ImageRendererProps) {
   }, [hovered]);
 
   return (
-    <Container style={ calculateSizes() }>
+    <Container style={ calculateSizes() } onClick={ openModal }>
       <ReactFreezeframe
         ref={ freezeRef }
         src={ file.url }
@@ -49,11 +51,15 @@ function ImageRenderer({ file, hovered }: ImageRendererProps) {
       : file.data.height
 
       const width = height > 400
-      ? Math.min(file.data.width * (400 / file.data.height), 400)
+      ? Math.min(file.data.width * (400 / height), 400)
       : file.data.width
 
       return { width, height };
     } else return {};
+  }
+
+  function openModal() {
+    setModalState({ imagePreview: [true, file.url] });
   }
 }
 
