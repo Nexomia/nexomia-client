@@ -3,6 +3,7 @@ import { css } from 'linaria';
 import { styled } from 'linaria/react';
 import { useEffect, useRef, useState } from 'react';
 import { RiFileDownloadFill, RiFileMusicFill, RiPauseFill, RiPlayFill } from 'react-icons/ri';
+import { setModalState } from '../../../store/ModalStore';
 import Attachment from '../../../store/models/Attachment';
 import StyledIconCss from '../../css/StyledIconCss';
 import StyledText from '../../ui/StyledText';
@@ -23,6 +24,7 @@ const Preview = styled.img`
   height: 96px;
   border-radius: 4px;
   margin: 16px;
+  cursor: pointer;
 `
 
 const NoPreviewContainer = styled.div`
@@ -65,7 +67,7 @@ function AudioRenderer({ file }: AudioRendererProps) {
     <Container>
       <audio src={ file.url } preload="metadata" ref={ audioRef } />
       { file.data?.preview_url ? (
-        <Preview src={ file.data.preview_url } />
+        <Preview src={ file.data.preview_url } onClick={ openModal } />
       ) : (
         <NoPreviewContainer>
           <RiFileMusicFill className={ classNames(StyledIconCss, AttachmentIconCss) } />
@@ -111,6 +113,10 @@ function AudioRenderer({ file }: AudioRendererProps) {
     document.body.appendChild(anchor);
     anchor.click();
     document.body.removeChild(anchor);
+  }
+
+  function openModal() {
+    setModalState({ imagePreview: [true, file.data.preview_url] });
   }
 }
 
