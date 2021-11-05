@@ -29,7 +29,7 @@ import Guilds from '../components/layout/Guilds';
 import Sidebar from '../components/layout/Sidebar';
 import MemberSidebar from '../components/layout/MemberSidebar';
 import Content from '../components/layout/Content';
-import LoadingPlaceholder from '../components/ui/LoadingPlaceholder';
+import BrandLoading from '../components/ui/BrandLoading';
 import Modals from '../components/layout/Modals';
 
 import preloaders from '../i18n/preloaders.json';
@@ -58,12 +58,12 @@ function App() {
     setLoaderTitleAuthor(authorId);
     setLoaderTitleId(preloaders.authors[authorId].prefix + getRandomInt(preloaders.authors[authorId].count));
 
-    preloadUserInfo();
+    setTimeout(() => preloadUserInfo(), 1000);
   }, []);
 
   return (
     <div className="App dark-theme" onClick={ closeContextMenu } onContextMenu={ (event: any) => event.preventDefault() }>
-      <LoadingPlaceholder
+      <BrandLoading
         title={ t(`states:loading.${loaderTitleId.toString()}`) }
         subtext={ `@${preloaders.authors[loaderTitleAuthor].name}` }
         active={ !loaded }
