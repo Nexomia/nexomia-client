@@ -44,17 +44,13 @@ function ImageRenderer({ file, hovered }: ImageRendererProps) {
 
   function calculateSizes() {
     if (file?.data?.width && file?.data?.height) {
-      const width = file.data.width > 400
-      ? 400
-      : file.data.height > 400
-      ? file.data.width * (400 / file.data.height)
-      : file.data.width
-
-      const height = file.data.height > 400
-      ? 400
-      : file.data.width > 400
-      ? file.data.height * (400 / file.data.width)
+      const height = file.data.width > 400
+      ? Math.min(file.data.height * (400 / file.data.width), 400)
       : file.data.height
+
+      const width = height > 400
+      ? Math.min(file.data.width * (400 / file.data.height), 400)
+      : file.data.width
 
       return { width, height };
     } else return {};

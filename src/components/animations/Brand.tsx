@@ -8,6 +8,8 @@ const Container = styled.div`
   height: 160px;
   position: relative;
   animation: logoc .4s;
+  user-select: none;
+  user-drag: none;
 
   @keyframes logoc {
     from {
@@ -64,6 +66,8 @@ const Logo = styled.img`
   height: 160px;
   position: absolute;
   animation: logo .4s;
+  user-select: none;
+  user-drag: none;
 
   @keyframes logo {
     from {
