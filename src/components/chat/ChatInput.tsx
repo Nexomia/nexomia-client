@@ -352,7 +352,7 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
     } else {
       if (sendLoading) return;
       setSendLoading(true);
-      await MessagesService.sendMessage(channel, '', [], [id]);
+      await MessagesService.sendMessage(channel, '', [], [], id);
       setSendLoading(false);
     }
   }
