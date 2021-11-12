@@ -245,6 +245,13 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
                 <GenericRenderer file={ attachment } />
               )
             )) }
+
+            { MessageCache[id].sticker && (
+              <img
+                src={ MessageCache[id].sticker?.url }
+                className={ css`width: 150px; height: 150px; user-select: none; user-drag: none;` }
+              />
+            ) }
           </ContentContainer>
         </Fragment>
       ) : (
