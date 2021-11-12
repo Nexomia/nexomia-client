@@ -121,6 +121,8 @@
     "pinned_messages": "Pinned Messages",
     "invites": "Invites",
     "user_divider": "User",
-    "profile": "Profile"
+    "profile": "Profile",
+    "chat": "Chat",
+    "emotes": "Emotes"
   }
 }

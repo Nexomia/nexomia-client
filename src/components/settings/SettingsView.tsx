@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import $GuildCacheStore from '../../store/GuildCacheStore';
 import CenteredContainer from '../layout/CenteredContainer';
+import EmotesUserView from './app/EmotesUserView';
 import GeneralUserView from './app/GeneralUserView';
 import GeneralView from './guild/GeneralView';
 import InvitesView from './guild/InvitesView';
@@ -36,6 +37,10 @@ function SettingsView() {
       { /* App */ }
       { guildId === 'general' && (
         <GeneralUserView />
+      ) }
+
+      { guildId === 'emotes' && (
+        <EmotesUserView />
       ) }
 
       { /* Guild */ }

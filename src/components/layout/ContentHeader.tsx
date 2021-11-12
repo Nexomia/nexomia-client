@@ -102,6 +102,14 @@ function ContentHeader() {
       { path === 'guildsettings' && channelId === 'invites' && (
         <Content>{ t('tabs.invites') }</Content>
       ) }
+
+      { path === 'settings' && guildId === 'general' && (
+        <Content>{ t('tabs.profile') }</Content>
+      ) }
+
+      { path === 'settings' && guildId === 'emotes' && (
+        <Content>{ t('tabs.emotes') }</Content>
+      ) }
     </Header>
   );
 }

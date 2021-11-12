@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { Fragment, KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { createEditor, BaseEditor, Descendant, Node, Text } from 'slate';
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
-import { RiAddCircleFill, RiCloseLine, RiEmotionLaughFill, RiSendPlane2Fill } from 'react-icons/ri';
+import { RiAddCircleFill, RiCloseLine, RiEmotionLaughFill, RiSendPlane2Fill, RiStickyNoteFill } from 'react-icons/ri';
 
 import { addMessage } from '../../store/MessageStore';
 import { cacheMessages } from '../../store/MessageCacheStore';
@@ -28,6 +28,7 @@ import AttachmentPreview from './AttachmentPreview';
 import { FileContent } from 'use-file-picker/dist/interfaces';
 import FilesService from '../../services/api/files/files.service';
 import ContentPicker from './ContentPicker';
+import EmojiPackType from '../../store/models/EmojiPackType';
 
 type CustomElement = { type: 'paragraph'; children: CustomText[] };
 type CustomText = { text: string };
@@ -141,7 +142,6 @@ interface InputAttachment {
 function ChatInput({ channel, onMessageSent }: ChatInputProps) {
   const inputRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const editableRef = useRef(null);
 
   const InputCache = useStore($InputStore);
 
@@ -151,7 +151,7 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
   const [typing, setTyping] = useState(false);
   const [sendLocked, setSendLocked] = useState(false);
   const [attachments, setAttachments]: any[] = useState([]);
-  const [pickerOpened, setPickerOpened] = useState(false);
+  const [pickerOpened, setPickerOpened]: any = useState(null);
 
   const editor = useMemo(() => withReact(createEditor()), []);
   const initialValue: CustomElement[] = [
@@ -212,7 +212,16 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
             />
           </Slate>
         </Input>
-        <InputButton onClick={ () => setPickerOpened(!pickerOpened) } className={ classNames(css`margin-right: 0`, { hover: pickerOpened }) }>
+        <InputButton
+          onClick={ () => togglePickerType(EmojiPackType.STICKER) }
+          className={ classNames(css`margin-right: 0`, { hover: pickerOpened === EmojiPackType.STICKER }) }
+        >
+          <RiStickyNoteFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
+        </InputButton>
+        <InputButton
+          onClick={ () => togglePickerType(EmojiPackType.EMOJI) }
+          className={ classNames(css`margin-right: 0`, { hover: pickerOpened === EmojiPackType.EMOJI }) }
+        >
           <RiEmotionLaughFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
         </InputButton>
         <InputButton onClick={ sendMessage } className={ classNames({ active: sendLoading }) } >
@@ -257,7 +266,7 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
           />
         )) }
       </AttachmentsContainer>
-      { pickerOpened && <ContentPicker onSelect={ addEmojiText } /> }
+      { pickerOpened !== null && <ContentPicker type={ pickerOpened } onSelect={ addEmojiText } /> }
     </OuterContainer>
   );
 
@@ -332,8 +341,24 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
     setAttachments(newAttachments);
   }
 
-  function addEmojiText(text: string) {
-    editor.insertText('<i:' + text + '>');
+  async function addEmojiText(text: string, id: string, sticker: boolean) {
+    if (!sticker) { // cringe cringe cringe
+      // @ts-ignore
+      inputRef.current?.children[0]?.focus();
+      setImmediate(() => {
+        if (!id) editor.insertText('<i:' + text + '>');
+        else editor.insertText('<e:' + text + ':' + id + '>');
+      });
+    } else {
+      if (sendLoading) return;
+      setSendLoading(true);
+      await MessagesService.sendMessage(channel, '', [], [id]);
+      setSendLoading(false);
+    }
+  }
+
+  function togglePickerType(type: EmojiPackType) {
+    setPickerOpened(pickerOpened === type ? null : type);
   }
 }
 

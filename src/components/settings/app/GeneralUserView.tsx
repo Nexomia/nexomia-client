@@ -3,7 +3,6 @@ import { css } from 'linaria';
 import { styled } from 'linaria/react';
 import { ChangeEvent, Fragment, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 import { useFilePicker } from 'use-file-picker';
 import FilesService from '../../../services/api/files/files.service';
 import UsersService from '../../../services/api/users/users.service';
@@ -14,10 +13,6 @@ import LoadingPlaceholder from '../../ui/LoadingPlaceholder';
 import MultilineField from '../../ui/MultilineField';
 import BannerRenderer from '../BannerRenderer';
 
-interface RouteParams {
-  guildId: string
-}
-
 const BadgeContainer = styled.div`
   padding: 80px 16px 16px 16px;
   background: var(--background-secondary-alt);
@@ -27,8 +22,6 @@ const BadgeContainer = styled.div`
 `
 
 function GeneralUserView() {
-  const { guildId } = useParams<RouteParams>();
-
   const { t } = useTranslation(['settings']);
 
   const UserCache = useStore($UserStore);

@@ -171,11 +171,18 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
           <SidebarHeader>
             <Content>{ t('tabs.app_settings') }</Content>
           </SidebarHeader>
-          <StyledText className={ css`margin: 2px 0px 2px 12px; color: var(--text-secondary)` }>{ t('tabs.user_divider') }</StyledText>
+          <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }>{ t('tabs.user_divider') }</StyledText>
           <Tab
             title={ t('tabs.profile') }
             tabId={ 'general' }
             onClick={ () => { history.push(`/settings/general`) } }
+          />
+
+          <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }>{ t('tabs.chat') }</StyledText>
+          <Tab
+            title={ t('tabs.emotes') }
+            tabId={ 'emotes' }
+            onClick={ () => { history.push(`/settings/emotes`) } }
           />
         </Fragment>
       ) }

@@ -2,6 +2,7 @@ import { css } from 'linaria';
 import getMessageMarkdownBounds from './getMessageMarkdownBounds';
 import { parse } from 'twemoji-parser';
 import emojis from 'emojibase-data/en/data.json';
+import Emoji from '../components/chat/markdown/Emoji';
 
 const EmoteImage = css`
   display: inline-block;
@@ -64,8 +65,7 @@ export default function renderMessageContent(content: string) {
         let optimizeParsed: any = null;
         if (
           (
-            content.slice(bound.start, bound.length).startsWith('<i') ||
-            content.slice(bound.start, bound.length).startsWith('<e')
+            content.slice(bound.start, bound.length).startsWith('<i')
           ) &&
           (optimizeParsed = parse(
             emojis.find((e: any) => e?.label === content.slice(bound.start, bound.length).split(':')[1].split('>')[0])?.emoji || ''
@@ -81,6 +81,18 @@ export default function renderMessageContent(content: string) {
                 }
               )
             }} />
+          )
+        } else if (content.slice(bound.start, bound.length).startsWith('<e')) {
+          output.push(
+            <Emoji
+              id={ content.slice(bound.start, bound.length).split(':')[2].split('>')[0] }
+              style={
+                bounds.find((e: any) => e.type !== 'tag') ? {} : {
+                  width: '40px',
+                  height: '40px'
+                }
+              }
+            />
           )
         } else {
           output.push(content.slice(bound.start, bound.length));

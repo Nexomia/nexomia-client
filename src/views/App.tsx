@@ -36,9 +36,11 @@ import preloaders from '../i18n/preloaders.json';
 import Guild from '../store/models/Guild';
 import ContextMenu from '../components/contextmenus/ContextMenu';
 import Channel from '../store/models/Channel';
+import EmojiPack from '../store/models/EmojiPack';
 import { cacheChannels } from '../store/ChannelCacheStore';
 import { setGuildChannels } from '../store/ChannelStore';
 import { cacheUsers } from '../store/UserCacheStore';
+import { cacheEmojiPacks } from '../store/EmojiPackStore';
 
 function App() {
   const { t } = useTranslation(['states']);
@@ -125,12 +127,18 @@ function App() {
   async function preloadUserInfo() {
     CommonRequestManager.setToken(token);
     SocketManager.setToken(token);
-    const userInfo = await UsersService.getUser('@me');
-    if (!userInfo) {
+    const receivedUserInfo = await UsersService.getUser('@me');
+    if (!receivedUserInfo) {
       setToken('');
       history.push('/login');
       return;
     }
+
+    const { emoji_packs, ...userInfo } = receivedUserInfo;
+
+    userInfo.emojiPacks = emoji_packs.map((pack: EmojiPack) => pack.id);
+    
+    cacheEmojiPacks(emoji_packs);
 
     cacheUsers([userInfo]);
 
