@@ -5,6 +5,7 @@ interface ContextMenu {
   top?: number,
   left?: number,
   visible?: boolean,
+  lock?: boolean,
   id?: string
 }
 
@@ -12,7 +13,8 @@ const $ContextMenuStore = createStore<ContextMenu>({
   type: '',
   top: 0,
   left: 0,
-  visible: false
+  visible: false,
+  lock: false
 });
 
 const setContextMenu = createEvent<ContextMenu>();

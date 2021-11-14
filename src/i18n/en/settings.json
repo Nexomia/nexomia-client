@@ -6,7 +6,9 @@
     "delete": "Delete",
     "pin": "Pin",
     "edit": "Edit",
-    "add_reaction": "Add Reaction"
+    "add_reaction": "Add Reaction",
+    "confirmation": "Are you sure?",
+    "reply": "Reply"
   },
   "modals": {
     "channel_creating": "Creating Channel...",
@@ -26,7 +28,12 @@
     "channel_create_header": "Create a Channel",
     "channel_create_error": "Failed to create channel.",
     "create": "Create",
-    "join": "Join"
+    "join": "Join",
+    "invite_creating": "Creating Invite...",
+    "invite_header": "Invite your friends!",
+    "invite_description": "Choose the channel to create invite in.",
+    "invite_created": "Here is your invite!",
+    "invite_created_description": "Click to copy it."
   },
   "server_general": {
     "no_default_channel": "No default channel",
@@ -34,11 +41,17 @@
     "icon_url": "Server Icon URL (leave empty to remove)",
     "banner_url": "Server Banner URL (leave empty to remove)",
     "name": "Server Name",
-    "default_channel": "Default Channel"
+    "description": "Tell people more about your server!",
+    "default_channel": "Default Channel",
+    "edit": "Edit"
+  },
+  "user_general": {
+    "description": "Tell people more about yourself!"
   },
   "saving_changes": "Saving Changes...",
   "save_changes": "Save Changes",
   "server_roles": {
+    "create": "Create a role",
     "roles_description": "Roles help you organize your server and configure permissions for your members. Role permissions are calculated from lowest (default) to highest role.",
     "default_role": "DEFAULT",
     "back": "Back",
@@ -48,6 +61,11 @@
     "color": "Role Color",
     "permissions": "Permissions",
     "permissions_description": "Configure permissions carefully, forcing a lot of permissions to \"allowed\" state is a bad practice, though you are not restricted from doing this. Higher roles will inherit all permissions from this role and apply their overwrites to them."
+  },
+  "server_invites": {
+    "description": "Active invites are displayed below.",
+    "uses": "uses",
+    "invite_create": "Create an invite"
   },
   "server_permissions": {
     "administrator": "Administrator",
@@ -97,7 +115,14 @@
     "people": "People",
     "direct_messages": "Direct Messages",
     "server_settings": "Server Settings",
+    "app_settings": "Settings",
     "discover": "Discover",
-    "home": "Home"
+    "home": "Home",
+    "pinned_messages": "Pinned Messages",
+    "invites": "Invites",
+    "user_divider": "User",
+    "profile": "Profile",
+    "chat": "Chat",
+    "emotes": "Emotes"
   }
 }

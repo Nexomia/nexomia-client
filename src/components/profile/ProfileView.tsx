@@ -2,12 +2,14 @@ import classNames from 'classnames';
 import { useStore } from 'effector-react';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RiShieldCheckFill, RiCodeSSlashFill } from 'react-icons/ri';
-import markdown from 'snarkdown';
-import $UserCacheStore from '../../store/UserCacheStore';
+import UsersService from '../../services/api/users/users.service';
+import { setModalState } from '../../store/ModalStore';
+import $UserCacheStore, { cacheUsers } from '../../store/UserCacheStore';
 import getIconString from '../../utils/getIconString';
+import renderMessageContent from '../../utils/renderMessageContent';
 import StyledIconCss from '../css/StyledIconCss';
 import CenteredContainer from '../layout/CenteredContainer';
 import StyledText from '../ui/StyledText';
@@ -25,6 +27,7 @@ const Banner = styled.div`
   height: 400px;
   background-size: cover;
   background-position: center;
+  cursor: pointer;
 `
 
 const AvatarCss = `
@@ -42,6 +45,7 @@ const AvatarCss = `
   background: var(--background-light);
   flex-shrink: 0;
   font-size: 48px;
+  cursor: pointer;
 `
 
 const Avatar = styled.img`${AvatarCss}`
@@ -79,18 +83,28 @@ function ProfileView({ user }: ProfileViewProps) {
 
   const { t } = useTranslation(['chat']);
 
+  useEffect(() => {
+    if (
+      !UserCache[user] ||
+      (
+        !UserCache[user].banner &&
+        !UserCache[user].description
+      )
+    ) loadUserInfo();
+  }, []);
+
   return (
     <Container>
       { UserCache[user] && (
         <Fragment>
           { UserCache[user].banner ? (
-            <Banner style={{ background: `url(${ UserCache[user].banner })`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+            <Banner style={{ background: `url(${ UserCache[user].banner })`, backgroundSize: 'cover', backgroundPosition: 'center' }} onClick={ () => openModal(UserCache[user].banner) } />
           ) : (
             <Banner className={ css`background: var(--accent-dark)` } />
           ) }
           <CenteredContainer className={ css`flex-direction: column; margin: 0 16px` }>
             { UserCache[user].avatar ? (
-              <Avatar src={ UserCache[user].avatar } />
+              <Avatar src={ UserCache[user].avatar } onClick={ () => openModal(UserCache[user].avatar) } />
             ) : (
               <LetterAvatar>{ getIconString(UserCache[user].username || '') }</LetterAvatar>
             ) }
@@ -101,8 +115,8 @@ function ProfileView({ user }: ProfileViewProps) {
             <StyledText className={ css`font-size: 18px` }>{ UserCache[user].status }</StyledText>
             { UserCache[user].description && (
               <InfoContainer>
-                <StyledText className={ css`font-size: 22px; margin: 0; font-weight: 900; margin-bottom: 16px` }>{ t('profile.about_me') }</StyledText>
-                <StyledText className={ css`font-size: 18px; margin: 0` } dangerouslySetInnerHTML={{ __html: markdown(UserCache[user].description || '') }}></StyledText>
+                <StyledText className={ css`font-size: 22px; margin: 0; font-weight: 900; margin-bottom: 16px; white-space: break-spaces` }>{ t('profile.about_me') }</StyledText>
+                <StyledText className={ css`font-size: 18px; margin: 0` }>{ renderMessageContent(UserCache[user].description || '') }</StyledText>
               </InfoContainer>
             ) }
             { UserCache[user].verified && (
@@ -117,6 +131,15 @@ function ProfileView({ user }: ProfileViewProps) {
       ) }
     </Container>
   )
+
+  async function loadUserInfo() {
+    const userInfo = await UsersService.getUser(user);
+    cacheUsers([userInfo]);
+  }
+
+  function openModal(url: any) {
+    setModalState({ imagePreview: [true, url] });
+  }
 }
 
 export default ProfileView;

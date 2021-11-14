@@ -89,7 +89,7 @@ function UserMenu() {
       <PanelButton onClick={ () => history.push('/channels/@me') } className={ classNames({ active: guildId === '@me' }) }>
         <RiMailFill className={ PanelIconCss } />
       </PanelButton>
-      <PanelButton className={ classNames({ active: path === 'guildsettings' }) }>
+      <PanelButton onClick={ () => history.push('/settings/general') } className={ classNames({ active: path === 'guildsettings' || path === 'settings' }) }>
         <RiSettings4Fill className={ PanelIconCss } />
       </PanelButton>
       <PanelButton className={ css`margin-bottom: 0` }>

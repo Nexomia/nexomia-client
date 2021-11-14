@@ -46,8 +46,6 @@ function Content() {
   const { path, guildId, channelId } = useParams<RouteParams>();
   const Channels = useStore($ChannelStore);
 
-  useEffect(() => console.log(path))
-
   return (
     <Container>
       <ContentHeader />
@@ -62,7 +60,11 @@ function Content() {
           ) : null
         ) }
 
-        { !path && isTabGuild(guildId) && channelId && (
+        { path === 'settings' && (
+          <SettingsView />
+        ) }
+
+        { !path && channelId && (
           Channels[guildId] ? (
             <ChatView channel={ channelId } />
           ) : null

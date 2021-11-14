@@ -8,6 +8,7 @@ import MesssageEventHandler from './events/Messages';
 import UserEventHandler from './events/Users';
 import RoleEventHandler from './events/Roles';
 import ChannelEventHandler from './events/Channels';
+import GuildEventHandler from './events/Guilds';
 
 class SocketManager {
   public socket: WebSocket | null = null;
@@ -58,6 +59,10 @@ class SocketManager {
         MesssageEventHandler.messageDeleted(event);
         break;
 
+      case 'message.pinned':
+        MesssageEventHandler.messagePinned(event);
+        break;
+
       case 'user.connected':
         UserEventHandler.userConnected(event);
         break
@@ -70,8 +75,29 @@ class SocketManager {
         RoleEventHandler.rolePatched(event);
         break;
 
+      case 'guild.role_created':
+        RoleEventHandler.roleCreated(event);
+        RoleEventHandler.rolePatched(event);
+        break;
+
       case 'guild.channel_created':
         ChannelEventHandler.channelCreated(event);
+        break;
+
+      case 'guild.channel_deleted':
+        ChannelEventHandler.channelDeleted(event);
+        break;
+
+      case 'guild.user_joined':
+        GuildEventHandler.memberJoined(event);
+        break;
+
+      case 'guild.user_left':
+        GuildEventHandler.memberLeft(event);
+        break;
+
+      case 'channel.typing':
+        ChannelEventHandler.channelTyping(event);
         break;
     }
   }

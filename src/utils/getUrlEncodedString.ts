@@ -10,7 +10,5 @@ export default function getConvertedData(data: object): string {
     }
   }
 
-  console.log(convertedString);
-
   return convertedString;
 }

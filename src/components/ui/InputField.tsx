@@ -11,6 +11,7 @@ const InputField = styled.input`
   border-radius: 4px;
   font-size: 16px;
   font-weight: 600;
+  font-family: 'Inter', sans-serif;
   color: var(--text-primary);
   outline: none;
   transition: .2s;

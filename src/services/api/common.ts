@@ -20,7 +20,6 @@ class CommonRequestManager {
       if (error.response?.status === 401) {
         try {
           await this.refreshToken();
-
           return this.apiRequest(method, path, data);
         } catch {
           return error;
@@ -45,6 +44,10 @@ class CommonRequestManager {
 
   setToken(token: string) {
     this.token = token;
+  }
+
+  getToken() {
+    return this.token;
   }
 }
 

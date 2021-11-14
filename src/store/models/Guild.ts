@@ -1,4 +1,5 @@
 import Emoji from './Emoji';
+import Invite from './Invite';
 
 export default interface Guild {
   /**
@@ -152,5 +153,7 @@ export default interface Guild {
    */
   nsfw?: boolean;
 
-  default_channel?: string
+  default_channel?: string;
+
+  invites?: Invite[];
 }

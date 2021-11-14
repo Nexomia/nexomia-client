@@ -43,6 +43,16 @@ class GuildsService {
     return response.data;
   }
 
+  async deleteGuildChannel(guild: string, channel: string) {
+    const response = await CommonRequestManager.apiRequest('DELETE', `/channels/${channel}`, {});
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
+
   async joinGuild(inviteCode: string) {
     const response = await CommonRequestManager.apiRequest('GET', `/invites/${inviteCode}/accept`, {});
 
@@ -51,6 +61,10 @@ class GuildsService {
     }
 
     return response.data;
+  }
+
+  async leaveGuild(guild: string) {
+    return await CommonRequestManager.apiRequest('DELETE', `/users/@me/guilds/${guild}`, {});
   }
 
   async patchGuild(guild: string, patch: object) {
@@ -65,6 +79,16 @@ class GuildsService {
 
   async getGuildMembers(guild: string) {
     const response = await CommonRequestManager.apiRequest('GET', `/guilds/${guild}/members`, {});
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
+
+  async getGuildInvites(guild: string) {
+    const response = await CommonRequestManager.apiRequest('GET', `/guilds/${guild}/invites`, {});
 
     if (axios.isAxiosError(response)) {
       return false;

@@ -7,7 +7,9 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import {
   RiAddFill
-} from 'react-icons/ri'
+} from 'react-icons/ri';
+
+import ReactFreezeframe from 'react-freezeframe';
 
 import { useStore } from 'effector-react';
 import { setModalState } from '../../store/ModalStore';
@@ -20,6 +22,7 @@ import PanelButton from '../guilds/PanelButton';
 import StyledText from '../ui/StyledText';
 import PanelIconCss from '../css/PanelIconCss';
 import getIconString from '../../utils/getIconString';
+import $ChannelStore from '../../store/ChannelStore';
 
 const GuildsContainer = styled.div`
   display: flex;
@@ -67,6 +70,7 @@ function Guilds() {
 
   const guildList = useStore($GuildStore);
   const guilds = useStore($GuildCacheStore);
+  const channels = useStore($ChannelStore);
 
   return (
     <GuildsContainer>
@@ -80,7 +84,9 @@ function Guilds() {
             key={ guildListId }
             className={ classNames({ active: guildId === guildListId }) }
           >
-            { guilds[guildListId]?.icon && <AvatarImg src={ guilds[guildListId]?.icon } /> }
+            { guilds[guildListId]?.icon && (
+              <ReactFreezeframe className={ css`width: 100%; height: 100%` } src={ guilds[guildListId]?.icon } />
+            ) }
             {
               !guilds[guildListId]?.icon &&
               (
@@ -101,7 +107,11 @@ function Guilds() {
   );
 
   function switchGuild(id: string) {
-    history.push(`/channels/${id}`);
+    if (channels[id] && channels[id].length) {
+      history.push(`/channels/${id}/${channels[id][channels[id].indexOf(guilds[id]?.default_channel || '')] || channels[id][0]}`);
+    } else {
+      history.push(`/channels/${id}`);
+    }
   }
 
   function openContextMenu(event: any, id: string) {

@@ -14,6 +14,7 @@ body {
   --background-light: #4c5360;
   --background-primary-alt: #404754;
   --background-primary: #373d49;
+  --background-secondary-alt2: #363b47;
   --background-secondary-alt: #333844;
   --background-secondary: #2c313d;
   --accent: #7794ce;
@@ -27,6 +28,13 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  padding: 4px;
+  background: var(--background-secondary);
+  border-radius: 4px;
+}
+
+h2 {
+  margin: 0;
+  font-size: 24px;
 }

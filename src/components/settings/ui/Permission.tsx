@@ -30,9 +30,9 @@ const Splitter = styled.div`
 `
 
 const Selector = styled.div`
-  width: 28px;
+  width: 32px;
   height: 28px;
-  padding: 2px;
+  padding: 2px 4px;
   background: var(--background-light);
   cursor: pointer;
 

@@ -1,8 +1,11 @@
+import classNames from 'classnames';
 import { useStore } from 'effector-react';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
+import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import $UserCacheStore from '../../store/UserCacheStore';
+import UsersService from '../../services/api/users/users.service';
+import $UserCacheStore, { cacheUsers } from '../../store/UserCacheStore';
 import getIconString from '../../utils/getIconString';
 import getMemberColor from '../../utils/getMemberColor';
 import StyledText from '../ui/StyledText';
@@ -26,6 +29,14 @@ const Container = styled.div`
   }
 `
 
+const OfflineCss = css`
+  opacity: .5;
+
+  &:hover {
+    opacity: 1;
+  }
+`
+
 const AvatarCss = `
   width: 34px;
   height: 34px;
@@ -45,6 +56,12 @@ const AvatarCss = `
   background: var(--background-light);
 `
 
+const ActiveCss = css`
+  &, &:hover {
+    background: var(--accent);
+  }
+`
+
 const Avatar = styled.img`${AvatarCss}`
 const LetterAvatar = styled.div`${AvatarCss}`
 
@@ -56,39 +73,56 @@ const Presence = styled.div`
 
 interface MemberProps {
   id: string,
-  guild?: string
+  guild?: string,
+  offline?: boolean,
+  tab?: boolean,
+  active?: boolean,
+  onClick?: any
 }
 
-function Member({ id, guild }: MemberProps) {
+function Member({ id, guild, offline = false, tab = false, onClick = () => null, active = false }: MemberProps) {
   const UserCache = useStore($UserCacheStore);
   const history = useHistory();
 
+  useEffect(() => {
+    if (!UserCache[id]) loadUser();
+  }, []);
+
   return (
-    <Container onClick={ openProfile }>
-      {
-        UserCache[id].avatar ? (
-          <Avatar src={ UserCache[id].avatar } className={ css`background: transparent` } />
-        ) : (
-          <LetterAvatar>{ getIconString(UserCache[id].username || '') }</LetterAvatar>
-        )
-      }
-      <div className={ css`display: flex; flex-direction: column; justify-content: center; width: 154px;` }>
-        <StyledText
-          className={ css`margin: 0; font-size: 16px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;` }
-          style={{ color: getMemberColor(guild || '', id) }}>
-          { UserCache[id].username }
-        </StyledText>
-        { (UserCache[id].status && UserCache[id].presence !== 4 && UserCache[id].connected) && 
-          <StyledText className={ css`margin: 0; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; font-weight: 400` }>
-          { UserCache[id].status }
-        </StyledText> }
-      </div>
-      { UserCache[id].connected && <Presence style={{ background: ['var(--accent-green)', 'var(--accent-yellow)', 'var(--text-negative)'][(UserCache[id].presence || 3) - 1] }} /> }
-    </Container>
+    UserCache[id] ? (
+      <Container onClick={ openProfile } className={ classNames({ [OfflineCss]: offline, [ActiveCss]: active }) }>
+        {
+          UserCache[id].avatar ? (
+            <Avatar src={ UserCache[id].avatar } className={ css`background: transparent` } />
+          ) : (
+            <LetterAvatar>{ getIconString(UserCache[id].username || '') }</LetterAvatar>
+          )
+        }
+        <div className={ css`display: flex; flex-direction: column; justify-content: center; width: 154px;` }>
+          <StyledText
+            className={ css`margin: 0; font-size: 16px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;` }
+            style={{ color: getMemberColor(guild || '', id) }}>
+            { UserCache[id].username }
+          </StyledText>
+          { (UserCache[id].status && UserCache[id].presence !== 4 && UserCache[id].connected) && 
+            <StyledText className={ css`margin: 0; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; font-weight: 400` }>
+            { UserCache[id].status }
+          </StyledText> }
+        </div>
+        { UserCache[id].connected && <Presence style={{ background: ['var(--accent-green)', 'var(--accent-yellow)', 'var(--text-negative)'][(UserCache[id].presence || 3) - 1] }} /> }
+      </Container>
+    ) : null
   )
 
   function openProfile() {
-    history.push(`/profiles/${id}`);
+    if (tab) onClick();
+    else history.push(`/profiles/${id}`);
+  }
+
+  async function loadUser() {
+    const response = await UsersService.getUser(id);
+
+    if (response) cacheUsers([response]);
   }
 }
 

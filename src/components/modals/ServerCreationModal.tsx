@@ -19,8 +19,9 @@ import InputField from '../ui/InputField';
 import FilledButton from '../ui/FilledButton';
 import LoadingPlaceholder from '../ui/LoadingPlaceholder';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 
-interface ServerCreationModalProps {
+interface ModalProps {
   active: boolean
 }
 
@@ -28,8 +29,10 @@ const negativeColorCss = css`
   color: var(--text-negative);
 `
 
-function ServerCreationModal({ active }: ServerCreationModalProps) {
+function ServerCreationModal({ active }: ModalProps) {
   const layerRef = useRef(null);
+
+  const history = useHistory();
 
   const { t } = useTranslation(['settings']);
 
@@ -110,6 +113,8 @@ function ServerCreationModal({ active }: ServerCreationModalProps) {
     }]);
     addGuild(id);
 
+    history.push(`/channels/${id}`);
+
     setLoading(false);
     setNameValue('');
     setInviteValue('');
@@ -134,6 +139,8 @@ function ServerCreationModal({ active }: ServerCreationModalProps) {
       channels: []
     }]);
     addGuild(id);
+
+    history.push(`/channels/${id}`);
 
     setLoading(false);
     setNameValue('');

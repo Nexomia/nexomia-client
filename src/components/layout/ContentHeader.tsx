@@ -1,6 +1,6 @@
 import { styled } from 'linaria/react';
 import { css } from 'linaria';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 
 import { useStore } from 'effector-react';
 import { useParams } from 'react-router-dom';
@@ -17,6 +17,7 @@ import $UserCacheStore from '../../store/UserCacheStore';
 import isTabGuild from '../../utils/isTabGuild';
 import InputButton from '../chat/InputButton';
 import { useTranslation } from 'react-i18next';
+import PinnedMessagesView from '../chat/PinnedMessagesView';
 
 const Header = styled.div`
   height: 48px;
@@ -34,12 +35,14 @@ const Content = styled.div`
   font-size: 18px;
   padding: 0 8px;
   user-select: none;
+  margin-left: 7px;
 `
 
 const HeaderIconCss = css`
   width: 28px;
   height: 28px;
-  margin-left: 8px;
+  margin-left: 14px;
+  margin-right: -7px;
 `
 
 const InputIconCss = css`
@@ -59,6 +62,10 @@ function ContentHeader() {
   const usersCache = useStore($UserCacheStore);
   const { t } = useTranslation(['settings']);
 
+  const [pinsOpened, setPinsOpened] = useState(false);
+
+  useEffect(() => setPinsOpened(false), [channelId]);
+
   return (
     <Header>
       { path === 'profiles' && guildId !== 'people' && (
@@ -73,9 +80,10 @@ function ContentHeader() {
         <Fragment>
           <Content>{ channelsCache[channelId]?.name || '' }</Content>
           <div className={ css`flex-grow: 1` } />
-          <InputButton>
+          <InputButton onClick={ () => setPinsOpened(!pinsOpened) }>
             <RiPushpinFill className={ classNames(StyledIconCss, InputIconCss) } />
           </InputButton>
+          { pinsOpened && <PinnedMessagesView channel={ channelId } /> }
         </Fragment>
       ) }
 
@@ -89,6 +97,18 @@ function ContentHeader() {
 
       { path === 'guildsettings' && channelId === 'roles' && (
         <Content>{ t('tabs.roles') }</Content>
+      ) }
+
+      { path === 'guildsettings' && channelId === 'invites' && (
+        <Content>{ t('tabs.invites') }</Content>
+      ) }
+
+      { path === 'settings' && guildId === 'general' && (
+        <Content>{ t('tabs.profile') }</Content>
+      ) }
+
+      { path === 'settings' && guildId === 'emotes' && (
+        <Content>{ t('tabs.emotes') }</Content>
       ) }
     </Header>
   );

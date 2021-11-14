@@ -22,6 +22,10 @@ class RolesService {
 
     return response.data;
   }
+
+  async createRole(guild: string) {
+    await CommonRequestManager.apiRequest('POST', `/guilds/${guild}/roles`, {});
+  }
 }
 
 export default new RolesService();

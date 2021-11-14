@@ -5,5 +5,8 @@ export default css`
   & > div {
     transform: scale(.8);
   }
+  & > img {
+    transform: scale(.8);
+  }
   pointer-events: none;
 `

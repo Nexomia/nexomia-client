@@ -7,11 +7,13 @@ interface UserInfo {
   username: string,
   discriminator: string,
   avatar: string,
+  banner: string,
   verified: boolean,
   flags: number,
   premiumType: boolean,
   publicFlags: number,
-  email: string
+  email: string,
+  emojiPacks: string[]
 }
 
 const $UserStore = createStore<UserInfo>({
@@ -19,11 +21,13 @@ const $UserStore = createStore<UserInfo>({
   username: '',
   discriminator: '',
   avatar: '',
+  banner: '',
   verified: false,
   flags: 0,
   premiumType: false,
   publicFlags: 0,
-  email: ''
+  email: '',
+  emojiPacks: []
 });
 
 $UserStore.on(setUser, (state, user: UserInfo) => ({ ...state, ...user }));
