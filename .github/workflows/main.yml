@@ -28,6 +28,9 @@ jobs:
       - name: Install Packages
         run: yarn
 
+      - name: Copy config to the project directory
+        run: cp /root/configs/nexomia-client.ts ./src/config.ts
+
       - name: Build
         run: CI=false yarn build
         
