@@ -6,6 +6,7 @@ const addMessage = createEvent<ChannelMessageInfo>();
 const preaddMessage = createEvent<ChannelMessageInfo>();
 const clearLoadedMesssages = createEvent<string>();
 const deleteMessage = createEvent<ChannelMessageInfo>();
+const leanArray = createEvent<string>();
 
 interface ChannelMessagesInfo {
   channel: string,
@@ -52,7 +53,14 @@ $MessageStore
       ...state,
       [info.channel]: modifiedChannel
     };
-  });
+  })
+  .on(leanArray, (state: ChannelMessages, channel: string) => (
+    {
+      ...state,
+      // @ts-ignore
+      [channel]: [ ...new Set({ ...state }[channel]) ]
+    }
+  ));
 
 export default $MessageStore;
-export { setChannelMessages, appendChannelMessages, addMessage, preaddMessage, deleteMessage, clearLoadedMesssages };
+export { setChannelMessages, appendChannelMessages, addMessage, preaddMessage, deleteMessage, clearLoadedMesssages, leanArray };

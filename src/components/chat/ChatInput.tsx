@@ -7,7 +7,7 @@ import { createEditor, BaseEditor, Descendant, Node, Text } from 'slate';
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
 import { RiAddCircleFill, RiCloseLine, RiEmotionLaughFill, RiSendPlane2Fill, RiStickyNoteFill } from 'react-icons/ri';
 
-import { addMessage } from '../../store/MessageStore';
+import { addMessage, leanArray } from '../../store/MessageStore';
 import { cacheMessages } from '../../store/MessageCacheStore';
 
 import StyledIconCss from '../css/StyledIconCss';
@@ -300,6 +300,7 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
 
     cacheMessages([response]);
     addMessage({ channel: response.channel_id, message: response.id });
+    leanArray(response.channel_id);
 
     setSendLoading(false);
 

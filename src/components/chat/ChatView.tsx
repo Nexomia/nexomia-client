@@ -4,7 +4,7 @@ import { styled } from 'linaria/react';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import $ChannelCacheStore from '../../store/ChannelCacheStore';
 import { cacheMessages } from '../../store/MessageCacheStore';
-import $MessageStore, { appendChannelMessages, clearLoadedMesssages } from '../../store/MessageStore';
+import $MessageStore, { appendChannelMessages, clearLoadedMesssages, leanArray } from '../../store/MessageStore';
 import { ComputedPermissions } from '../../store/models/ComputedPermissions';
 import $RoleCacheStore from '../../store/RolesCacheStore';
 import PermissionCalculator from '../../utils/PermissionCalculator';
@@ -165,6 +165,7 @@ function ChatView({ channel }: ChatViewProps) {
       Messages[channel].length > 50
     ) {
       clearLoadedMesssages(channel);
+      leanArray(channel);
     }
   }
 }
