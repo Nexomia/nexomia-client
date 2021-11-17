@@ -108,7 +108,12 @@ function BannerRenderer({ banner, avatar, letters, onBannerClick = () => null, o
           </AvatarInner>
         </LetterAvatar>
       ) : (
-        <LetterAvatar>{ getIconString(letters) }</LetterAvatar>
+        <LetterAvatar onClick={ () => onAvatarClick() }>
+          { getIconString(letters) }
+          <AvatarInner className={ css`top: -110px` }>
+            <StyledText className={ css`margin: 0; font-size: 14px; font-weight: 900` }>{ t('server_general.edit') }</StyledText>
+          </AvatarInner>
+        </LetterAvatar>
       ) }
     </Container>
   )
