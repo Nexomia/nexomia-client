@@ -82,6 +82,10 @@ class SocketManager {
         UserEventHandler.userDisconnected(event);
         break
 
+      case 'user.patched':
+        UserEventHandler.userPatched(event);
+        break
+
       case 'guild.role_patched':
         RoleEventHandler.rolePatched(event);
         break;

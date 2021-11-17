@@ -31,6 +31,7 @@ function GeneralUserView() {
   const [saveLoading, setSaveLoading] = useState(false);
   const [bannerEdited, setBannerEdited] = useState(false);
   const [avatarEdited, setAvatarEdited] = useState(false);
+  const [preedited, setPreedited] = useState(false);
 
   const [openBannerPicker, bannerResult] = useFilePicker({
     readAs: 'DataURL',
@@ -43,14 +44,16 @@ function GeneralUserView() {
   });
 
   useEffect(() => {
-    if (!bannerResult.loading && bannerResult.filesContent?.length) {
+    if (!bannerResult.loading && bannerResult.filesContent?.length && preedited) {
       setBannerEdited(true);
       setEdited(true);
-    }
-
-    if (!avatarResult.loading && avatarResult.filesContent?.length) {
+    } else if (!avatarResult.loading && avatarResult.filesContent?.length && preedited) {
       setAvatarEdited(true);
       setEdited(true);
+    } else {
+      setAvatarEdited(false);
+      setBannerEdited(false);
+      setEdited(false);
     }
   }, [bannerResult]);
 
@@ -62,8 +65,8 @@ function GeneralUserView() {
         avatar={ !avatarEdited ? UserCache.avatar || '' : avatarResult.filesContent[0]?.content || '' }
         banner={ !bannerEdited ? UserCache.banner || '' : bannerResult.filesContent[0]?.content || '' }
         letters={ UserCache.username || '' }
-        onAvatarClick={ () => openAvatarPicker() }
-        onBannerClick={ () => openBannerPicker() }
+        onAvatarClick={ () => { openAvatarPicker(); setPreedited(true) } }
+        onBannerClick={ () => { openBannerPicker(); setPreedited(true) } }
       />
       { /* <InputField
         className={ css`margin-top: 2px; margin-bottom: 16px` }
@@ -138,6 +141,7 @@ function GeneralUserView() {
 
     setSaveLoading(false);
     setEdited(false);
+    setPreedited(false);
     setAvatarEdited(false);
     setBannerEdited(false);
   }
