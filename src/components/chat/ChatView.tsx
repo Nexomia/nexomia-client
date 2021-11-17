@@ -21,6 +21,8 @@ import $UserCacheStore from '../../store/UserCacheStore';
 import getMemberColor from '../../utils/getMemberColor';
 import { useTranslation } from 'react-i18next';
 
+import getNeededMessageCount from '../../utils/getNeededMessageCount';
+
 const MessageContainerWrapper = styled.div`
   flex-grow: 1;
 `
@@ -154,7 +156,7 @@ function ChatView({ channel }: ChatViewProps) {
       !loading
     ) {
       setLoading(true);
-      const response = await MessagesService.getChannelMessages(channel, Messages[channel].length);
+      const response = await MessagesService.getChannelMessages(channel, Messages[channel].length, getNeededMessageCount());
       if (!response || !response.length) return;
       cacheMessages(response);
       appendChannelMessages({ channel, messages: response.map((message: Message) => message.id) });
@@ -162,7 +164,7 @@ function ChatView({ channel }: ChatViewProps) {
     } else if (
       scrollerRef?.current?.scrollTop &&
       scrollerRef?.current?.scrollTop > scrollerRef?.current?.scrollHeight - 100 - window.innerHeight &&
-      Messages[channel].length > 50
+      Messages[channel].length > getNeededMessageCount()
     ) {
       clearLoadedMesssages(channel);
       leanArray(channel);

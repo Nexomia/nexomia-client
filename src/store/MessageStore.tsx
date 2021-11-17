@@ -1,4 +1,5 @@
 import { createStore, createEvent } from 'effector-root';
+import getNeededMessageCount from '../utils/getNeededMessageCount';
 
 const setChannelMessages = createEvent<ChannelMessagesInfo>();
 const appendChannelMessages = createEvent<ChannelMessagesInfo>();
@@ -42,7 +43,7 @@ $MessageStore
   .on(clearLoadedMesssages, (state: ChannelMessages, channel: string) => (
     {
       ...state,
-      [channel]: { ...state }[channel].slice(-50)
+      [channel]: { ...state }[channel].slice(0 - getNeededMessageCount())
     }
   ))
   .on(deleteMessage, (state: ChannelMessages, info: ChannelMessageInfo) => {
