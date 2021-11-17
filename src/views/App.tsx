@@ -32,7 +32,6 @@ import Content from '../components/layout/Content';
 import BrandLoading from '../components/ui/BrandLoading';
 import Modals from '../components/layout/Modals';
 
-import preloaders from '../i18n/preloaders.json';
 import Guild from '../store/models/Guild';
 import ContextMenu from '../components/contextmenus/ContextMenu';
 import Channel from '../store/models/Channel';
@@ -52,22 +51,13 @@ function App() {
 
   const [loaded, setLoaded] = useState(false);
 
-  const [loaderTitleAuthor, setLoaderTitleAuthor] = useState(0);
-  const [loaderTitleId, setLoaderTitleId] = useState(0);
-
   useEffect(() => {
-    const authorId = getRandomInt(preloaders.authors.length)
-    setLoaderTitleAuthor(authorId);
-    setLoaderTitleId(preloaders.authors[authorId].prefix + getRandomInt(preloaders.authors[authorId].count));
-
-    setTimeout(() => preloadUserInfo(), 1000);
+    preloadUserInfo();
   }, []);
 
   return (
     <div className="App dark-theme" onClick={ closeContextMenu } onContextMenu={ (event: any) => event.preventDefault() }>
       <BrandLoading
-        title={ t(`states:loading.${loaderTitleId.toString()}`) }
-        subtext={ `@${preloaders.authors[loaderTitleAuthor].name}` }
         active={ !loaded }
         solid={ true }
       />

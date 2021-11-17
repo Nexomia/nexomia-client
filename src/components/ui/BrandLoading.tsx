@@ -3,7 +3,6 @@ import { css } from 'linaria';
 
 import classNames from 'classnames';
 
-import StyledText from './StyledText';
 import Brand from '../animations/Brand';
 import { useEffect, useState } from 'react';
 
@@ -41,25 +40,11 @@ const DotsContainer = styled.div`
 `
 
 type BrandLoadingPlaceholderProps = {
-  title: string,
   active: boolean,
   solid?: boolean,
-  subtext?: string
 }
 
-const textCss = css`
-  font-size: 40px;
-  font-weight: 800;
-  transition: .4s;
-  color: var(--background-primary);
-
-  &.inactive {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-`
-
-function BrandLoading({ title, active, solid = false, subtext = '' }: BrandLoadingPlaceholderProps) {
+function BrandLoading({ active, solid = false }: BrandLoadingPlaceholderProps) {
   const [clearElements, setClearElements] = useState(false);
 
   useEffect(() => {
@@ -73,9 +58,6 @@ function BrandLoading({ title, active, solid = false, subtext = '' }: BrandLoadi
         <DotsContainer className={ classNames({ inactive: !active }) }>
           <Brand inactive={ !active } />
         </DotsContainer>
-        <StyledText
-          className={ classNames({ inactive: !active, [textCss]: true }) }
-        >{ title }{ subtext && ( <StyledText className={ css`text-align: center; color: var(--background-primary);` }>{ subtext }</StyledText> ) }</StyledText>
       </Layer>
     ) : null
   )
