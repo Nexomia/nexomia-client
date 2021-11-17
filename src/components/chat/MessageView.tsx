@@ -28,6 +28,7 @@ function MessageView({ channel, onMessagesLoaded = () => null, type = 0 }: Messa
   const { t } = useTranslation(['chat']);
 
   let prevMessage = '';
+  let optimizeKeys: string[] = [];
 
   useEffect(() => {
     if (
@@ -67,8 +68,9 @@ function MessageView({ channel, onMessagesLoaded = () => null, type = 0 }: Messa
                 />
               );
 
-              if (!MessageCacheStore[message].deleted) {
+              if (!MessageCacheStore[message].deleted && !optimizeKeys.includes(message)) {
                 prevMessage = type === 0 && !MessageCacheStore[message]?.type ? message : '';
+                optimizeKeys.push(message);
                 return rendered;
               } else {
                 return null;
