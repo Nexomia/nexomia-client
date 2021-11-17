@@ -40,6 +40,8 @@ class CommonRequestManager {
     setToken(response.data.access_token);
     this.setToken(response.data.access_token);
     setRefreshToken(response.data.refresh_token);
+
+    return response.data.refresh_token;
   }
 
   setToken(token: string) {

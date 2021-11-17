@@ -44,11 +44,22 @@ class SocketManager {
   handleEvent(event: CustomMessageEvent) {
     switch (event.info.event) {
       case 'auth.warning':
-        CommonRequestManager.refreshToken();
+        const newToken = CommonRequestManager.refreshToken();
+        this.socket?.send(
+          JSON.stringify(
+            {
+              authorization: newToken
+            }
+          )
+        );
         break;
 
       case 'auth.succeed':
         this.onLoad();
+        break;
+
+      case 'auth.successed':
+        console.log('[SOCKET] Reauth complete.');
         break;
 
       case 'message.created':
