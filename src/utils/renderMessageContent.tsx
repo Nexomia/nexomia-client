@@ -19,6 +19,8 @@ export default function renderMessageContent(content: string) {
   const bounds = getMessageMarkdownBounds(content);
   let latestStart = 0;
 
+  console.log(bounds);
+
   for (const bound of bounds) {
     output.push(content.slice(latestStart, bound.start));
 
@@ -75,7 +77,7 @@ export default function renderMessageContent(content: string) {
             <div className={ EmoteImage } style={{
               background: `url(${optimizeParsed[0]?.url})`,
               ...(
-                bounds.find((e: any) => e.type !== 'tag') ? {} : {
+                bounds[0].start !== 0 || (bounds[bounds.length - 1].start + bounds[bounds.length - 1].length) < content.length ? {} : {
                   width: '40px',
                   height: '40px'
                 }
@@ -87,7 +89,7 @@ export default function renderMessageContent(content: string) {
             <Emoji
               id={ content.slice(bound.start, bound.length).split(':')[2].split('>')[0] }
               style={
-                bounds.find((e: any) => e.type !== 'tag') ? {} : {
+                bounds[0].start !== 0 || (bounds[bounds.length - 1].start + bounds[bounds.length - 1].length) < content.length ? {} : {
                   width: '40px',
                   height: '40px'
                 }
