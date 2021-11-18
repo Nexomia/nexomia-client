@@ -19,8 +19,6 @@ export default function renderMessageContent(content: string) {
   const bounds = getMessageMarkdownBounds(content);
   let latestStart = 0;
 
-  console.log(bounds);
-
   for (const bound of bounds) {
     output.push(content.slice(latestStart, bound.start));
 
