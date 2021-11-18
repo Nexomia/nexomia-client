@@ -18,6 +18,8 @@ const CardContainer = styled.div`
   flex-direction: row;
   margin: -8px;
   justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
 `
 
 const ButtonContainer = styled.div`

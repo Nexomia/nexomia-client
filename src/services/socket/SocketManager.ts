@@ -41,10 +41,20 @@ class SocketManager {
     });
   }
 
-  handleEvent(event: CustomMessageEvent) {
+  async handleEvent(event: CustomMessageEvent) {
     switch (event.info.event) {
       case 'auth.warning':
-        CommonRequestManager.refreshToken();
+        const newToken = await CommonRequestManager.refreshToken();
+        this.socket?.send(
+          JSON.stringify(
+            {
+              event: 'auth.refresh_token',
+              data: {
+                authorization: newToken
+              }
+            }
+          )
+        );
         break;
 
       case 'auth.succeed':
@@ -69,6 +79,10 @@ class SocketManager {
 
       case 'user.disconnected':
         UserEventHandler.userDisconnected(event);
+        break
+
+      case 'user.patched':
+        UserEventHandler.userPatched(event);
         break
 
       case 'guild.role_patched':

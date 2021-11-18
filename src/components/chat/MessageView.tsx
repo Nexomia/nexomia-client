@@ -12,6 +12,7 @@ import MessagesService from '../../services/api/messages/messages.service';
 import Message from '../../store/models/Message';
 import StyledText from '../ui/StyledText';
 import { useTranslation } from 'react-i18next';
+import getNeededMessageCount from '../../utils/getNeededMessageCount';
 
 interface MessageViewProps {
   channel: string,
@@ -94,7 +95,7 @@ function MessageView({ channel, onMessagesLoaded = () => null, type = 0 }: Messa
     if (type === 1) {
       response = await MessagesService.getChannelPins(channel);
     } else {
-      response = await MessagesService.getChannelMessages(channel);
+      response = await MessagesService.getChannelMessages(channel, 0, getNeededMessageCount());
     }
 
     if (!response) return;

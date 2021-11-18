@@ -13,28 +13,21 @@ import settingsEn from './en/settings.json';
 import settingsRu from './ru/settings.json';
 import settingsGe from './ge/settings.json';
 
-import statesEn from './en/states.json';
-import statesRu from './ru/states.json';
-import statesGe from './ge/states.json';
-
 export const resources = {
   en: {
     reg: regEn,
     chat: chatEn,
-    settings: settingsEn,
-    states: statesEn
+    settings: settingsEn
   },
   ru: {
     reg: regRu,
     chat: chatRu,
-    settings: settingsRu,
-    states: statesRu
+    settings: settingsRu
   },
   ge: {
     reg: regGe,
     chat: chatGe,
-    settings: settingsGe,
-    states: statesGe
+    settings: settingsGe
   }
 } as const;
 

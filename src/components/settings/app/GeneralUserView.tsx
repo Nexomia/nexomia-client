@@ -27,10 +27,12 @@ function GeneralUserView() {
   const UserCache = useStore($UserStore);
 
   const [userName, setUserName] = useState('');
+  const [description, setDescription] = useState('');
   const [edited, setEdited] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [bannerEdited, setBannerEdited] = useState(false);
   const [avatarEdited, setAvatarEdited] = useState(false);
+  const [preedited, setPreedited] = useState(false);
 
   const [openBannerPicker, bannerResult] = useFilePicker({
     readAs: 'DataURL',
@@ -43,14 +45,16 @@ function GeneralUserView() {
   });
 
   useEffect(() => {
-    if (!bannerResult.loading && bannerResult.filesContent?.length) {
+    if (!bannerResult.loading && bannerResult.filesContent?.length && preedited) {
       setBannerEdited(true);
       setEdited(true);
-    }
-
-    if (!avatarResult.loading && avatarResult.filesContent?.length) {
+    } else if (!avatarResult.loading && avatarResult.filesContent?.length && preedited) {
       setAvatarEdited(true);
       setEdited(true);
+    } else if (!userName && !description) {
+      setAvatarEdited(false);
+      setBannerEdited(false);
+      setEdited(false);
     }
   }, [bannerResult]);
 
@@ -62,21 +66,9 @@ function GeneralUserView() {
         avatar={ !avatarEdited ? UserCache.avatar || '' : avatarResult.filesContent[0]?.content || '' }
         banner={ !bannerEdited ? UserCache.banner || '' : bannerResult.filesContent[0]?.content || '' }
         letters={ UserCache.username || '' }
-        onAvatarClick={ () => openAvatarPicker() }
-        onBannerClick={ () => openBannerPicker() }
+        onAvatarClick={ () => { openAvatarPicker(); setPreedited(true) } }
+        onBannerClick={ () => { openBannerPicker(); setPreedited(true) } }
       />
-      { /* <InputField
-        className={ css`margin-top: 2px; margin-bottom: 16px` }
-        defaultValue={ GuildsCache[guildId]?.icon }
-        placeholder={ t('server_general.icon_url') }
-        onChange={ (event: ChangeEvent<HTMLInputElement>) => { setGuildAvatar(event.target.value); setEdited(true) } }
-      />
-      <InputField
-        className={ css`margin-top: 2px; margin-bottom: 16px` }
-        defaultValue={ GuildsCache[guildId]?.banner }
-        placeholder={ t('server_general.banner_url') }
-        onChange={ (event: ChangeEvent<HTMLInputElement>) => { setGuildBanner(event.target.value); setEdited(true) } }
-      /> */ }
       <BadgeContainer>
         <InputField
           className={
@@ -87,7 +79,7 @@ function GeneralUserView() {
               font-size: 22px;
               text-align: center;
               background: var(--background-secondary);
-              border: var(--background-secondary);
+              border: 2px solid var(--background-secondary);
 
               &:not(:hover):not(:focus) {
                 background: transparent;
@@ -103,11 +95,13 @@ function GeneralUserView() {
           className={
             css`
               background: var(--background-secondary);
+              border: 2px solid var(--background-secondary);
               height: 200px;
             `
           }
-          defaultValue={ '' }
+          defaultValue={ UserCache.description }
           placeholder={ t('user_general.description') }
+          onChange={ (event: ChangeEvent<HTMLTextAreaElement>) => { setDescription(event.target.value); setEdited(true) } }
         />
       </BadgeContainer>
     </Fragment>
@@ -119,6 +113,7 @@ function GeneralUserView() {
     const userPatch: any = {};
 
     if (userName) userPatch.username = userName;
+    if (description) userPatch.description = description;
 
     if (avatarEdited) {
       const uploadUrl = await FilesService.createFile(2);
@@ -138,6 +133,7 @@ function GeneralUserView() {
 
     setSaveLoading(false);
     setEdited(false);
+    setPreedited(false);
     setAvatarEdited(false);
     setBannerEdited(false);
   }

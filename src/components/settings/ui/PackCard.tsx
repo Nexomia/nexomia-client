@@ -13,7 +13,8 @@ const Card = styled.div`
   display: flex;
   max-width: 280px;
   min-width: 228px;
-  flex-grow: 1;
+  flex-grow: 0;
+  flex-shrink: 0;
   background: var(--background-secondary-alt);
   border-radius: 8px;
   margin: 8px;
@@ -91,7 +92,7 @@ function PackCard({ picture, name, description, author = '', onClick = () => nul
   }, [UserCache]);
 
   return (
-    <Card onClick={ onClick } className={ classNames(mini && css`max-width: 150px; min-width: 110px`) }>
+    <Card onClick={ onClick } className={ classNames(mini && css`width: 150px; min-width: 150px`) }>
       <PreviewContainer className={ classNames(mini && css`height: 140px`) }>
         <Preview src={ picture } />
       </PreviewContainer>

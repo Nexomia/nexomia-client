@@ -1,4 +1,4 @@
-import { cacheChannels } from '../../../store/ChannelCacheStore';
+import $ChannelCacheStore, { cacheChannels } from '../../../store/ChannelCacheStore';
 import { setGuildChannels } from '../../../store/ChannelStore';
 import Channel from '../../../store/models/Channel';
 import $TypersStore, { addTyper, removeTyper } from '../../../store/TypersStore';
@@ -25,8 +25,9 @@ class ChannelEventHandler {
   }
 
   async channelDeleted(event: CustomMessageEvent) {
-    const response = await ChannelsService.getGuildChannels(event.info.data.guild_id);
-    setGuildChannels({ guild: event.info.data.guild_id, channels: response.map((channel: Channel) => channel.id) });
+    const guildId = $ChannelCacheStore.getState()[event.info.data.id].guild_id
+    const response = await ChannelsService.getGuildChannels(guildId || '');
+    setGuildChannels({ guild: guildId || '', channels: response.map((channel: Channel) => channel.id) });
   }
 
   async channelTyping(event: CustomMessageEvent) {

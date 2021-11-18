@@ -1,4 +1,5 @@
 import { createStore, createEvent } from 'effector-root';
+import getNeededMessageCount from '../utils/getNeededMessageCount';
 
 const setChannelMessages = createEvent<ChannelMessagesInfo>();
 const appendChannelMessages = createEvent<ChannelMessagesInfo>();
@@ -6,6 +7,7 @@ const addMessage = createEvent<ChannelMessageInfo>();
 const preaddMessage = createEvent<ChannelMessageInfo>();
 const clearLoadedMesssages = createEvent<string>();
 const deleteMessage = createEvent<ChannelMessageInfo>();
+const leanArray = createEvent<string>();
 
 interface ChannelMessagesInfo {
   channel: string,
@@ -41,7 +43,7 @@ $MessageStore
   .on(clearLoadedMesssages, (state: ChannelMessages, channel: string) => (
     {
       ...state,
-      [channel]: { ...state }[channel].slice(-50)
+      [channel]: { ...state }[channel].slice(0 - getNeededMessageCount())
     }
   ))
   .on(deleteMessage, (state: ChannelMessages, info: ChannelMessageInfo) => {
@@ -52,7 +54,14 @@ $MessageStore
       ...state,
       [info.channel]: modifiedChannel
     };
-  });
+  })
+  .on(leanArray, (state: ChannelMessages, channel: string) => (
+    {
+      ...state,
+      // @ts-ignore
+      [channel]: [ ...new Set({ ...state }[channel]) ]
+    }
+  ));
 
 export default $MessageStore;
-export { setChannelMessages, appendChannelMessages, addMessage, preaddMessage, deleteMessage, clearLoadedMesssages };
+export { setChannelMessages, appendChannelMessages, addMessage, preaddMessage, deleteMessage, clearLoadedMesssages, leanArray };
