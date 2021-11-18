@@ -103,7 +103,7 @@ function GeneralView() {
               font-size: 22px;
               text-align: center;
               background: var(--background-secondary);
-              border: var(--background-secondary);
+              border: 2px solid var(--background-secondary);
 
               &:not(:hover):not(:focus) {
                 background: transparent;
@@ -119,6 +119,7 @@ function GeneralView() {
           className={
             css`
               background: var(--background-secondary);
+              border: 2px solid var(--background-secondary);
               height: 200px;
             `
           }

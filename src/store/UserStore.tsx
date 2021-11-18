@@ -5,6 +5,7 @@ const setUser = createEvent<UserInfo>();
 interface UserInfo {
   id: string,
   username: string,
+  description: string
   discriminator: string,
   avatar: string,
   banner: string,
@@ -19,6 +20,7 @@ interface UserInfo {
 const $UserStore = createStore<UserInfo>({
   id: '',
   username: '',
+  description: '',
   discriminator: '',
   avatar: '',
   banner: '',

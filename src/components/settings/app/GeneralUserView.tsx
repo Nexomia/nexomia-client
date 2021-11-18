@@ -27,6 +27,7 @@ function GeneralUserView() {
   const UserCache = useStore($UserStore);
 
   const [userName, setUserName] = useState('');
+  const [description, setDescription] = useState('');
   const [edited, setEdited] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [bannerEdited, setBannerEdited] = useState(false);
@@ -50,7 +51,7 @@ function GeneralUserView() {
     } else if (!avatarResult.loading && avatarResult.filesContent?.length && preedited) {
       setAvatarEdited(true);
       setEdited(true);
-    } else {
+    } else if (!userName && !description) {
       setAvatarEdited(false);
       setBannerEdited(false);
       setEdited(false);
@@ -68,18 +69,6 @@ function GeneralUserView() {
         onAvatarClick={ () => { openAvatarPicker(); setPreedited(true) } }
         onBannerClick={ () => { openBannerPicker(); setPreedited(true) } }
       />
-      { /* <InputField
-        className={ css`margin-top: 2px; margin-bottom: 16px` }
-        defaultValue={ GuildsCache[guildId]?.icon }
-        placeholder={ t('server_general.icon_url') }
-        onChange={ (event: ChangeEvent<HTMLInputElement>) => { setGuildAvatar(event.target.value); setEdited(true) } }
-      />
-      <InputField
-        className={ css`margin-top: 2px; margin-bottom: 16px` }
-        defaultValue={ GuildsCache[guildId]?.banner }
-        placeholder={ t('server_general.banner_url') }
-        onChange={ (event: ChangeEvent<HTMLInputElement>) => { setGuildBanner(event.target.value); setEdited(true) } }
-      /> */ }
       <BadgeContainer>
         <InputField
           className={
@@ -90,7 +79,7 @@ function GeneralUserView() {
               font-size: 22px;
               text-align: center;
               background: var(--background-secondary);
-              border: var(--background-secondary);
+              border: 2px solid var(--background-secondary);
 
               &:not(:hover):not(:focus) {
                 background: transparent;
@@ -106,11 +95,13 @@ function GeneralUserView() {
           className={
             css`
               background: var(--background-secondary);
+              border: 2px solid var(--background-secondary);
               height: 200px;
             `
           }
-          defaultValue={ '' }
+          defaultValue={ UserCache.description }
           placeholder={ t('user_general.description') }
+          onChange={ (event: ChangeEvent<HTMLTextAreaElement>) => { setDescription(event.target.value); setEdited(true) } }
         />
       </BadgeContainer>
     </Fragment>
@@ -122,6 +113,7 @@ function GeneralUserView() {
     const userPatch: any = {};
 
     if (userName) userPatch.username = userName;
+    if (description) userPatch.description = description;
 
     if (avatarEdited) {
       const uploadUrl = await FilesService.createFile(2);
