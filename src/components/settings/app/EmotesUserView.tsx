@@ -105,7 +105,7 @@ function EmotesUserView() {
           </StyledText>
           {
             EmojiPacks[openedPack].owner_id === UserCache.id && (
-              <StyledText className={ css`text-align: center; margin: 0 0 24px 0; font-weight: 900` }>
+              <StyledText className={ css`text-align: center; margin: -12px 0 24px 0; font-weight: 900` }>
                 { 'You own this pack.' }
               </StyledText>
             )

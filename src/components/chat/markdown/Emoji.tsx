@@ -1,5 +1,6 @@
 import { useStore } from 'effector-react';
 import { css } from 'linaria';
+import { useEffect } from 'react';
 import $EmojiCacheStore from '../../../store/EmojiStore';
 
 const EmoteImage = css`
