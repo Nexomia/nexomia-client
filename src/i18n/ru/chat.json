@@ -17,7 +17,6 @@
   "forwarded_messages": "пересланных сообщений",
   "emoji_search": "Найдите лучшую эмоцию!",
   "date": {
-    "today": "Сегодня в ",
     "yesterday": "Вчера в "
   }
 }
