@@ -3,6 +3,7 @@ import getMessageMarkdownBounds from './getMessageMarkdownBounds';
 import { parse } from 'twemoji-parser';
 import emojis from 'emojibase-data/en/data.json';
 import Emoji from '../components/chat/markdown/Emoji';
+import $EmojiCacheStore from '../store/EmojiStore';
 
 const EmoteImage = css`
   display: inline-block;
@@ -18,6 +19,8 @@ export default function renderMessageContent(content: string) {
   const output = [];
   const bounds = getMessageMarkdownBounds(content);
   let latestStart = 0;
+
+  let optimizeEmojiSliced: any;
 
   for (const bound of bounds) {
     output.push(content.slice(latestStart, bound.start));
@@ -68,7 +71,7 @@ export default function renderMessageContent(content: string) {
             content.slice(bound.start, bound.length).startsWith('<i')
           ) &&
           (optimizeParsed = parse(
-            emojis.find((e: any) => e?.label === content.slice(bound.start, bound.length).split(':')[1].split('>')[0])?.emoji || ''
+            emojis.find((e: any) => e?.label === content.slice(bound.start, bound.length)?.split(':')[1]?.split('>')[0])?.emoji || ''
           ))
         ) {
           output.push(
@@ -82,10 +85,13 @@ export default function renderMessageContent(content: string) {
               )
             }} />
           )
-        } else if (content.slice(bound.start, bound.length).startsWith('<e')) {
+        } else if (
+          content.slice(bound.start, bound.length).startsWith('<e') &&
+          $EmojiCacheStore.getState()[optimizeEmojiSliced = content.slice(bound.start, bound.length)?.split(':')[1]?.split('>')[0]]
+        ) {
           output.push(
             <Emoji
-              id={ content.slice(bound.start, bound.length).split(':')[2].split('>')[0] }
+              id={ optimizeEmojiSliced }
               style={
                 bounds[0].start !== 0 || (bounds[bounds.length - 1].start + bounds[bounds.length - 1].length) < content.length ? {} : {
                   width: '40px',
