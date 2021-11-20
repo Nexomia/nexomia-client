@@ -101,7 +101,11 @@ function Member({ id, guild, offline = false, tab = false, onClick = () => null,
         <div className={ css`display: flex; flex-direction: column; justify-content: center; width: 154px;` }>
           <StyledText
             className={ css`margin: 0; font-size: 16px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;` }
-            style={{ color: getMemberColor(guild || '', id) }}>
+            style={{
+              background: getMemberColor(guild || '', id),
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}>
             { UserCache[id].username }
           </StyledText>
           { (UserCache[id].status && UserCache[id].presence !== 4 && UserCache[id].connected) && 

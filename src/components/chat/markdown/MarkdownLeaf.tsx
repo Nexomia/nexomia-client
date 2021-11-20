@@ -64,7 +64,7 @@ function MarkdownLeaf({ attributes, children, leaf }: any) {
         <Emoji
           attributes={ attributes }
           children={ children }
-          id={ leaf.text.split(':')[2].split('>')[0] }
+          id={ leaf.text.split(':')[1].split('>')[0] }
         />
       ) : <span { ...attributes }>{ children }</span> }
     </Fragment>

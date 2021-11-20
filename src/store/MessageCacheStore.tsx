@@ -1,4 +1,5 @@
 import { createStore, createEvent } from 'effector-root';
+import { cacheEmojis } from './EmojiStore';
 
 import Message from './models/Message';
 import $UserCacheStore, { cacheUsers } from './UserCacheStore';
@@ -27,6 +28,9 @@ $MessageCacheStore
           if (user && !UserCache[user.id]) cacheUsers([user]);
           modifiedState = { ...modifiedState, [cleanModifiedMessage.id]: cleanModifiedMessage };
         })
+      }
+      if (message.emojis) {
+        cacheEmojis(message.emojis);
       }
       return null;
     });

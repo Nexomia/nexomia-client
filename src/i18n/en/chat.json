@@ -17,7 +17,6 @@
   "forwarded_messages": "forwarded messages",
   "emoji_search": "Find the best emote!",
   "date": {
-    "today": "Today at ",
     "yesterday": "Yesterday at "
   }
 }

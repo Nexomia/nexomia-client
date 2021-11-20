@@ -348,7 +348,7 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
       inputRef.current?.children[0]?.focus();
       setImmediate(() => {
         if (!id) editor.insertText('<i:' + text + '>');
-        else editor.insertText('<e:' + text + ':' + id + '>');
+        else editor.insertText('<e:' + id + '>');
       });
     } else {
       if (sendLoading) return;

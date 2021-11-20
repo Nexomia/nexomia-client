@@ -23,6 +23,7 @@ export default interface Message {
   sticker?: Emoji;
   deleted: boolean;
   embeds?: Embed[] | null;
+  emojis?: Emoji[];
   forwarded_ids: string[];
   forwarded_messages: Message[]
 }

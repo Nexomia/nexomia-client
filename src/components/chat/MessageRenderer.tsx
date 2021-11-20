@@ -193,8 +193,18 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
             { (!grouped || MessageCache[id].type) ? (
               <StyledText className={ css`margin: 0` }>
                 <div
-                  className={ css`display: inline-block; cursor: pointer; &:hover { text-decoration: underline }` }
-                  style={{ color: getMemberColor(ChannelCache[channel].guild_id || '', MessageCache[id].author) }}
+                  className={ css`
+                    display: inline-block;
+                    cursor: pointer;
+                    &:hover {
+                      text-decoration: underline
+                    }
+                  ` }
+                  style={{
+                    background: getMemberColor(ChannelCache[channel].guild_id || '', MessageCache[id].author),
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent'
+                  }}
                   onClick={ showUserProfile }
                 >
                   { UserCache[MessageCache[id].author].username }
@@ -208,9 +218,9 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
                   {
                     Math.floor(Date.now() / 86400000) * 86400000 - 86400000 < MessageCache[id].created ? (
                       (
-                        Math.floor(Date.now() / 86400000) * 86400000 < MessageCache[id].created
-                        ? t('date.today')
-                        : t('date.yesterday')
+                        Math.floor(Date.now() / 86400000) * 86400000 > MessageCache[id].created
+                        ? t('date.yesterday')
+                        : ''
                       )
                       + format(new Date(MessageCache[id].created), 'HH:mm')
                     ) : format(new Date(MessageCache[id].created), 'DD.MM.YYYY HH:mm')
