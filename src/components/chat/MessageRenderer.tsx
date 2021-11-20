@@ -205,7 +205,16 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
                   </span>
                 </div>
                 <StyledText className={ css`margin: 0 0 0 8px; color: var(--text-secondary); display: inline-block; font-size: 12px` }>
-                  { format(new Date(MessageCache[id].created), 'HH:mm') }
+                  {
+                    Math.floor(Date.now() / 86400000) * 86400000 - 86400000 < MessageCache[id].created ? (
+                      (
+                        Math.floor(Date.now() / 86400000) * 86400000 < MessageCache[id].created
+                        ? t('date.today')
+                        : t('date.yesterday')
+                      )
+                      + format(new Date(MessageCache[id].created), 'HH:mm')
+                    ) : format(new Date(MessageCache[id].created), 'DD.MM.YYYY HH:mm')
+                  }
                 </StyledText>
               </StyledText>
             ) : null }

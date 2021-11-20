@@ -11,8 +11,7 @@ import StyledText from '../../ui/StyledText';
 
 const Card = styled.div`
   display: flex;
-  max-width: 280px;
-  min-width: 228px;
+  width: 280px;
   flex-grow: 0;
   flex-shrink: 0;
   background: var(--background-secondary-alt);
@@ -92,7 +91,7 @@ function PackCard({ picture, name, description, author = '', onClick = () => nul
   }, [UserCache]);
 
   return (
-    <Card onClick={ onClick } className={ classNames(mini && css`width: 150px; min-width: 150px`) }>
+    <Card onClick={ onClick } className={ classNames(mini && css`width: 150px`) }>
       <PreviewContainer className={ classNames(mini && css`height: 140px`) }>
         <Preview src={ picture } />
       </PreviewContainer>
