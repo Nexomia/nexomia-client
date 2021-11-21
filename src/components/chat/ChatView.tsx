@@ -84,6 +84,8 @@ function ChatView({ channel }: ChatViewProps) {
 
   const [inputVisible, setInputVisible] = useState(getSendPermission());
   const [loading, setLoading] = useState(false);
+  const [addLoading, setAddLoading] = useState(false);
+  const [addScroll, setAddScroll] = useState(0);
 
   const { t } = useTranslation(['chat']);
 
@@ -93,8 +95,8 @@ function ChatView({ channel }: ChatViewProps) {
   }, [Roles, channel]);
 
   useEffect(() => {
-    scrollView(true);
     if (!loading) {
+      scrollView(true);
       document.title = `#${Channels[channel].name} - Nexomia`;
     } else {
       setLoading(false);
@@ -103,9 +105,17 @@ function ChatView({ channel }: ChatViewProps) {
   }, [channel, channelId, loading]);
 
   useEffect(() => {
-    scrollView(false);
+    if (!addLoading) {
+      setImmediate(() => {
+        console.log('scroll');
+        scrollerRef.current?.scrollTo({
+          top: scrollerRef?.current?.scrollHeight - addScroll,
+          behavior: 'auto'
+        });
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Messages[channel]]);
+  }, [addLoading]);
 
   return (
     <Fragment>
@@ -176,13 +186,15 @@ function ChatView({ channel }: ChatViewProps) {
     if (
       scrollerRef?.current?.scrollTop &&
       scrollerRef?.current?.scrollTop < 800 &&
-      !loading
+      !addLoading
     ) {
-      setLoading(true);
+      setAddLoading(true);
+      setAddScroll(scrollerRef?.current?.scrollHeight - scrollerRef?.current?.scrollTop);
       const response = await MessagesService.getChannelMessages(channel, Messages[channel].length, getNeededMessageCount());
       if (!response || !response.length) return;
       cacheMessages(response);
       appendChannelMessages({ channel, messages: response.map((message: Message) => message.id) });
+      setAddLoading(false);
     } else if (
       scrollerRef?.current?.scrollTop &&
       scrollerRef?.current?.scrollTop + scrollerRef?.current?.clientHeight > scrollerRef?.current?.scrollHeight - 100 &&
