@@ -164,7 +164,11 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
 
   return (
     <Container
-      className={ classNames({ [GroupedContainerCss]: (grouped && !MessageCache[id].type), active: ContextMenu?.id === id && ContextMenu?.visible && avatar }) }
+      className={ classNames(
+        (grouped && !MessageCache[id].type) && GroupedContainerCss,
+        ContextMenu?.id === id && ContextMenu?.visible && avatar && 'active',
+        !avatar && css`animation: none`
+      ) }
       onContextMenu={ openContextMenu }
       onMouseEnter={ () => setHovered(true) }
       onMouseLeave={ () => setHovered(false) }

@@ -87,13 +87,18 @@ function ChatView({ channel }: ChatViewProps) {
 
   useEffect(() => {
     if (!loading) {
-      scrollView();
+      scrollView(true);
       document.title = `#${Channels[channel].name} - Nexomia`;
     } else {
       setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [channel, Messages[channel]]);
+  }, [channel]);
+
+  useEffect(() => {
+    scrollView(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [Messages[channel]]);
 
   return (
     <Fragment>
@@ -125,15 +130,26 @@ function ChatView({ channel }: ChatViewProps) {
         </MessageContainer>
       </MessageContainerWrapper>
       { inputVisible ? (
-        <ChatInput channel={ channel } onMessageSent={ scrollView } />
+        <ChatInput
+          channel={ channel }
+          onMessageSent={ () => scrollView(true) }
+          onAttachmentAdded={ () => scrollView(false) }
+        />
       ) : <div className={ css`height: 26px` } /> }
     </Fragment>
   )
 
-  function scrollView() {
-    if (!loading) {
+  function scrollView(force: boolean) {
+    if (
+      !loading &&
+      scrollerRef?.current &&
+      (
+        scrollerRef?.current?.scrollTop > scrollerRef?.current?.scrollHeight - 400 ||
+        force
+      )
+    ) {
       scrollerRef.current?.scrollTo({
-        top: scrollerRef.current.scrollHeight,
+        top: scrollerRef.current.scrollHeight * 2,
         behavior: 'auto'
       });
     }

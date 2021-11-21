@@ -120,7 +120,8 @@ const ForwardedMessagesContainer = styled.div`
 
 interface ChatInputProps {
   channel: string,
-  onMessageSent: any
+  onMessageSent: any,
+  onAttachmentAdded: any
 }
 
 interface InputAttachment {
@@ -131,7 +132,7 @@ interface InputAttachment {
   id: string
 }
 
-function ChatInput({ channel, onMessageSent }: ChatInputProps) {
+function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps) {
   const inputRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -182,6 +183,9 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
     setAttachments(modifiedAttachments);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => onAttachmentAdded(), [attachments, InputCache[channel]]);
 
   return (
     <OuterContainer>
