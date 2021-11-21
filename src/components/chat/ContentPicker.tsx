@@ -144,6 +144,7 @@ function ContentPicker({ onSelect = () => null, type }: PickerProps) {
       ? '0'
       : UserCache.emojiPacks[0]
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
   let parsedOptimize: any = null
@@ -158,6 +159,7 @@ function ContentPicker({ onSelect = () => null, type }: PickerProps) {
               onClick={ () => setSelectedGroup(pack) }
             >
               <img
+                alt=''
                 src={ EmojiPacks[pack].icon }
                 className={ classNames(StyledIconCss, InputIconCss) }
               />

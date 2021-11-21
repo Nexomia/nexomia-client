@@ -88,12 +88,14 @@ function Member({ id, guild, offline = false, tab = false, onClick = () => null,
 
   useEffect(() => {
     if (!UserCache[id]) loadUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // trash workaround for React/Chrome bug
   // it can potentially lower the performance
   useEffect(() => {
     if (textRef.current) textRef.current.style.webkitBackgroundClip = 'text';
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   });
 
   return (

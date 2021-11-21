@@ -39,8 +39,6 @@ function GeneralView() {
 
   const { t } = useTranslation(['settings']);
 
-  const [guildAvatar, setGuildAvatar] = useState('');
-  const [guildBanner, setGuildBanner] = useState('');
   const [guildName, setGuildName] = useState('');
   const [guildDefaultChannel, setGuildDefaultChannel] = useState('');
   const [edited, setEdited] = useState(false);
@@ -68,6 +66,7 @@ function GeneralView() {
       setAvatarEdited(true);
       setEdited(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bannerResult]);
 
   return (

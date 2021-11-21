@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { RiFileDownloadFill, RiFileMusicFill, RiPauseFill, RiPlayFill } from 'react-icons/ri';
 import { setModalState } from '../../../store/ModalStore';
 import Attachment from '../../../store/models/Attachment';

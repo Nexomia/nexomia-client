@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { RiArrowLeftLine } from 'react-icons/ri';
 import $EmojiPackCacheStore from '../../../store/EmojiPackStore';
 import $EmojiCacheStore from '../../../store/EmojiStore';
-import EmojiPackType from '../../../store/models/EmojiPackType';
 import $UserStore from '../../../store/UserStore';
 import StyledIconCss from '../../css/StyledIconCss';
 import StyledText from '../../ui/StyledText';

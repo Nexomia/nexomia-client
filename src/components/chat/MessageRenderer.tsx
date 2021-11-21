@@ -15,7 +15,7 @@ import { RiArrowLeftLine, RiArrowRightLine, RiPushpinFill } from 'react-icons/ri
 import StyledIconCss from '../css/StyledIconCss';
 import { useTranslation } from 'react-i18next';
 import renderMessageContent from '../../utils/renderMessageContent';
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import Dots from '../animations/Dots';
 import $InputStore from '../../store/InputStore';
 import Attachment from '../../store/models/Attachment';
@@ -270,6 +270,7 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
 
             { MessageCache[id].sticker && (
               <img
+                alt=''
                 src={ MessageCache[id].sticker?.url }
                 className={ css`width: 150px; height: 150px; user-select: none; user-drag: none;` }
               />

@@ -37,6 +37,7 @@ function Login() {
     if (token && token !== '') {
       history.push('/home');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { t } = useTranslation(['reg']);

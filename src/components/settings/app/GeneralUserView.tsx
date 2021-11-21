@@ -56,6 +56,7 @@ function GeneralUserView() {
       setBannerEdited(false);
       setEdited(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bannerResult]);
 
   return (

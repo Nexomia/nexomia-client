@@ -9,7 +9,6 @@ import $ChannelCacheStore from '../../../store/ChannelCacheStore';
 import { setContextMenu } from '../../../store/ContextMenuStore';
 import $GuildCacheStore, { setGuildInvites } from '../../../store/GuildCacheStore';
 import { setModalState } from '../../../store/ModalStore';
-import $UserCacheStore from '../../../store/UserCacheStore';
 import FilledButton from '../../ui/FilledButton';
 import StyledText from '../../ui/StyledText';
 
@@ -41,12 +40,12 @@ function InvitesView() {
 
   const Guilds = useStore($GuildCacheStore);
   const Channels = useStore($ChannelCacheStore);
-  const Users = useStore($UserCacheStore);
 
   useEffect(() => {
     if (!Guilds[guildId]?.invites?.length) {
       loadInvites();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

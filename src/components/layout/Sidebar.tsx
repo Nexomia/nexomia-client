@@ -25,11 +25,9 @@ import SidebarHeader from './SidebarHeader';
 import Channel from '../../store/models/Channel';
 import StyledText from '../ui/StyledText';
 import CenteredContainer from './CenteredContainer';
-import ChannelsService from '../../services/api/channels/channels.service';
 import Dots from '../animations/Dots';
 import isTabGuild from '../../utils/isTabGuild';
 import GuildsService from '../../services/api/guilds/guilds.service';
-import RolesService from '../../services/api/roles/roles.service';
 import Role from '../../store/models/Role';
 import Tab from '../sidebar/Tab';
 import $UserStore from '../../store/UserStore';
@@ -126,11 +124,13 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
     if (!['channels', 'guildsettings'].includes(path)) {
       document.title = 'Nexomia';
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [guildId, path]);
 
   useEffect(() => {
     const newGuildChannels = channels[guildId] || [];
     setGuildChannelsValue(newGuildChannels);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [channels]);
 
   return (

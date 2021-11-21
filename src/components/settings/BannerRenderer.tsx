@@ -1,6 +1,5 @@
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
-import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import getIconString from '../../utils/getIconString';
 import StyledText from '../ui/StyledText';

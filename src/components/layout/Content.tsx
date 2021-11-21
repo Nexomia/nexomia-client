@@ -1,13 +1,11 @@
 import { styled } from 'linaria/react';
 import { css } from 'linaria';
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
 import classNames from 'classnames';
 
 import ContentHeader from './ContentHeader';
 import ChatView from '../chat/ChatView';
 import ProfileView from '../profile/ProfileView';
-import isTabGuild from '../../utils/isTabGuild';
 import SettingsView from '../settings/SettingsView';
 import { useStore } from 'effector-react';
 import $ChannelStore from '../../store/ChannelStore';

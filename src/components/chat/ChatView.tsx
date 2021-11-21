@@ -77,13 +77,12 @@ function ChatView({ channel }: ChatViewProps) {
 
   const [inputVisible, setInputVisible] = useState(getSendPermission());
   const [loading, setLoading] = useState(false);
-  const [oldHeight, setOldHeight] = useState(0);
-  const [oldTop, setOldTop] = useState(0);
 
   const { t } = useTranslation(['chat']);
 
   useEffect(() => {
     setInputVisible(getSendPermission());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Roles]);
 
   useEffect(() => {
@@ -93,6 +92,7 @@ function ChatView({ channel }: ChatViewProps) {
     } else {
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [channel, Messages[channel]]);
 
   return (
@@ -160,7 +160,6 @@ function ChatView({ channel }: ChatViewProps) {
       if (!response || !response.length) return;
       cacheMessages(response);
       appendChannelMessages({ channel, messages: response.map((message: Message) => message.id) });
-      setOldHeight(scrollerRef?.current?.scrollHeight);
     } else if (
       scrollerRef?.current?.scrollTop &&
       scrollerRef?.current?.scrollTop > scrollerRef?.current?.scrollHeight - 100 - window.innerHeight &&

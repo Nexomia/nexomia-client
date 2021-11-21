@@ -45,6 +45,7 @@ function ContextMenu() {
 
   useEffect(() => {
     if (!visible) setStep(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ContextMenu]);
 
   const [step, setStep] = useState(false);

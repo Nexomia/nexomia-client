@@ -3,7 +3,6 @@ import { styled } from 'linaria/react';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import $GuildCacheStore from '../../store/GuildCacheStore';
-import CenteredContainer from '../layout/CenteredContainer';
 import EmotesUserView from './app/EmotesUserView';
 import GeneralUserView from './app/GeneralUserView';
 import GeneralView from './guild/GeneralView';
@@ -30,6 +29,7 @@ function SettingsView() {
 
   useEffect(() => {
     document.title = `${Guilds[guildId]?.name} settings - Nexomia`;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
