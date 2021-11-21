@@ -44,6 +44,7 @@ const ScrollableContent = styled.div`
   right: 0;
   overflow: hidden auto;
   box-sizing: border-box;
+  overflow-anchor: none;
 `
 
 const MessageWrapper = styled.div`
@@ -106,7 +107,7 @@ function ChatView({ channel }: ChatViewProps) {
         <MessageContainer>
           <ScrollableContent ref={ scrollerRef } onScroll={ handleScroll }>
             <MessageWrapper>
-              <MessageView channel={ channel } onMessagesLoaded={ scrollView } />
+              <MessageView channel={ channel } onMessagesLoaded={ () => scrollView(true) } />
             </MessageWrapper>
             <TypersContainer>
               { !!Typers[channel]?.length && (
@@ -133,7 +134,7 @@ function ChatView({ channel }: ChatViewProps) {
         <ChatInput
           channel={ channel }
           onMessageSent={ () => scrollView(true) }
-          onAttachmentAdded={ () => scrollView(false) }
+          onAttachmentAdded={ () => scrollView(true) }
         />
       ) : <div className={ css`height: 26px` } /> }
     </Fragment>
@@ -144,14 +145,14 @@ function ChatView({ channel }: ChatViewProps) {
       !loading &&
       scrollerRef?.current &&
       (
-        scrollerRef?.current?.scrollTop > scrollerRef?.current?.scrollHeight - 400 ||
+        scrollerRef?.current?.scrollTop + scrollerRef?.current?.clientHeight > scrollerRef?.current?.scrollHeight - 600 ||
         force
       )
     ) {
-      scrollerRef.current?.scrollTo({
+      setImmediate(() => scrollerRef.current?.scrollTo({
         top: scrollerRef.current.scrollHeight * 2,
         behavior: 'auto'
-      });
+      }));
     }
   }
 
@@ -166,7 +167,7 @@ function ChatView({ channel }: ChatViewProps) {
 
     if (
       scrollerRef?.current?.scrollTop &&
-      scrollerRef?.current?.scrollTop < 400 &&
+      scrollerRef?.current?.scrollTop < 800 &&
       !loading
     ) {
       setLoading(true);
@@ -176,7 +177,7 @@ function ChatView({ channel }: ChatViewProps) {
       appendChannelMessages({ channel, messages: response.map((message: Message) => message.id) });
     } else if (
       scrollerRef?.current?.scrollTop &&
-      scrollerRef?.current?.scrollTop > scrollerRef?.current?.scrollHeight - 100 - window.innerHeight &&
+      scrollerRef?.current?.scrollTop + scrollerRef?.current?.clientHeight > scrollerRef?.current?.scrollHeight - 100 &&
       Messages[channel].length > getNeededMessageCount()
     ) {
       clearLoadedMesssages(channel);
