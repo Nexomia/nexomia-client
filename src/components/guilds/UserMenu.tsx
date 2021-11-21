@@ -43,6 +43,8 @@ const Container = styled.div`
 const AvatarImg = styled.img`
   width: 100%;
   height: 100%;
+  user-select: none;
+  user-drag: none;
 `
 
 const AvatarLetters = styled.div`
@@ -56,6 +58,7 @@ const AvatarLetters = styled.div`
   background: var(--background-light);
   flex-shrink: 0;
   user-select: none;
+  user-drag: none;
 `
 
 interface RouteParams {

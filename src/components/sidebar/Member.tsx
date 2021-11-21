@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { useStore } from 'effector-react';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import UsersService from '../../services/api/users/users.service';
 import $UserCacheStore, { cacheUsers } from '../../store/UserCacheStore';
@@ -84,13 +84,21 @@ function Member({ id, guild, offline = false, tab = false, onClick = () => null,
   const UserCache = useStore($UserCacheStore);
   const history = useHistory();
 
+  const textRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!UserCache[id]) loadUser();
   }, []);
 
+  // trash workaround for React/Chrome bug
+  // it can potentially lower the performance
+  useEffect(() => {
+    if (textRef.current) textRef.current.style.webkitBackgroundClip = 'text';
+  });
+
   return (
     UserCache[id] ? (
-      <Container onClick={ openProfile } className={ classNames({ [OfflineCss]: offline, [ActiveCss]: active }) }>
+      <Container onClick={ openProfile } className={ classNames(offline && OfflineCss, active && ActiveCss) }>
         {
           UserCache[id].avatar ? (
             <Avatar src={ UserCache[id].avatar } className={ css`background: transparent` } />
@@ -99,15 +107,26 @@ function Member({ id, guild, offline = false, tab = false, onClick = () => null,
           )
         }
         <div className={ css`display: flex; flex-direction: column; justify-content: center; width: 154px;` }>
-          <StyledText
-            className={ css`margin: 0; font-size: 16px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;` }
-            style={{
-              background: getMemberColor(guild || '', id),
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>
-            { UserCache[id].username }
-          </StyledText>
+          <div>
+            <StyledText
+              className={ css`
+                margin: 0;
+                font-size: 16px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                display: inline;
+              ` }
+              ref={ textRef }
+              style={{
+                background: getMemberColor(guild || '', id) || 'var(--text-primary)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}
+            >
+              { UserCache[id].username }
+            </StyledText>
+          </div>
           { (UserCache[id].status && UserCache[id].presence !== 4 && UserCache[id].connected) && 
             <StyledText className={ css`margin: 0; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; font-weight: 400` }>
             { UserCache[id].status }

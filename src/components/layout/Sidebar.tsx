@@ -231,63 +231,69 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       ) }
 
       { /* Guild Channels */ }
-      <Scrollable>
-        { !path && isTabGuild(guildId) && type === 'channels' && (guildChannels && guildChannels.length && channelsCache[guildChannels[0]] ? (
-          [
-            ...(guildChannels.map((channel: string) => (
-              !!(PermissionCalculator.getUserPermissions(guildId, channel, user.id) & ComputedPermissions.VIEW_CHANNEL) && (
+      { !path && isTabGuild(guildId) && type === 'channels' && (guildChannels && guildChannels.length && channelsCache[guildChannels[0]] ? (
+        <Scrollable>
+          {
+            [
+              ...(guildChannels.map((channel: string) => (
+                !!(PermissionCalculator.getUserPermissions(guildId, channel, user.id) & ComputedPermissions.VIEW_CHANNEL) && (
+                  <Tab
+                    Icon={ BiHash }
+                    title={ channelsCache[channel]?.name || '' }
+                    tabId={ channelsCache[channel]?.id }
+                    key={ channelsCache[channel]?.id }
+                    onClick={ () => { history.push(`/channels/${guildId}/${channel}`) } }
+                    contextEnabled
+                  />
+                )
+              ))),
+              (
+                (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
                 <Tab
-                  Icon={ BiHash }
-                  title={ channelsCache[channel]?.name || '' }
-                  tabId={ channelsCache[channel]?.id }
-                  key={ channelsCache[channel]?.id }
-                  onClick={ () => { history.push(`/channels/${guildId}/${channel}`) } }
-                  contextEnabled
-                />
+                  Icon={ RiAddFill }
+                  title={ t('chat:channel_new') }
+                  tabId={ 'new' }
+                  key={ 'new' }
+                  onClick={ () => { setModalState({ channelCreation: true }) } }
+                /> : null
               )
-            ))),
-            (
-              (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
-              <Tab
-                Icon={ RiAddFill }
-                title={ t('chat:channel_new') }
-                tabId={ 'new' }
-                key={ 'new' }
-                onClick={ () => { setModalState({ channelCreation: true }) } }
-              /> : null
-            )
-          ]
-        ) : loading ? (
-          <CenteredContainer>
-            <Dots />
-          </CenteredContainer>
-        ) : (
-          <Fragment>
-            <StyledText className={ css`text-align: center; margin-bottom: 16px` }>No channels</StyledText>
-            {
-              (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
-              <Tab
-                Icon={ RiAddFill }
-                title={ t('chat:channel_new') }
-                tabId={ 'new' }
-                onClick={ () => { setModalState({ channelCreation: true }) } }
-              /> : null
-            }
-          </Fragment>
-        )) }
-      </Scrollable>
+            ]
+          }
+        </Scrollable>
+      ) : loading ? (
+        <CenteredContainer>
+          <Dots />
+        </CenteredContainer>
+      ) : (
+        <Fragment>
+          <StyledText className={ css`text-align: center; margin-bottom: 16px` }>No channels</StyledText>
+          {
+            (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
+            <Tab
+              Icon={ RiAddFill }
+              title={ t('chat:channel_new') }
+              tabId={ 'new' }
+              onClick={ () => { setModalState({ channelCreation: true }) } }
+            /> : null
+          }
+        </Fragment>
+      )) }
 
       { /* DM Channels */ }
       { !path && guildId === '@me' && type === 'channels' && (
-        guildChannels.map((channel: string) => (
-          <Member
-            id={ channelsCache[channel]?.recipients?.filter((id: string) => id !== user.id)[0] || '' }
-            tab={ true }
-            key={ channel }
-            active={ channelId === channel }
-            onClick={ () => { history.push(`/channels/@me/${channel}`) } }
-          />
-        ))
+        <Scrollable>
+          {
+            guildChannels.map((channel: string) => (
+              <Member
+                id={ channelsCache[channel]?.recipients?.filter((id: string) => id !== user.id)[0] || '' }
+                tab={ true }
+                key={ channel }
+                active={ channelId === channel }
+                onClick={ () => { history.push(`/channels/@me/${channel}`) } }
+              />
+            ))
+          }
+        </Scrollable>
       ) }
     </SidebarContainer>
   );
