@@ -47,11 +47,6 @@ const Splitter = styled.div`
   background: var(--background-primary);
 `
 
-const AvatarImg = styled.img`
-  width: 100%;
-  height: 100%;
-`
-
 const GuildLetters = css`
   line-height: 48px;
   height: 48px;

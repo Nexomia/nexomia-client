@@ -22,6 +22,16 @@ const SidebarContainer = styled.div`
   background: var(--background-secondary-alt)
 `
 
+const Scrollable = styled.div`
+  flex-grow: 1;
+  overflow-y: scroll;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`
+
 interface RouteParams {
   guildId: string,
   channelId: string
@@ -36,68 +46,69 @@ function MemberSidebar() {
   const { t } = useTranslation(['chat']);
 
   let renderedUsers: string[] = [];
+  let sortedUsers: any;
 
   return (
     GuildStore[guildId]?.roles ? (
       <SidebarContainer>
         <SidebarHeader />
-        { GuildStore[guildId]?.roles && GuildStore[guildId].roles?.map((role: string) => {
-          if (!RoleCacheStore[role]?.hoist) return null;
+        <Scrollable>
+          { GuildStore[guildId]?.roles && GuildStore[guildId].roles?.map((role: string) => {
+            if (!RoleCacheStore[role]?.hoist) return null;
 
-          const onlineMembers = GuildStore[guildId].members?.map((memberId) => (
-            UserCacheStore[memberId].presence !== 4 &&
-            RoleCacheStore[role].members.includes(memberId) &&
-            !renderedUsers.includes(memberId) &&
-            UserCacheStore[memberId].connected
-          ));
-          if (!onlineMembers?.includes(true)) return null;
+            const onlineMembers = GuildStore[guildId].members?.map((memberId) => (
+              UserCacheStore[memberId].presence !== 4 &&
+              RoleCacheStore[role].members.includes(memberId) &&
+              !renderedUsers.includes(memberId) &&
+              UserCacheStore[memberId].connected
+            ));
+            if (!onlineMembers?.includes(true)) return null;
 
-          return (
-            <Fragment key={ role }>
-              <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` } key={ role }>{ RoleCacheStore[role].name !== 'everyone' ? RoleCacheStore[role].name : t('online') }</StyledText>
-              {
-                GuildStore[guildId].members?.sort(
-                  (a: string, b: string) => UserCacheStore[a]?.username?.localeCompare(UserCacheStore[b]?.username || '') || 0
-                )?.map((memberId: string) => {
-                  if (
-                    !RoleCacheStore[role].members.includes(memberId) ||
-                    renderedUsers.includes(memberId) ||
-                    UserCacheStore[memberId].presence === 4 ||
-                    !UserCacheStore[memberId].connected
-                  ) return null;
-                  renderedUsers.push(memberId);
-      
-                  return (
-                    memberId && (PermissionCalculator.getUserPermissions(guildId, channelId, memberId) & ComputedPermissions.VIEW_CHANNEL) && (
-                      <Member id={ memberId } key={ memberId } guild={ guildId } />
+            return (
+              <Fragment key={ role }>
+                <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` } key={ role }>{ RoleCacheStore[role].name !== 'everyone' ? RoleCacheStore[role].name : t('online') }</StyledText>
+                {
+                  (sortedUsers = GuildStore[guildId].members?.sort(
+                    (a: string, b: string) => UserCacheStore[a]?.username?.localeCompare(UserCacheStore[b]?.username || '') || 0
+                  ))?.map((memberId: string) => {
+                    if (
+                      !RoleCacheStore[role].members.includes(memberId) ||
+                      renderedUsers.includes(memberId) ||
+                      UserCacheStore[memberId].presence === 4 ||
+                      !UserCacheStore[memberId].connected
+                    ) return null;
+                    renderedUsers.push(memberId);
+        
+                    return (
+                      memberId && (PermissionCalculator.getUserPermissions(guildId, channelId, memberId) & ComputedPermissions.VIEW_CHANNEL) && (
+                        <Member id={ memberId } key={ memberId } guild={ guildId } />
+                      )
                     )
-                  )
-                })
-              }
-            </Fragment>
-          )
-        }) }
-        <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` }>{ t('offline') }</StyledText>
-        {
-          (
-            GuildStore[guildId]?.members &&
-            GuildStore[guildId].members?.sort(
-              (a: string, b: string) => UserCacheStore[a]?.username?.localeCompare(UserCacheStore[b]?.username || '') || 0
-            )?.map((memberId: string) => {
-              if (
-                renderedUsers.includes(memberId)
-              ) return null;
-              renderedUsers.push(memberId);
+                  })
+                }
+              </Fragment>
+            )
+          }) }
+          <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` }>{ t('offline') }</StyledText>
+          {
+            (
+              GuildStore[guildId]?.members &&
+              sortedUsers?.map((memberId: string) => {
+                if (
+                  renderedUsers.includes(memberId)
+                ) return null;
+                renderedUsers.push(memberId);
 
-              return (
-                memberId && (PermissionCalculator.getUserPermissions(guildId, channelId, memberId) & ComputedPermissions.VIEW_CHANNEL) ? (
-                  <Member offline id={ memberId } key={ memberId } guild={ guildId } />
-                ) : null
-              )
-            })
-          ) || null
-        }
-        { (renderedUsers = []) && null }
+                return (
+                  memberId && (PermissionCalculator.getUserPermissions(guildId, channelId, memberId) & ComputedPermissions.VIEW_CHANNEL) ? (
+                    <Member offline id={ memberId } key={ memberId } guild={ guildId } />
+                  ) : null
+                )
+              })
+            ) || null
+          }
+          { (renderedUsers = []) && null }
+        </Scrollable>
       </SidebarContainer>
     ) : null
   )

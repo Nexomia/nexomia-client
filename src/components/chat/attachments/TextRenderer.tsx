@@ -26,21 +26,6 @@ const BottomContainer = styled.div`
   align-items: center;
 `
 
-const NoPreviewContainer = styled.div`
-  width: 48px;
-  height: 48px;
-  border-radius: 4px;
-  margin: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
-const AttachmentIconCss = css`
-  width: 36px;
-  height: 36px;
-`
-
 const SmallInputIconCss = css`
   width: 18px;
   height: 18px;
@@ -64,6 +49,7 @@ function TextRenderer({ file }: TextRendererProps) {
 
   useEffect(() => {
     loadContent();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

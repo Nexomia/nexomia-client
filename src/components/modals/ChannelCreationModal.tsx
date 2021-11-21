@@ -4,7 +4,6 @@ import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 import GuildsService from '../../services/api/guilds/guilds.service';
-import { cacheChannels } from '../../store/ChannelCacheStore';
 import { setModalState } from '../../store/ModalStore';
 import InactiveLayerCss from '../css/InactiveLayerCss';
 import LayerBackgroundShadeCss from '../css/LayerBackgroundShadeCss';

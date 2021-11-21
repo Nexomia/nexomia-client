@@ -16,11 +16,6 @@ interface RoleCache {
   [key: string]: Role
 }
 
-interface RoleMembersInfo {
-  role: string,
-  members: string[]
-}
-
 interface RoleMemberInfo {
   role: string,
   member: string

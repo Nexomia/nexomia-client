@@ -1,8 +1,6 @@
-import { useStore } from 'effector-react';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
 import { useTranslation } from 'react-i18next';
-import $MessageStore from '../../store/MessageStore';
 import PopoutHeader from '../ui/PopoutHeader';
 import MessageView from './MessageView';
 
@@ -32,8 +30,6 @@ interface PinnedMessagesViewProps {
 
 function PinnedMessagesView({ channel }: PinnedMessagesViewProps) {
   const { t } = useTranslation(['settings']);
-
-  const Messages = useStore($MessageStore);
 
   return (
     <Container>

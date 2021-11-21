@@ -22,6 +22,7 @@ import getMemberColor from '../../utils/getMemberColor';
 import { useTranslation } from 'react-i18next';
 
 import getNeededMessageCount from '../../utils/getNeededMessageCount';
+import { useParams } from 'react-router';
 
 const MessageContainerWrapper = styled.div`
   flex-grow: 1;
@@ -44,6 +45,7 @@ const ScrollableContent = styled.div`
   right: 0;
   overflow: hidden auto;
   box-sizing: border-box;
+  overflow-anchor: none;
 `
 
 const MessageWrapper = styled.div`
@@ -67,7 +69,12 @@ interface ChatViewProps {
   channel: string
 }
 
+interface RouteParams {
+  channelId: string
+}
+
 function ChatView({ channel }: ChatViewProps) {
+  const { channelId } = useParams<RouteParams>();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const Messages = useStore($MessageStore);
   const Channels = useStore($ChannelCacheStore);
@@ -77,23 +84,38 @@ function ChatView({ channel }: ChatViewProps) {
 
   const [inputVisible, setInputVisible] = useState(getSendPermission());
   const [loading, setLoading] = useState(false);
-  const [oldHeight, setOldHeight] = useState(0);
-  const [oldTop, setOldTop] = useState(0);
+  const [addLoading, setAddLoading] = useState(false);
+  const [addScroll, setAddScroll] = useState(0);
 
   const { t } = useTranslation(['chat']);
 
   useEffect(() => {
     setInputVisible(getSendPermission());
-  }, [Roles]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [Roles, channel]);
 
   useEffect(() => {
     if (!loading) {
-      scrollView();
+      scrollView(true);
       document.title = `#${Channels[channel].name} - Nexomia`;
     } else {
       setLoading(false);
     }
-  }, [channel, Messages[channel]]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [channel, channelId, loading]);
+
+  useEffect(() => {
+    if (!addLoading) {
+      setImmediate(() => {
+        console.log('scroll');
+        scrollerRef.current?.scrollTo({
+          top: scrollerRef?.current?.scrollHeight - addScroll,
+          behavior: 'auto'
+        });
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addLoading]);
 
   return (
     <Fragment>
@@ -101,7 +123,7 @@ function ChatView({ channel }: ChatViewProps) {
         <MessageContainer>
           <ScrollableContent ref={ scrollerRef } onScroll={ handleScroll }>
             <MessageWrapper>
-              <MessageView channel={ channel } onMessagesLoaded={ scrollView } />
+              <MessageView channel={ channel } onMessagesLoaded={ () => scrollView(true) } />
             </MessageWrapper>
             <TypersContainer>
               { !!Typers[channel]?.length && (
@@ -125,18 +147,29 @@ function ChatView({ channel }: ChatViewProps) {
         </MessageContainer>
       </MessageContainerWrapper>
       { inputVisible ? (
-        <ChatInput channel={ channel } onMessageSent={ scrollView } />
+        <ChatInput
+          channel={ channel }
+          onMessageSent={ () => scrollView(true) }
+          onAttachmentAdded={ () => scrollView(true) }
+        />
       ) : <div className={ css`height: 26px` } /> }
     </Fragment>
   )
 
-  function scrollView() {
-    if (!loading) {
-      scrollerRef.current?.scrollTo({
-        top: scrollerRef.current.scrollHeight,
-        behavior: scrollerRef?.current?.scrollTop > scrollerRef?.current?.scrollHeight - 100 - window.innerHeight
-        ? 'smooth'
-        : 'auto'
+  function scrollView(force: boolean) {
+    if (
+      !loading &&
+      scrollerRef?.current &&
+      (
+        scrollerRef?.current?.scrollTop + scrollerRef?.current?.clientHeight > scrollerRef?.current?.scrollHeight - 600 ||
+        force
+      )
+    ) {
+      setImmediate(() => {
+        scrollerRef.current?.scrollTo({
+          top: scrollerRef.current.scrollHeight * 2,
+          behavior: 'auto'
+        });
       });
     }
   }
@@ -152,18 +185,19 @@ function ChatView({ channel }: ChatViewProps) {
 
     if (
       scrollerRef?.current?.scrollTop &&
-      scrollerRef?.current?.scrollTop < 400 &&
-      !loading
+      scrollerRef?.current?.scrollTop < 800 &&
+      !addLoading
     ) {
-      setLoading(true);
+      setAddLoading(true);
+      setAddScroll(scrollerRef?.current?.scrollHeight - scrollerRef?.current?.scrollTop);
       const response = await MessagesService.getChannelMessages(channel, Messages[channel].length, getNeededMessageCount());
       if (!response || !response.length) return;
       cacheMessages(response);
       appendChannelMessages({ channel, messages: response.map((message: Message) => message.id) });
-      setOldHeight(scrollerRef?.current?.scrollHeight);
+      setAddLoading(false);
     } else if (
       scrollerRef?.current?.scrollTop &&
-      scrollerRef?.current?.scrollTop > scrollerRef?.current?.scrollHeight - 100 - window.innerHeight &&
+      scrollerRef?.current?.scrollTop + scrollerRef?.current?.clientHeight > scrollerRef?.current?.scrollHeight - 100 &&
       Messages[channel].length > getNeededMessageCount()
     ) {
       clearLoadedMesssages(channel);

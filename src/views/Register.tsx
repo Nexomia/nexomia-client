@@ -36,6 +36,7 @@ function Register() {
     if (token) {
       history.push('/channels/@me');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { t } = useTranslation(['reg']);

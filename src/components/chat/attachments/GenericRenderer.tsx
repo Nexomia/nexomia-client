@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
-import { useEffect, useRef, useState } from 'react';
 import { RiFileDownloadFill, RiFileUnknowFill } from 'react-icons/ri';
 import Attachment from '../../../store/models/Attachment';
 import StyledIconCss from '../../css/StyledIconCss';
@@ -38,12 +37,6 @@ const AttachmentIconCss = css`
 const SmallInputIconCss = css`
   width: 18px;
   height: 18px;
-`
-
-const Player = styled.div`
-  display: flex;
-  flex-direction: row;
-  margin-top: 16px;
 `
 
 interface GenericRendererProps {

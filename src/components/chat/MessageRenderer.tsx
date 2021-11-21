@@ -15,7 +15,7 @@ import { RiArrowLeftLine, RiArrowRightLine, RiPushpinFill } from 'react-icons/ri
 import StyledIconCss from '../css/StyledIconCss';
 import { useTranslation } from 'react-i18next';
 import renderMessageContent from '../../utils/renderMessageContent';
-import { Fragment, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import Dots from '../animations/Dots';
 import $InputStore from '../../store/InputStore';
 import Attachment from '../../store/models/Attachment';
@@ -160,9 +160,15 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
 
   const history = useHistory();
 
+  const textRef = useRef<HTMLDivElement>(null);
+
   return (
     <Container
-      className={ classNames({ [GroupedContainerCss]: (grouped && !MessageCache[id].type), active: ContextMenu?.id === id && ContextMenu?.visible && avatar }) }
+      className={ classNames(
+        (grouped && !MessageCache[id].type) && GroupedContainerCss,
+        ContextMenu?.id === id && ContextMenu?.visible && avatar && 'active',
+        !avatar && css`animation: none`
+      ) }
       onContextMenu={ openContextMenu }
       onMouseEnter={ () => setHovered(true) }
       onMouseLeave={ () => setHovered(false) }
@@ -200,8 +206,9 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
                       text-decoration: underline
                     }
                   ` }
+                  ref={ textRef }
                   style={{
-                    background: getMemberColor(ChannelCache[channel].guild_id || '', MessageCache[id].author),
+                    background: getMemberColor(ChannelCache[channel].guild_id || '', MessageCache[id].author) || 'var(--text-primary)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent'
                   }}
@@ -267,6 +274,7 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
 
             { MessageCache[id].sticker && (
               <img
+                alt=''
                 src={ MessageCache[id].sticker?.url }
                 className={ css`width: 150px; height: 150px; user-select: none; user-drag: none;` }
               />

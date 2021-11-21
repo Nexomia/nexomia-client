@@ -27,6 +27,7 @@ $MessageCacheStore
           const { user, ...cleanModifiedMessage } = modifiedMessage;
           if (user && !UserCache[user.id]) cacheUsers([user]);
           modifiedState = { ...modifiedState, [cleanModifiedMessage.id]: cleanModifiedMessage };
+          return null;
         })
       }
       if (message.emojis) {

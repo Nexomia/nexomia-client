@@ -5,7 +5,6 @@ import {
 } from 'react-router-dom';
 
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { useStore } from 'effector-react';
 import $AuthStore, { setToken } from '../store/AuthStore';
@@ -42,8 +41,6 @@ import { cacheUsers } from '../store/UserCacheStore';
 import { cacheEmojiPacks } from '../store/EmojiPackStore';
 
 function App() {
-  const { t } = useTranslation(['states']);
-
   const { token } = useStore($AuthStore);
   const User = useStore($UserStore);
 
@@ -53,6 +50,7 @@ function App() {
 
   useEffect(() => {
     preloadUserInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -152,10 +150,6 @@ function App() {
     if (menuState.lock || !menuState.visible) return;
     setContextMenu({ visible: false });
   }
-}
-
-function getRandomInt(max: number): number {
-  return Math.floor(Math.random() * Math.floor(max));
 }
 
 export default App;

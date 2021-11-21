@@ -4,7 +4,6 @@ import { css } from 'linaria';
 import { styled } from 'linaria/react';
 import { useEffect, useState } from 'react';
 import UsersService from '../../../services/api/users/users.service';
-import EmojiPackOwner from '../../../store/models/EmojiPackOwner';
 import $UserCacheStore, { cacheUsers } from '../../../store/UserCacheStore';
 import getIconString from '../../../utils/getIconString';
 import StyledText from '../../ui/StyledText';
@@ -88,6 +87,7 @@ function PackCard({ picture, name, description, author = '', onClick = () => nul
       if (!UserCache[author]) loadUserInfo();
       else setAuthorUser(UserCache[author]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [UserCache]);
 
   return (

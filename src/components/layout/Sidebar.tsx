@@ -25,11 +25,9 @@ import SidebarHeader from './SidebarHeader';
 import Channel from '../../store/models/Channel';
 import StyledText from '../ui/StyledText';
 import CenteredContainer from './CenteredContainer';
-import ChannelsService from '../../services/api/channels/channels.service';
 import Dots from '../animations/Dots';
 import isTabGuild from '../../utils/isTabGuild';
 import GuildsService from '../../services/api/guilds/guilds.service';
-import RolesService from '../../services/api/roles/roles.service';
 import Role from '../../store/models/Role';
 import Tab from '../sidebar/Tab';
 import $UserStore from '../../store/UserStore';
@@ -64,6 +62,16 @@ const Content = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+`
+
+const Scrollable = styled.div`
+  flex-grow: 1;
+  overflow-y: scroll;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 interface RouteParams {
@@ -116,11 +124,13 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
     if (!['channels', 'guildsettings'].includes(path)) {
       document.title = 'Nexomia';
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [guildId, path]);
 
   useEffect(() => {
     const newGuildChannels = channels[guildId] || [];
     setGuildChannelsValue(newGuildChannels);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [channels]);
 
   return (
@@ -185,7 +195,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             onClick={ () => { history.push(`/settings/emotes`) } }
           />
 
-          <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }>Build 6<br />20.11.2021</StyledText>
+          <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }>Build 7<br />21.11.2021</StyledText>
         </Fragment>
       ) }
 
@@ -222,30 +232,34 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
 
       { /* Guild Channels */ }
       { !path && isTabGuild(guildId) && type === 'channels' && (guildChannels && guildChannels.length && channelsCache[guildChannels[0]] ? (
-        [
-          ...(guildChannels.map((channel: string) => (
-            !!(PermissionCalculator.getUserPermissions(guildId, channel, user.id) & ComputedPermissions.VIEW_CHANNEL) && (
-              <Tab
-                Icon={ BiHash }
-                title={ channelsCache[channel]?.name || '' }
-                tabId={ channelsCache[channel]?.id }
-                key={ channelsCache[channel]?.id }
-                onClick={ () => { history.push(`/channels/${guildId}/${channel}`) } }
-                contextEnabled
-              />
-            )
-          ))),
-          (
-            (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
-            <Tab
-              Icon={ RiAddFill }
-              title={ t('chat:channel_new') }
-              tabId={ 'new' }
-              key={ 'new' }
-              onClick={ () => { setModalState({ channelCreation: true }) } }
-            /> : null
-          )
-        ]
+        <Scrollable>
+          {
+            [
+              ...(guildChannels.map((channel: string) => (
+                !!(PermissionCalculator.getUserPermissions(guildId, channel, user.id) & ComputedPermissions.VIEW_CHANNEL) && (
+                  <Tab
+                    Icon={ BiHash }
+                    title={ channelsCache[channel]?.name || '' }
+                    tabId={ channelsCache[channel]?.id }
+                    key={ channelsCache[channel]?.id }
+                    onClick={ () => { history.push(`/channels/${guildId}/${channel}`) } }
+                    contextEnabled
+                  />
+                )
+              ))),
+              (
+                (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
+                <Tab
+                  Icon={ RiAddFill }
+                  title={ t('chat:channel_new') }
+                  tabId={ 'new' }
+                  key={ 'new' }
+                  onClick={ () => { setModalState({ channelCreation: true }) } }
+                /> : null
+              )
+            ]
+          }
+        </Scrollable>
       ) : loading ? (
         <CenteredContainer>
           <Dots />
@@ -267,15 +281,19 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
 
       { /* DM Channels */ }
       { !path && guildId === '@me' && type === 'channels' && (
-        guildChannels.map((channel: string) => (
-          <Member
-            id={ channelsCache[channel]?.recipients?.filter((id: string) => id !== user.id)[0] || '' }
-            tab={ true }
-            key={ channel }
-            active={ channelId === channel }
-            onClick={ () => { history.push(`/channels/@me/${channel}`) } }
-          />
-        ))
+        <Scrollable>
+          {
+            guildChannels.map((channel: string) => (
+              <Member
+                id={ channelsCache[channel]?.recipients?.filter((id: string) => id !== user.id)[0] || '' }
+                tab={ true }
+                key={ channel }
+                active={ channelId === channel }
+                onClick={ () => { history.push(`/channels/@me/${channel}`) } }
+              />
+            ))
+          }
+        </Scrollable>
       ) }
     </SidebarContainer>
   );

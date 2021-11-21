@@ -9,7 +9,7 @@ import { List, arrayMove } from 'react-movable';
 import RolesService from '../../../services/api/roles/roles.service';
 import $GuildCacheStore, { setGuildRoles } from '../../../store/GuildCacheStore';
 import PermissionOverwrites from '../../../store/models/PermissionOverwrites';
-import $RoleCacheStore, { cacheRoles, updateRole } from '../../../store/RolesCacheStore';
+import $RoleCacheStore, { updateRole } from '../../../store/RolesCacheStore';
 import StyledIconCss from '../../css/StyledIconCss';
 import InputField from '../../ui/InputField';
 import LoadingPlaceholder from '../../ui/LoadingPlaceholder';
@@ -103,10 +103,12 @@ function RolesView() {
         & (ComputedPermissions.MANAGE_ROLES | ComputedPermissions.ADMINISTRATOR)
       )
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     setRoleList([ ...(GuildsCache[guildId]?.roles || []) ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [GuildsCache]);
 
   const [canMove, setCanMove] = useState(false);

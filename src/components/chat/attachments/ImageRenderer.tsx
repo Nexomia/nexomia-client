@@ -1,7 +1,6 @@
 import { styled } from 'linaria/react';
 import { useEffect, useRef } from 'react';
 import ReactFreezeframe from 'react-freezeframe';
-import { Freeze } from 'freezeframe/types'
 import Attachment from '../../../store/models/Attachment';
 import { setModalState } from '../../../store/ModalStore';
 

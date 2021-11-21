@@ -2,7 +2,7 @@ import { styled } from 'linaria/react';
 import { css } from 'linaria';
 import { htmlUnescape } from 'escape-goat';
 import classNames from 'classnames';
-import { Fragment, KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { createEditor, BaseEditor, Descendant, Node, Text } from 'slate';
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
 import { RiAddCircleFill, RiCloseLine, RiEmotionLaughFill, RiSendPlane2Fill, RiStickyNoteFill } from 'react-icons/ri';
@@ -16,7 +16,6 @@ import MessagesService from '../../services/api/messages/messages.service';
 import InputButton from './InputButton';
 import { useTranslation } from 'react-i18next';
 import ChannelsService from '../../services/api/channels/channels.service';
-import renderMessageContent from '../../utils/renderMessageContent';
 import getMessageMarkdownBounds from '../../utils/getMessageMarkdownBounds';
 import MarkdownLeaf from './markdown/MarkdownLeaf';
 import { useStore } from 'effector-react';
@@ -93,13 +92,6 @@ const EditableCss = css`
   word-break: break-all;
 `
 
-const Placeholder = styled.div`
-  color: var(--text-secondary);
-  position: absolute;
-  padding: 14px 0;
-  pointer-events: none;
-`
-
 const ForwardsContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -128,7 +120,8 @@ const ForwardedMessagesContainer = styled.div`
 
 interface ChatInputProps {
   channel: string,
-  onMessageSent: any
+  onMessageSent: any,
+  onAttachmentAdded: any
 }
 
 interface InputAttachment {
@@ -139,7 +132,7 @@ interface InputAttachment {
   id: string
 }
 
-function ChatInput({ channel, onMessageSent }: ChatInputProps) {
+function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps) {
   const inputRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -188,7 +181,11 @@ function ChatInput({ channel, onMessageSent }: ChatInputProps) {
     }
 
     setAttachments(modifiedAttachments);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => onAttachmentAdded(), [attachments, InputCache[channel]]);
 
   return (
     <OuterContainer>
