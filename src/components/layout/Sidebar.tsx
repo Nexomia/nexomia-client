@@ -66,6 +66,16 @@ const Content = styled.div`
   overflow: hidden;
 `
 
+const Scrollable = styled.div`
+  flex-grow: 1;
+  overflow-y: scroll;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`
+
 interface RouteParams {
   path: string,
   guildId: string,
@@ -221,49 +231,51 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       ) }
 
       { /* Guild Channels */ }
-      { !path && isTabGuild(guildId) && type === 'channels' && (guildChannels && guildChannels.length && channelsCache[guildChannels[0]] ? (
-        [
-          ...(guildChannels.map((channel: string) => (
-            !!(PermissionCalculator.getUserPermissions(guildId, channel, user.id) & ComputedPermissions.VIEW_CHANNEL) && (
+      <Scrollable>
+        { !path && isTabGuild(guildId) && type === 'channels' && (guildChannels && guildChannels.length && channelsCache[guildChannels[0]] ? (
+          [
+            ...(guildChannels.map((channel: string) => (
+              !!(PermissionCalculator.getUserPermissions(guildId, channel, user.id) & ComputedPermissions.VIEW_CHANNEL) && (
+                <Tab
+                  Icon={ BiHash }
+                  title={ channelsCache[channel]?.name || '' }
+                  tabId={ channelsCache[channel]?.id }
+                  key={ channelsCache[channel]?.id }
+                  onClick={ () => { history.push(`/channels/${guildId}/${channel}`) } }
+                  contextEnabled
+                />
+              )
+            ))),
+            (
+              (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
               <Tab
-                Icon={ BiHash }
-                title={ channelsCache[channel]?.name || '' }
-                tabId={ channelsCache[channel]?.id }
-                key={ channelsCache[channel]?.id }
-                onClick={ () => { history.push(`/channels/${guildId}/${channel}`) } }
-                contextEnabled
-              />
+                Icon={ RiAddFill }
+                title={ t('chat:channel_new') }
+                tabId={ 'new' }
+                key={ 'new' }
+                onClick={ () => { setModalState({ channelCreation: true }) } }
+              /> : null
             )
-          ))),
-          (
-            (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
-            <Tab
-              Icon={ RiAddFill }
-              title={ t('chat:channel_new') }
-              tabId={ 'new' }
-              key={ 'new' }
-              onClick={ () => { setModalState({ channelCreation: true }) } }
-            /> : null
-          )
-        ]
-      ) : loading ? (
-        <CenteredContainer>
-          <Dots />
-        </CenteredContainer>
-      ) : (
-        <Fragment>
-          <StyledText className={ css`text-align: center; margin-bottom: 16px` }>No channels</StyledText>
-          {
-            (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
-            <Tab
-              Icon={ RiAddFill }
-              title={ t('chat:channel_new') }
-              tabId={ 'new' }
-              onClick={ () => { setModalState({ channelCreation: true }) } }
-            /> : null
-          }
-        </Fragment>
-      )) }
+          ]
+        ) : loading ? (
+          <CenteredContainer>
+            <Dots />
+          </CenteredContainer>
+        ) : (
+          <Fragment>
+            <StyledText className={ css`text-align: center; margin-bottom: 16px` }>No channels</StyledText>
+            {
+              (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
+              <Tab
+                Icon={ RiAddFill }
+                title={ t('chat:channel_new') }
+                tabId={ 'new' }
+                onClick={ () => { setModalState({ channelCreation: true }) } }
+              /> : null
+            }
+          </Fragment>
+        )) }
+      </Scrollable>
 
       { /* DM Channels */ }
       { !path && guildId === '@me' && type === 'channels' && (
