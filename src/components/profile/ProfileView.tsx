@@ -84,13 +84,7 @@ function ProfileView({ user }: ProfileViewProps) {
   const { t } = useTranslation(['chat']);
 
   useEffect(() => {
-    if (
-      !UserCache[user] ||
-      (
-        !UserCache[user].banner &&
-        !UserCache[user].description
-      )
-    ) loadUserInfo();
+    loadUserInfo();
   }, []);
 
   return (
