@@ -110,7 +110,9 @@ function ProfileView({ user }: ProfileViewProps) {
             { UserCache[user].description && (
               <InfoContainer>
                 <StyledText className={ css`font-size: 22px; margin: 0; font-weight: 900; margin-bottom: 16px; white-space: break-spaces` }>{ t('profile.about_me') }</StyledText>
-                <StyledText className={ css`font-size: 18px; margin: 0` }>{ renderMessageContent(UserCache[user].description || '') }</StyledText>
+                <StyledText
+                  className={ css`font-size: 18px; margin: 0; user-select: text; word-break: break-all; white-space: break-spaces;` }
+                >{ renderMessageContent(UserCache[user].description || '') }</StyledText>
               </InfoContainer>
             ) }
             { UserCache[user].verified && (
