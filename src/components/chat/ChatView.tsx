@@ -22,6 +22,7 @@ import getMemberColor from '../../utils/getMemberColor';
 import { useTranslation } from 'react-i18next';
 
 import getNeededMessageCount from '../../utils/getNeededMessageCount';
+import { useParams } from 'react-router';
 
 const MessageContainerWrapper = styled.div`
   flex-grow: 1;
@@ -68,7 +69,12 @@ interface ChatViewProps {
   channel: string
 }
 
+interface RouteParams {
+  channelId: string
+}
+
 function ChatView({ channel }: ChatViewProps) {
+  const { channelId } = useParams<RouteParams>();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const Messages = useStore($MessageStore);
   const Channels = useStore($ChannelCacheStore);
@@ -87,14 +93,14 @@ function ChatView({ channel }: ChatViewProps) {
   }, [Roles, channel]);
 
   useEffect(() => {
+    scrollView(true);
     if (!loading) {
-      scrollView(true);
       document.title = `#${Channels[channel].name} - Nexomia`;
     } else {
       setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [channel]);
+  }, [channel, channelId, loading]);
 
   useEffect(() => {
     scrollView(false);
@@ -149,10 +155,12 @@ function ChatView({ channel }: ChatViewProps) {
         force
       )
     ) {
-      setImmediate(() => scrollerRef.current?.scrollTo({
-        top: scrollerRef.current.scrollHeight * 2,
-        behavior: 'auto'
-      }));
+      setImmediate(() => {
+        scrollerRef.current?.scrollTo({
+          top: scrollerRef.current.scrollHeight * 2,
+          behavior: 'auto'
+        });
+      });
     }
   }
 
