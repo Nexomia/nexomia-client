@@ -83,7 +83,7 @@ function ChatView({ channel }: ChatViewProps) {
   useEffect(() => {
     setInputVisible(getSendPermission());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Roles]);
+  }, [Roles, channel]);
 
   useEffect(() => {
     if (!loading) {
