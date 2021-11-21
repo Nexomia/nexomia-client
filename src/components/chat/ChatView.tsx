@@ -134,9 +134,7 @@ function ChatView({ channel }: ChatViewProps) {
     if (!loading) {
       scrollerRef.current?.scrollTo({
         top: scrollerRef.current.scrollHeight,
-        behavior: scrollerRef?.current?.scrollTop > scrollerRef?.current?.scrollHeight - 100 - window.innerHeight
-        ? 'smooth'
-        : 'auto'
+        behavior: 'auto'
       });
     }
   }
