@@ -205,6 +205,9 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
                     &:hover {
                       text-decoration: underline
                     }
+                    @-moz-document url-prefix() {
+                      margin-top: 1px;
+                    }
                   ` }
                   ref={ textRef }
                   style={{

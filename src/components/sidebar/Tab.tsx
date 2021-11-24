@@ -43,6 +43,9 @@ const TextCss = css`
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  @-moz-document url-prefix() {
+    margin-top: 2px;
+  }
 `
 
 interface TabProps {

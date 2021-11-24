@@ -35,6 +35,9 @@ const Content = styled.div`
   padding: 0 8px;
   user-select: none;
   margin-left: 7px;
+  @-moz-document url-prefix() {
+    margin-top: -2px;
+  }
 `
 
 const HeaderIconCss = css`

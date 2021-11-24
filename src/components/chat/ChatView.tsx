@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 
 import getNeededMessageCount from '../../utils/getNeededMessageCount';
 import { useParams } from 'react-router';
+import { removeUnread } from '../../store/UnreadStore';
 
 const MessageContainerWrapper = styled.div`
   flex-grow: 1;
@@ -91,6 +92,7 @@ function ChatView({ channel }: ChatViewProps) {
 
   useEffect(() => {
     setInputVisible(getSendPermission());
+    removeUnread(channel);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Roles, channel]);
 
@@ -116,6 +118,11 @@ function ChatView({ channel }: ChatViewProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addLoading]);
+
+  useEffect(() => {
+    scrollView(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [Messages[channel]]);
 
   return (
     <Fragment>
