@@ -86,6 +86,7 @@ function ChatView({ channel }: ChatViewProps) {
   const [inputVisible, setInputVisible] = useState(getSendPermission());
   const [loading, setLoading] = useState(false);
   const [addLoading, setAddLoading] = useState(false);
+  const [addedLoading, setAddedLoading] = useState(false);
   const [addScroll, setAddScroll] = useState(0);
 
   const { t } = useTranslation(['chat']);
@@ -107,7 +108,7 @@ function ChatView({ channel }: ChatViewProps) {
   }, [channel, channelId, loading]);
 
   useEffect(() => {
-    if (!addLoading) {
+    if (!addedLoading) {
       setImmediate(() => {
         console.log('scroll');
         scrollerRef.current?.scrollTo({
@@ -117,7 +118,7 @@ function ChatView({ channel }: ChatViewProps) {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addLoading]);
+  }, [addedLoading]);
 
   useEffect(() => {
     scrollView(false);
@@ -129,6 +130,9 @@ function ChatView({ channel }: ChatViewProps) {
       <MessageContainerWrapper>
         <MessageContainer>
           <ScrollableContent ref={ scrollerRef } onScroll={ handleScroll }>
+            { Messages[channel]?.length > 10 && (
+              <div className={ css`height: 3500px` } />
+            ) }
             <MessageWrapper>
               <MessageView channel={ channel } onMessagesLoaded={ () => scrollView(true) } />
             </MessageWrapper>
@@ -192,16 +196,18 @@ function ChatView({ channel }: ChatViewProps) {
 
     if (
       scrollerRef?.current?.scrollTop &&
-      scrollerRef?.current?.scrollTop < 800 &&
+      scrollerRef?.current?.scrollTop < 3500 &&
       !addLoading
     ) {
       setAddLoading(true);
+      setAddedLoading(true);
       setAddScroll(scrollerRef?.current?.scrollHeight - scrollerRef?.current?.scrollTop);
       const response = await MessagesService.getChannelMessages(channel, Messages[channel].length, getNeededMessageCount());
       if (!response || !response.length) return;
       cacheMessages(response);
       appendChannelMessages({ channel, messages: response.map((message: Message) => message.id) });
-      setAddLoading(false);
+      setAddedLoading(false);
+      setTimeout(() => setAddLoading(false), 1000);
     } else if (
       scrollerRef?.current?.scrollTop &&
       scrollerRef?.current?.scrollTop + scrollerRef?.current?.clientHeight > scrollerRef?.current?.scrollHeight - 100 &&
