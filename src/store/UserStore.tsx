@@ -1,6 +1,8 @@
 import { createStore, createEvent } from 'effector-root';
 
 const setUser = createEvent<UserInfo>();
+const addEmojiPack = createEvent<string>();
+const removeEmojiPack = createEvent<string>();
 
 interface UserInfo {
   id: string,
@@ -32,7 +34,18 @@ const $UserStore = createStore<UserInfo>({
   emojiPacks: []
 });
 
-$UserStore.on(setUser, (state, user: UserInfo) => ({ ...state, ...user }));
+$UserStore
+  .on(setUser, (state, user: UserInfo) => ({ ...state, ...user }))
+  .on(addEmojiPack, (state: UserInfo, pack: string) => {
+    let modifiedState = { ...state };
+    modifiedState.emojiPacks.push(pack);
+    return modifiedState;
+  })
+  .on(removeEmojiPack, (state: UserInfo, pack: string) => {
+    let modifiedState = { ...state };
+    modifiedState.emojiPacks.splice(modifiedState.emojiPacks.indexOf(pack), 1);
+    return modifiedState;
+  });
 
 export default $UserStore;
-export { setUser };
+export { setUser, removeEmojiPack, addEmojiPack };

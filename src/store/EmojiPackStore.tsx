@@ -4,6 +4,13 @@ import Emoji from './models/Emoji';
 import EmojiPack from './models/EmojiPack';
 
 const cacheEmojiPacks = createEvent<EmojiPack[]>();
+const addEmoji = createEvent<AddEmojiInfo>();
+const removeEmoji = createEvent<AddEmojiInfo>();
+
+interface AddEmojiInfo {
+  pack: string,
+  emoji: string
+}
 
 interface EmojiPackCache {
   [key: string]: EmojiPack
@@ -23,7 +30,20 @@ $EmojiPackCacheStore
     });
     return modifiedState;
   })
-  
+  .on(addEmoji, (state: EmojiPackCache, info: AddEmojiInfo) => {
+    let modifiedState = { ...state };
+    modifiedState[info.pack].emojis.push(info.emoji);
+    return modifiedState;
+  })
+  .on(removeEmoji, (state: EmojiPackCache, info: AddEmojiInfo) => {
+    let modifiedState = { ...state };
+    modifiedState[info.pack].emojis.splice(
+      modifiedState[info.pack].emojis.indexOf(info.emoji),
+      1
+    );
+    return modifiedState;
+  });
+
 
 export default $EmojiPackCacheStore;
-export { cacheEmojiPacks };
+export { cacheEmojiPacks, addEmoji, removeEmoji };

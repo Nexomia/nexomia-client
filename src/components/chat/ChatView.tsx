@@ -88,12 +88,14 @@ function ChatView({ channel }: ChatViewProps) {
   const [addLoading, setAddLoading] = useState(false);
   const [addedLoading, setAddedLoading] = useState(false);
   const [addScroll, setAddScroll] = useState(0);
+  const [showTopMargin, setShowTopMargin] = useState(true);
 
   const { t } = useTranslation(['chat']);
 
   useEffect(() => {
     setInputVisible(getSendPermission());
     removeUnread(channel);
+    setShowTopMargin(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Roles, channel]);
 
@@ -130,7 +132,7 @@ function ChatView({ channel }: ChatViewProps) {
       <MessageContainerWrapper>
         <MessageContainer>
           <ScrollableContent ref={ scrollerRef } onScroll={ handleScroll }>
-            { Messages[channel]?.length > 10 && (
+            { Messages[channel]?.length > 10 && showTopMargin && (
               <div className={ css`height: 3500px` } />
             ) }
             <MessageWrapper>
@@ -201,9 +203,12 @@ function ChatView({ channel }: ChatViewProps) {
     ) {
       setAddLoading(true);
       setAddedLoading(true);
-      setAddScroll(scrollerRef?.current?.scrollHeight - scrollerRef?.current?.scrollTop);
       const response = await MessagesService.getChannelMessages(channel, Messages[channel].length, getNeededMessageCount());
-      if (!response || !response.length) return;
+      if (!response || !response.length) {
+        setShowTopMargin(false);
+        return;
+      }
+      setAddScroll(scrollerRef?.current?.scrollHeight - scrollerRef?.current?.scrollTop);
       cacheMessages(response);
       appendChannelMessages({ channel, messages: response.map((message: Message) => message.id) });
       setAddedLoading(false);

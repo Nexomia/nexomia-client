@@ -128,7 +128,9 @@ function ContextMenu() {
                   ''
                 ) &
                 ComputedPermissions.MANAGE_MESSAGES
-              ) || ChannelCache[MessageCache[id || '']?.channel_id]?.recipients?.length ? (
+              ) ||
+              ChannelCache[MessageCache[id || '']?.channel_id]?.recipients?.length ||
+              MessageCache[id || '']?.author === User.id ? (
                 <ContextTab title={ t('menu.delete') } onClick={ deleteMessage } />
               ) : null }
 

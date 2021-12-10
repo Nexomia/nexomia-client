@@ -249,7 +249,7 @@ function ContentPicker({ onSelect = () => null, type }: PickerProps) {
         <Scrollable>
           <SplitterContainer />
           {
-            EmojiPacks[selectedGroup] && EmojiPacks[selectedGroup].emojis && EmojiPacks[selectedGroup].emojis.map((emoji: string) => (
+            EmojiPacks[selectedGroup] && EmojiPacks[selectedGroup].emojis && EmojiPacks[selectedGroup].emojis.map((emoji: string) => !Emojis[emoji].deleted ? (
               <Emote
                 key={ emoji }
                 className={
@@ -263,7 +263,7 @@ function ContentPicker({ onSelect = () => null, type }: PickerProps) {
               >
                 <EmoteImage src={ Emojis[emoji].url } className={ classNames(type === EmojiPackType.STICKER && StickerCss) } />
               </Emote>
-            ))
+            ) : null)
           }
           {
             type === EmojiPackType.EMOJI && emojis.map((emote: Emoji, index) => (
