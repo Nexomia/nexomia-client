@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
 import { RiFileChart2Fill, RiFileCodeFill, RiFileMusicFill, RiFileUnknowFill, RiMovieFill } from 'react-icons/ri';
-import { FileContent } from 'use-file-picker/dist/interfaces';
 import StyledIconCss from '../css/StyledIconCss';
 import StyledText from '../ui/StyledText';
 
@@ -68,7 +67,7 @@ const AttachmentIconCss = css`
 `
 
 interface AttachmentPreviewProps {
-  file: FileContent,
+  file: string,
   plainFile: File,
   ready: boolean,
   progress: number
@@ -78,7 +77,7 @@ function AttachmentPreview({ file, plainFile, ready, progress }: AttachmentPrevi
   return (
     <Container
       style={ plainFile.type.startsWith('image') ? {
-        background: `url(${file.content})`,
+        background: `url(${file})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       } : {} }

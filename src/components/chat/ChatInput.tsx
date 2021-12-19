@@ -2,7 +2,7 @@ import { styled } from 'linaria/react';
 import { css } from 'linaria';
 import { htmlUnescape } from 'escape-goat';
 import classNames from 'classnames';
-import { KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { ClipboardEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { createEditor, BaseEditor, Descendant, Node, Text } from 'slate';
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
 import { RiAddCircleFill, RiCloseLine, RiEmotionLaughFill, RiSendPlane2Fill, RiStickyNoteFill } from 'react-icons/ri';
@@ -24,7 +24,6 @@ import MessageRenderer from './MessageRenderer';
 import StyledText from '../ui/StyledText';
 import { useFilePicker } from 'use-file-picker';
 import AttachmentPreview from './AttachmentPreview';
-import { FileContent } from 'use-file-picker/dist/interfaces';
 import FilesService from '../../services/api/files/files.service';
 import ContentPicker from './ContentPicker';
 import EmojiPackType from '../../store/models/EmojiPackType';
@@ -125,7 +124,7 @@ interface ChatInputProps {
 }
 
 interface InputAttachment {
-  content: FileContent,
+  content: string,
   plain: File,
   progress: number,
   ready: boolean,
@@ -165,7 +164,7 @@ function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps
     let modifiedAttachments = [ ...attachments ];
     for (const i in filesContent) {
       const newFile = {
-        content: filesContent[i],
+        content: filesContent[i].content,
         plain: plainFiles[i],
         progress: 0,
         ready: false,
@@ -206,6 +205,7 @@ function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps
               renderLeaf={ (props) => (<MarkdownLeaf { ...props } />) }
               onKeyDown={ handleKeyPress }
               onKeyUp={ unlockInput }
+              onPaste={ handlePaste }
             />
           </Slate>
         </Input>
@@ -337,6 +337,29 @@ function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps
     newAttachments[index].ready = true;
     newAttachments[index].id = fileInfo.id;
     setAttachments(newAttachments);
+  }
+
+  function handlePaste(event: ClipboardEvent<HTMLDivElement>) {
+    let modifiedAttachments = [ ...attachments ];
+    // @ts-expect-error
+    for (const file of event.clipboardData.files) {
+      const newFile = {
+        content: URL.createObjectURL(file),
+        plain: file,
+        progress: 0,
+        ready: false,
+        id: ''
+      };
+
+      modifiedAttachments = [
+        ...modifiedAttachments,
+        newFile
+      ];
+
+      uploadAttachment(newFile, modifiedAttachments);
+    }
+
+    setAttachments(modifiedAttachments);
   }
 
   async function addEmojiText(text: string, id: string, sticker: boolean) {

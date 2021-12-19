@@ -30,6 +30,16 @@ class UsersService {
 
     return response.data;
   }
+
+  async putEmojiPack(packId: string) {
+    const response = await CommonRequestManager.apiRequest('PUT', `/users/@me/emojiPacks/${packId}`, {});
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
 }
 
 export default new UsersService();

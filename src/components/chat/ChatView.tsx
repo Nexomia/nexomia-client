@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 
 import getNeededMessageCount from '../../utils/getNeededMessageCount';
 import { useParams } from 'react-router';
+import { removeUnread } from '../../store/UnreadStore';
 
 const MessageContainerWrapper = styled.div`
   flex-grow: 1;
@@ -85,12 +86,16 @@ function ChatView({ channel }: ChatViewProps) {
   const [inputVisible, setInputVisible] = useState(getSendPermission());
   const [loading, setLoading] = useState(false);
   const [addLoading, setAddLoading] = useState(false);
+  const [addedLoading, setAddedLoading] = useState(false);
   const [addScroll, setAddScroll] = useState(0);
+  const [showTopMargin, setShowTopMargin] = useState(true);
 
   const { t } = useTranslation(['chat']);
 
   useEffect(() => {
     setInputVisible(getSendPermission());
+    removeUnread(channel);
+    setShowTopMargin(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Roles, channel]);
 
@@ -105,7 +110,7 @@ function ChatView({ channel }: ChatViewProps) {
   }, [channel, channelId, loading]);
 
   useEffect(() => {
-    if (!addLoading) {
+    if (!addedLoading) {
       setImmediate(() => {
         console.log('scroll');
         scrollerRef.current?.scrollTo({
@@ -115,13 +120,21 @@ function ChatView({ channel }: ChatViewProps) {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addLoading]);
+  }, [addedLoading]);
+
+  useEffect(() => {
+    scrollView(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [Messages[channel]]);
 
   return (
     <Fragment>
       <MessageContainerWrapper>
         <MessageContainer>
           <ScrollableContent ref={ scrollerRef } onScroll={ handleScroll }>
+            { Messages[channel]?.length > 10 && showTopMargin && (
+              <div className={ css`height: 3500px` } />
+            ) }
             <MessageWrapper>
               <MessageView channel={ channel } onMessagesLoaded={ () => scrollView(true) } />
             </MessageWrapper>
@@ -185,16 +198,23 @@ function ChatView({ channel }: ChatViewProps) {
 
     if (
       scrollerRef?.current?.scrollTop &&
-      scrollerRef?.current?.scrollTop < 800 &&
+      scrollerRef?.current?.scrollTop < 3500 &&
       !addLoading
     ) {
       setAddLoading(true);
-      setAddScroll(scrollerRef?.current?.scrollHeight - scrollerRef?.current?.scrollTop);
+      setAddedLoading(true);
       const response = await MessagesService.getChannelMessages(channel, Messages[channel].length, getNeededMessageCount());
-      if (!response || !response.length) return;
+      if (!response || !response.length) {
+        setShowTopMargin(false);
+        setAddedLoading(false);
+        setTimeout(() => setAddLoading(false), 1000);
+        return;
+      }
+      setAddScroll(scrollerRef?.current?.scrollHeight - scrollerRef?.current?.scrollTop);
       cacheMessages(response);
       appendChannelMessages({ channel, messages: response.map((message: Message) => message.id) });
-      setAddLoading(false);
+      setAddedLoading(false);
+      setTimeout(() => setAddLoading(false), 1000);
     } else if (
       scrollerRef?.current?.scrollTop &&
       scrollerRef?.current?.scrollTop + scrollerRef?.current?.clientHeight > scrollerRef?.current?.scrollHeight - 100 &&

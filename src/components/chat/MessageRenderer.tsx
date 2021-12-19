@@ -23,6 +23,8 @@ import ImageRenderer from './attachments/ImageRenderer';
 import AudioRenderer from './attachments/AudioRenderer';
 import GenericRenderer from './attachments/GenericRenderer';
 import TextRenderer from './attachments/TextRenderer';
+import EmoteHoverEffect from '../css/EmoteHoverEffect';
+import { setModalState } from '../../store/ModalStore';
 
 const Spacer = styled.div`
   display: flex;
@@ -43,7 +45,6 @@ const Container = styled.div`
   padding: 4px 0;
   display: flex;
   flex-direction: row;
-  overflow: hidden;
   animation: appear .2s;
 
   &:hover, &.active {
@@ -205,6 +206,9 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
                     &:hover {
                       text-decoration: underline
                     }
+                    @-moz-document url-prefix() {
+                      margin-top: 1px;
+                    }
                   ` }
                   ref={ textRef }
                   style={{
@@ -276,7 +280,8 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
               <img
                 alt=''
                 src={ MessageCache[id].sticker?.url }
-                className={ css`width: 150px; height: 150px; user-select: none; user-drag: none;` }
+                className={ classNames(css`width: 150px; height: 150px; user-select: none; user-drag: none;`, EmoteHoverEffect) }
+                onClick={ () => setModalState({ emojiPack: [true, MessageCache[id].sticker?.pack_id] }) }
               />
             ) }
           </ContentContainer>

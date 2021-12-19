@@ -18,6 +18,7 @@ import $UserStore from '../../store/UserStore';
 import $EmojiPackCacheStore from '../../store/EmojiPackStore';
 import $EmojiCacheStore from '../../store/EmojiStore';
 import EmojiPackType from '../../store/models/EmojiPackType';
+import EmoteHoverEffect from '../css/EmoteHoverEffect';
 
 const Container = styled.div`
   position: absolute;
@@ -249,13 +250,14 @@ function ContentPicker({ onSelect = () => null, type }: PickerProps) {
         <Scrollable>
           <SplitterContainer />
           {
-            EmojiPacks[selectedGroup] && EmojiPacks[selectedGroup].emojis && EmojiPacks[selectedGroup].emojis.map((emoji: string) => (
+            EmojiPacks[selectedGroup] && EmojiPacks[selectedGroup].emojis && EmojiPacks[selectedGroup].emojis.map((emoji: string) => !Emojis[emoji].deleted ? (
               <Emote
                 key={ emoji }
                 className={
                   classNames(
                     hoveredId === emoji ? 'hovered' : '',
-                    type === EmojiPackType.STICKER && StickerCss
+                    type === EmojiPackType.STICKER && StickerCss,
+                    EmoteHoverEffect
                   )
                 }
                 onMouseEnter={ () => setHoveredId(emoji) }
@@ -263,7 +265,7 @@ function ContentPicker({ onSelect = () => null, type }: PickerProps) {
               >
                 <EmoteImage src={ Emojis[emoji].url } className={ classNames(type === EmojiPackType.STICKER && StickerCss) } />
               </Emote>
-            ))
+            ) : null)
           }
           {
             type === EmojiPackType.EMOJI && emojis.map((emote: Emoji, index) => (
@@ -273,7 +275,7 @@ function ContentPicker({ onSelect = () => null, type }: PickerProps) {
               ) && (parsedOptimize = parse(emote.emoji)).length ? (
                 <Emote
                   key={ index }
-                  className={ hoveredId === index ? 'hovered' : '' }
+                  className={ classNames(hoveredId === index ? 'hovered' : '', EmoteHoverEffect) }
                   onMouseEnter={ () => setHoveredId(index) }
                   onClick={ () => onSelect(emote.label) }
                 >

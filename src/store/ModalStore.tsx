@@ -10,7 +10,11 @@ const $ModalStore = createStore<Modals>({
   serverCreation: false,
   channelCreation: false,
   inviteCreation: false,
-  imagePreview: [false, '']
+  imagePreview: [false, ''],
+  emojiEdit: [false, '', '', ''],
+  packDelete: [false, ''],
+  packCreation: false,
+  emojiPack: [false, '']
 });
 
 $ModalStore.on(setModalState, (state, modifiedState: Modals) => ({ ...state, ...modifiedState }));
