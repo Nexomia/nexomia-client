@@ -14,6 +14,7 @@ import ModalHeader from '../ui/ModalHeader';
 import StyledText from '../ui/StyledText';
 import EmojisService from '../../services/api/emojis/emojis.service';
 import { useHistory } from 'react-router';
+import $UserStore from '../../store/UserStore';
 
 interface ModalProps {
   active: boolean
@@ -53,6 +54,7 @@ function EmojiPackModal({ active }: ModalProps) {
 
   const Modals = useStore($ModalStore);
   const EmojiPacks = useStore($EmojiPackCacheStore);
+  const User = useStore($UserStore);
 
   const history = useHistory();
 
@@ -87,8 +89,8 @@ function EmojiPackModal({ active }: ModalProps) {
               <ModalHeader className={ css`margin: 0 0 8px 0` }>{ EmojiPacks[selectedPack].name }</ModalHeader>
             </HeadingContainer>
             { (error && <StyledText className={ negativeColorCss }>{ 'Something went wrong' }</StyledText>) }
-            { EmojiPacks[selectedPack].available && <FilledButton onClick={ explore }>{ 'Explore this pack' }</FilledButton> }
-            { !EmojiPacks[selectedPack].available && (
+            { (EmojiPacks[selectedPack].available || User.emojiPacks.includes(selectedPack)) && <FilledButton onClick={ explore }>{ 'Explore this pack' }</FilledButton> }
+            { (!EmojiPacks[selectedPack].available && !User.emojiPacks.includes(selectedPack)) && (
               <ModalHeader className={ css`margin: 16px 0 8px 0` }><StyledText>{ 'This pack is not available to you.' }</StyledText></ModalHeader>
             ) }
           </Fragment>
