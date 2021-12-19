@@ -8,10 +8,11 @@ import { RiArrowLeftLine } from 'react-icons/ri';
 import { useFilePicker } from 'use-file-picker';
 import EmojisService from '../../../services/api/emojis/emojis.service';
 import FilesService from '../../../services/api/files/files.service';
+import UsersService from '../../../services/api/users/users.service';
 import $EmojiPackCacheStore, { addEmoji, cacheEmojiPacks, removeEmoji } from '../../../store/EmojiPackStore';
 import $EmojiCacheStore, { cacheEmojis } from '../../../store/EmojiStore';
-import { setModalState } from '../../../store/ModalStore';
-import $UserStore from '../../../store/UserStore';
+import $ModalStore, { setModalState } from '../../../store/ModalStore';
+import $UserStore, { addEmojiPack } from '../../../store/UserStore';
 import StyledIconCss from '../../css/StyledIconCss';
 import FilledButton from '../../ui/FilledButton';
 import InputField from '../../ui/InputField';
@@ -77,6 +78,7 @@ function EmotesUserView() {
   const UserCache = useStore($UserStore);
   const EmojiPacks = useStore($EmojiPackCacheStore);
   const Emojis = useStore($EmojiCacheStore);
+  const Modals = useStore($ModalStore);
   
   const [prevContent, setPrevContent] = useState(false);
   const [openedPack, setOpenedPack] = useState('');
@@ -92,6 +94,12 @@ function EmotesUserView() {
     readAs: 'DataURL',
     accept: 'image/*'
   });
+
+  useEffect(() => {
+    setOpenedPack(Modals.emojiPack[1]);
+    setModalState({ emojiPack: [false, ''] });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (result.filesContent?.length && !result.loading && !prevContent) {
@@ -146,6 +154,14 @@ function EmotesUserView() {
               { t('server_roles.back') }
             </StyledText>
           </ButtonContainer>
+          {
+            !UserCache.emojiPacks.includes(openedPack) && (
+              <FilledButton
+                className={ css`margin-top: 0; margin-bottom: 32px` }
+                onClick={ () => savePack() }
+              >{ 'Save this pack' }</FilledButton>
+            )
+          }
           <HeadingContainer>
             <PreviewContainer
               onClick={ () => EmojiPacks[openedPack].owner_id === UserCache.id ? openIconPicker() : null }
@@ -283,6 +299,11 @@ function EmotesUserView() {
   async function deleteEmoji(emoji: string) {
     await EmojisService.deleteEmoji(emoji, openedPack);
     removeEmoji({ pack: openedPack, emoji });
+  }
+
+  async function savePack() {
+    await UsersService.putEmojiPack(openedPack);
+    addEmojiPack(openedPack);
   }
 }
 

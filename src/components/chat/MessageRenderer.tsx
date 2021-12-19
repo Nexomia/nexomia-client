@@ -24,6 +24,7 @@ import AudioRenderer from './attachments/AudioRenderer';
 import GenericRenderer from './attachments/GenericRenderer';
 import TextRenderer from './attachments/TextRenderer';
 import EmoteHoverEffect from '../css/EmoteHoverEffect';
+import { setModalState } from '../../store/ModalStore';
 
 const Spacer = styled.div`
   display: flex;
@@ -280,6 +281,7 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
                 alt=''
                 src={ MessageCache[id].sticker?.url }
                 className={ classNames(css`width: 150px; height: 150px; user-select: none; user-drag: none;`, EmoteHoverEffect) }
+                onClick={ () => setModalState({ emojiPack: [true, MessageCache[id].sticker?.pack_id] }) }
               />
             ) }
           </ContentContainer>

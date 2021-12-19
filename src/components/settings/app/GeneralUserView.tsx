@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useFilePicker } from 'use-file-picker';
 import FilesService from '../../../services/api/files/files.service';
 import UsersService from '../../../services/api/users/users.service';
+import { setModalState } from '../../../store/ModalStore';
 import $UserStore from '../../../store/UserStore';
 import FilledButton from '../../ui/FilledButton';
 import InputField from '../../ui/InputField';
@@ -43,6 +44,11 @@ function GeneralUserView() {
     readAs: 'DataURL',
     accept: 'image/*'
   });
+
+  useEffect(() => {
+    setModalState({ emojiPack: [false, ''] });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (!bannerResult.loading && bannerResult.filesContent?.length && preedited) {

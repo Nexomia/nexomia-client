@@ -5,6 +5,7 @@ import EmojiPackType from './EmojiPackType';
 
 export default interface EmojiPack {
   id: string,
+  available: boolean,
   type: EmojiPackType
   name: string,
   icon?: string,

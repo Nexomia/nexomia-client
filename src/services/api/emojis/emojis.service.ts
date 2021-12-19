@@ -23,6 +23,16 @@ class EmojisService {
     return response.data;
   }
 
+  async getPack(packId: string) {
+    const response = await CommonRequestManager.apiRequest('GET', `/emojis/${packId}?include_emojis=true`, {});
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
+
   async editPackIcon(icon: string, packId: string) {
     const response = await CommonRequestManager.apiRequest('PATCH', `/emojis/${packId}`, { icon });
 
@@ -74,7 +84,7 @@ class EmojisService {
   }
 
   async deletePack(packId: string) {
-    const response = await CommonRequestManager.apiRequest('DELETE', `/emojis/${packId}`, {});
+    const response = await CommonRequestManager.apiRequest('DELETE', `/users/@me/emojiPacks/${packId}`, {});
 
     if (axios.isAxiosError(response)) {
       return false;

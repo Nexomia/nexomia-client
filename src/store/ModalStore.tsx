@@ -13,7 +13,8 @@ const $ModalStore = createStore<Modals>({
   imagePreview: [false, ''],
   emojiEdit: [false, '', '', ''],
   packDelete: [false, ''],
-  packCreation: false
+  packCreation: false,
+  emojiPack: [false, '']
 });
 
 $ModalStore.on(setModalState, (state, modifiedState: Modals) => ({ ...state, ...modifiedState }));

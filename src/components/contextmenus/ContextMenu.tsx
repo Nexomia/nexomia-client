@@ -1,6 +1,6 @@
 import { useStore } from 'effector-react';
 import { styled } from 'linaria/react';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
 import GuildsService from '../../services/api/guilds/guilds.service';
@@ -44,18 +44,32 @@ function ContextMenu() {
   const User = useStore($UserStore);
 
   useEffect(() => {
-    if (!visible) setStep(false);
+    if (!visible) {
+      setStep(false);
+      setBlockVisible(false);
+    } else if (baseRef.current) {
+      if (baseRef.current.clientHeight + (top || 0) > window.innerHeight - 16) {
+        setOffset((baseRef.current.clientHeight + (top || 0)) - (window.innerHeight - 16));
+      } else {
+        setOffset(0);
+      }
+      setImmediate(() => setBlockVisible(true));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ContextMenu]);
 
   const [step, setStep] = useState(false);
+  const [blockVisible, setBlockVisible] = useState(false);
+  const [offset, setOffset] = useState(0);
+
+  const baseRef = useRef<HTMLDivElement>(null);
 
   const { t } = useTranslation(['settings']);
 
   return (
     <Fragment>
       { visible && (
-        <Base style={{ top, left }}>
+        <Base style={{ top, left, opacity: blockVisible ? 1 : 0, transform: `translateY(-${offset}px)` }} ref={ baseRef }>
           { type === 'guild' && (
             <Fragment>
               { (

@@ -9,6 +9,6 @@ export default css`
     position: relative;
     transform: scale(1.2);
     filter: drop-shadow(0 5px 10px rgba(0, 0, 0, .3));
-    z-index: 100;
+    z-index: 9;
   }
 `
