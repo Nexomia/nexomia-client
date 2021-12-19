@@ -48,10 +48,8 @@ const IconCss = css`
 `
 
 const PreviewContainer = styled.div`
-  width: 250px;
-  height: 250px;
-  background: var(--background-secondary);
-  border-radius: 8px;
+  width: 200px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,6 +61,16 @@ const Preview = styled.img`
   max-width: 80%;
   user-select: none;
   user-drag: none;
+`
+
+const HeadingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--background-secondary-alt);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
 `
 
 function EmotesUserView() {
@@ -138,68 +146,72 @@ function EmotesUserView() {
               { t('server_roles.back') }
             </StyledText>
           </ButtonContainer>
-          <PreviewContainer
-            onClick={ () => EmojiPacks[openedPack].owner_id === UserCache.id ? openIconPicker() : null }
-            className={ css`background: var(--background-secondary-alt)` }
-          >
-            <Preview src={ EmojiPacks[openedPack]?.icon || '' } />
-          </PreviewContainer>
-          {
-            EmojiPacks[openedPack].owner_id === UserCache.id ? (
-              <Fragment>
-                <InputField
-                  className={
-                    css`
-                      margin-top: 16px;
-                      font-weight: 900;
-                      font-size: 22px;
-                      text-align: center;
-                      background: var(--background-secondary);
-                      border: 2px solid var(--background-secondary);
+          <HeadingContainer>
+            <PreviewContainer
+              onClick={ () => EmojiPacks[openedPack].owner_id === UserCache.id ? openIconPicker() : null }
+              className={ css`background: var(--background-secondary-alt)` }
+            >
+              <Preview src={ EmojiPacks[openedPack]?.icon || '' } />
+            </PreviewContainer>
+            {
+              EmojiPacks[openedPack].owner_id === UserCache.id ? (
+                <Fragment>
+                  <InputField
+                    className={
+                      css`
+                        margin-top: 16px;
+                        font-weight: 900;
+                        font-size: 22px;
+                        text-align: center;
+                        background: var(--background-secondary);
+                        border: 2px solid var(--background-secondary);
 
-                      &:not(:hover):not(:focus) {
-                        background: transparent;
-                        border-color: transparent;
-                      }
-                    `
-                  }
-                  defaultValue={ EmojiPacks[openedPack]?.name }
-                  placeholder={ 'Pack name' }
-                  onChange={ (event: ChangeEvent<HTMLInputElement>) => { setName(event.target.value) } }
-                  onBlur={ updateName }
-                />
-                <MultilineField
-                  className={
-                    css`
-                      background: var(--background-secondary);
-                      border: 2px solid var(--background-secondary);
-                      height: 200px;
-                      margin-bottom: 32px;
-                    `
-                  }
-                  defaultValue={ EmojiPacks[openedPack]?.description }
-                  placeholder={ 'Tell more about your pack!' }
-                  onChange={ (event: ChangeEvent<HTMLTextAreaElement>) => { setDescription(event.target.value) } }
-                  onBlur={ updateDescription }
-                />
-              </Fragment>
-            ) : (
-              <StyledText className={ css`text-align: center; margin: 24px 0 24px 0; font-size: 22px; font-weight: 900` }>
-                { EmojiPacks[openedPack]?.name }
-              </StyledText>
-            )
-          }
+                        &:not(:hover):not(:focus) {
+                          background: transparent;
+                          border-color: transparent;
+                        }
+                      `
+                    }
+                    defaultValue={ EmojiPacks[openedPack]?.name }
+                    placeholder={ 'Pack name' }
+                    onChange={ (event: ChangeEvent<HTMLInputElement>) => { setName(event.target.value) } }
+                    onBlur={ updateName }
+                  />
+                  <MultilineField
+                    className={
+                      css`
+                        background: var(--background-secondary);
+                        border: 2px solid var(--background-secondary);
+                        height: 200px;
+                        margin-bottom: 32px;
+                      `
+                    }
+                    defaultValue={ EmojiPacks[openedPack]?.description }
+                    placeholder={ 'Tell more about your pack!' }
+                    onChange={ (event: ChangeEvent<HTMLTextAreaElement>) => { setDescription(event.target.value) } }
+                    onBlur={ updateDescription }
+                  />
+                </Fragment>
+              ) : (
+                <StyledText className={ css`text-align: center; margin: 24px 0 24px 0; font-size: 22px; font-weight: 900` }>
+                  { EmojiPacks[openedPack]?.name }
+                </StyledText>
+              )
+            }
+            {
+              EmojiPacks[openedPack].owner_id === UserCache.id && (
+                <StyledText className={ css`text-align: center; margin: -12px 0 8px 0; font-weight: 900` }>
+                  { 'You own this pack' }
+                </StyledText>
+              )
+            }
+          </HeadingContainer>
           {
             EmojiPacks[openedPack].owner_id === UserCache.id && (
-              <Fragment>
-                <StyledText className={ css`text-align: center; margin: -12px 0 24px 0; font-weight: 900` }>
-                  { 'You own this pack.' }
-                </StyledText>
-                <FilledButton
-                  className={ css`margin-top: 0; margin-bottom: 32px` }
-                  onClick={ () => { openPicker(); setPrevContent(false); } }
-                >{ 'Add an emote' }</FilledButton>
-              </Fragment>
+              <FilledButton
+                className={ css`margin-top: 0; margin-bottom: 32px` }
+                onClick={ () => { openPicker(); setPrevContent(false); } }
+              >{ 'Add an emote' }</FilledButton>
             )
           }
           <CardContainer>
@@ -215,6 +227,13 @@ function EmotesUserView() {
                 />
               ) : null)
             }
+            {
+              !EmojiPacks[openedPack].emojis.filter((emoji: string) => !Emojis[emoji].deleted).length ? (
+                <StyledText className={ css`text-align: center; margin: 32px 0` }>
+                  { 'This pack is empty...' }
+                </StyledText>
+              ) : null
+            }
           </CardContainer>
         </Fragment>
       ) }
@@ -222,7 +241,7 @@ function EmotesUserView() {
   )
 
   async function uploadEmoji() {
-    const uploadUrl = await FilesService.createFile(6);
+    const uploadUrl = await FilesService.createFile(6 - EmojiPacks[openedPack].type);
     const fileInfo = await FilesService.uploadFile(uploadUrl, result.plainFiles[0]);
     const emoji = await EmojisService.putEmoji(
       result.filesContent[0].name.split('.')[0],

@@ -206,6 +206,8 @@ function ChatView({ channel }: ChatViewProps) {
       const response = await MessagesService.getChannelMessages(channel, Messages[channel].length, getNeededMessageCount());
       if (!response || !response.length) {
         setShowTopMargin(false);
+        setAddedLoading(false);
+        setTimeout(() => setAddLoading(false), 1000);
         return;
       }
       setAddScroll(scrollerRef?.current?.scrollHeight - scrollerRef?.current?.scrollTop);

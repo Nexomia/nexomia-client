@@ -23,6 +23,7 @@ import ImageRenderer from './attachments/ImageRenderer';
 import AudioRenderer from './attachments/AudioRenderer';
 import GenericRenderer from './attachments/GenericRenderer';
 import TextRenderer from './attachments/TextRenderer';
+import EmoteHoverEffect from '../css/EmoteHoverEffect';
 
 const Spacer = styled.div`
   display: flex;
@@ -43,7 +44,6 @@ const Container = styled.div`
   padding: 4px 0;
   display: flex;
   flex-direction: row;
-  overflow: hidden;
   animation: appear .2s;
 
   &:hover, &.active {
@@ -279,7 +279,7 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
               <img
                 alt=''
                 src={ MessageCache[id].sticker?.url }
-                className={ css`width: 150px; height: 150px; user-select: none; user-drag: none;` }
+                className={ classNames(css`width: 150px; height: 150px; user-select: none; user-drag: none;`, EmoteHoverEffect) }
               />
             ) }
           </ContentContainer>

@@ -161,6 +161,7 @@ function PackCard({
         className={ classNames(css`margin: 16px; font-weight: 900`, mini && css`text-align: center`) }
       >{ name }</StyledText>
       { description && <StyledText className={ css`margin: 0 16px 16px 16px; color: var(--text-secondary)` }>{ description }</StyledText> }
+      <div className={ css`flex-grow: 1` } />
       {
         authorUser && (
           <AuthorContainer>

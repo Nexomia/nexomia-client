@@ -1,6 +1,8 @@
+import classNames from 'classnames';
 import { useStore } from 'effector-react';
 import { css } from 'linaria';
 import $EmojiCacheStore from '../../../store/EmojiStore';
+import EmoteHoverEffect from '../../css/EmoteHoverEffect';
 
 const EmoteImage = css`
   display: inline-block;
@@ -31,7 +33,7 @@ function Emoji({ id, children = [], attributes = {}, style = {} }: EmojiProps) {
   const Emojis = useStore($EmojiCacheStore);
 
   return (
-    <div { ...attributes } className={ EmoteImage } style={{ background: `url(${Emojis[id]?.url})`, backgroundSize: 'cover', ...style }}>{ children }</div>
+    <div { ...attributes } className={ classNames(EmoteImage, EmoteHoverEffect) } style={{ background: `url(${Emojis[id]?.url})`, backgroundSize: 'cover', ...style }}>{ children }</div>
   )
 }
 
