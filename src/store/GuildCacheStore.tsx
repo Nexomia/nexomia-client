@@ -1,6 +1,7 @@
 import { createStore, createEvent } from 'effector-root';
 
 import Guild from './models/Guild';
+import GuildBan from './models/GuildBan';
 import Invite from './models/Invite';
 
 const cacheGuilds = createEvent<Guild[]>();
@@ -10,6 +11,8 @@ const addGuildMembers = createEvent<GuildMembersInfo>();
 const removeGuildMember = createEvent<GuildMemberInfo>();
 const setGuildInvites = createEvent<GuildInvitesInfo>();
 const addGuildInvites = createEvent<GuildInvitesInfo>();
+const setGuildBans = createEvent<GuildBansInfo>();
+const addGuildBans = createEvent<GuildBansInfo>();
 
 interface GuildCache {
   [key: string]: Guild
@@ -33,6 +36,11 @@ interface GuildMemberInfo {
 interface GuildInvitesInfo {
   guild: string,
   invites: Invite[]
+}
+
+interface GuildBansInfo {
+  guild: string,
+  bans: GuildBan[]
 }
 
 const $GuildCacheStore = createStore<GuildCache>({});
@@ -76,6 +84,16 @@ $GuildCacheStore
     modifiedState[info.guild].invites = [...(state[info.guild].invites || []), ...info.invites];
     return modifiedState;
   })
+  .on(setGuildBans, (state: GuildCache, info: GuildBansInfo) => {
+    const modifiedState = { ...state };
+    modifiedState[info.guild].bans = info.bans
+    return modifiedState;
+  })
+  .on(addGuildBans, (state: GuildCache, info: GuildBansInfo) => {
+    const modifiedState = { ...state };
+    modifiedState[info.guild].bans = [...(state[info.guild].bans || []), ...info.bans];
+    return modifiedState;
+  })
 
 export default $GuildCacheStore;
-export { cacheGuilds, setGuildRoles, setGuildMembers, addGuildMembers, removeGuildMember, addGuildInvites, setGuildInvites };
+export { cacheGuilds, setGuildRoles, setGuildMembers, addGuildMembers, removeGuildMember, addGuildInvites, setGuildInvites, setGuildBans };

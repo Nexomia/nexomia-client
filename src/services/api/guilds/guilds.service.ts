@@ -44,7 +44,7 @@ class GuildsService {
   }
 
   async deleteGuildChannel(guild: string, channel: string) {
-    const response = await CommonRequestManager.apiRequest('DELETE', `/channels/${channel}`, {});
+    const response = await CommonRequestManager.apiRequest('DELETE', `/guilds/${guild}/channels/${channel}`, {});
 
     if (axios.isAxiosError(response)) {
       return false;
@@ -89,6 +89,36 @@ class GuildsService {
 
   async getGuildInvites(guild: string) {
     const response = await CommonRequestManager.apiRequest('GET', `/guilds/${guild}/invites`, {});
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
+
+  async getGuildBans(guild: string) {
+    const response = await CommonRequestManager.apiRequest('GET', `/guilds/${guild}/bans`, {});
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
+
+  async addGuildBan(guild: string, user: string, ban: object) {
+    const response = await CommonRequestManager.apiRequest('PUT', `/guilds/${guild}/bans/${user}`, ban);
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
+
+  async removeGuildBan(guild: string, user: string) {
+    const response = await CommonRequestManager.apiRequest('DELETE', `/guilds/${guild}/bans/${user}`, {});
 
     if (axios.isAxiosError(response)) {
       return false;

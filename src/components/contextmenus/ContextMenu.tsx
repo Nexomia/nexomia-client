@@ -148,6 +148,24 @@ function ContextMenu() {
                 <ContextTab title={ t('menu.delete') } onClick={ deleteMessage } />
               ) : null }
 
+              { (
+                PermissionCalculator.getUserPermissions(
+                  ChannelCache[MessageCache[id || '']?.channel_id]?.guild_id || '',
+                  MessageCache[id || '']?.channel_id || '',
+                  ''
+                ) & (
+                  ComputedPermissions.OWNER |
+                  ComputedPermissions.ADMINISTRATOR |
+                  ComputedPermissions.MANAGE_MEMBERS
+                )
+              ) &&
+              MessageCache[id || '']?.author !== User.id ? (
+                <ContextTab title={ t('menu.ban') } onClick={ () => {
+                  setContextMenu({ id: guildId, data: { user_id: MessageCache[id || ''].author } });
+                  setModalState({ guildBanUser: true });
+                } } />
+              ) : null }
+
               <ContextTab title={ t('menu.copy_id') } onClick={ copyId } />
             </Fragment>
           ) }

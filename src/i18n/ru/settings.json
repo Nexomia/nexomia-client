@@ -8,7 +8,8 @@
     "edit": "Редактировать",
     "add_reaction": "Добавить реакцию",
     "confirmation": "Вы уверены?",
-    "reply": "Ответить"
+    "reply": "Ответить",
+    "ban": "Забанить"
   },
   "modals": {
     "channel_creating": "Создаем канал...",
@@ -33,7 +34,20 @@
     "invite_header": "Пригласи друзей!",
     "invite_description": "Выбери канал, в котором создадим приглашение.",
     "invite_created": "Приглашение создано!",
-    "invite_created_description": "Нажмите по нему, чтобы скопировать."
+    "invite_created_description": "Нажмите по нему, чтобы скопировать.",
+    "guildBan_header": "Забанить пользователя:",
+    "guildBan_banning": "Бананим...",
+    "guildBan_description": "Выберите участника или напишите его имя",
+    "guildBan": {
+      "hour": "Последний час",
+      "nothing": "Ничего не удалять",
+      "day": "Последние 24 часа",
+      "week": "Последние 7 дней",
+      "all": "Все время"
+    },
+    "guildBan_ban": "Забанить",
+    "guildBan_reason": "Введите причу бана",
+    "guildBan_user": "Введите id пользователя или его тэг"
   },
   "server_general": {
     "no_default_channel": "Нет стандартного канала",
@@ -123,6 +137,12 @@
     "user_divider": "Пользователь",
     "profile": "Профиль",
     "chat": "Чат",
-    "emotes": "Эмоции"
+    "emotes": "Эмоции",
+    "bans": "Баны"
+  },
+  "server_bans": {
+    "reason": "Причина",
+    "banned_by": "Забанен",
+    "no_reason": "Не указана"
   }
 }

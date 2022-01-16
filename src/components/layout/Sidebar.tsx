@@ -195,7 +195,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             onClick={ () => { history.push(`/settings/emotes`) } }
           />
 
-          <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }>Build 8<br />19.12.2021</StyledText>
+          <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }>Build 9<br />16.01.2022</StyledText>
         </Fragment>
       ) }
 
@@ -219,6 +219,12 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             tabId={ 'invites' }
             onClick={ () => { history.push(`/guildsettings/${guildId}/invites`) } }
           />
+          <Tab
+            title={ t('tabs.bans') }
+            tabId={ 'bans' }
+            onClick={ () => { history.push(`/guildsettings/${guildId}/bans`) } }
+          />
+                    
         </Fragment>
       ) }
 

@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import $GuildCacheStore from '../../store/GuildCacheStore';
 import EmotesUserView from './app/EmotesUserView';
 import GeneralUserView from './app/GeneralUserView';
+import BansView from './guild/BansView';
 import GeneralView from './guild/GeneralView';
 import InvitesView from './guild/InvitesView';
 import RolesView from './guild/RolesView';
@@ -54,6 +55,10 @@ function SettingsView() {
 
       { channelId === 'invites' && (
         <InvitesView />
+      ) }
+
+      { channelId === 'bans' && (
+        <BansView />
       ) }
     </Wrapper>
   ) 

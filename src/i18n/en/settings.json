@@ -8,7 +8,8 @@
     "edit": "Edit",
     "add_reaction": "Add Reaction",
     "confirmation": "Are you sure?",
-    "reply": "Reply"
+    "reply": "Reply",
+    "ban": "Ban"
   },
   "modals": {
     "channel_creating": "Creating Channel...",
@@ -33,7 +34,20 @@
     "invite_header": "Invite your friends!",
     "invite_description": "Choose the channel to create invite in.",
     "invite_created": "Here is your invite!",
-    "invite_created_description": "Click to copy it."
+    "invite_created_description": "Click to copy it.",
+    "guildBan_header": "Ban user:",
+    "guildBan_banning": "Bananning...",
+    "guildBan_description": "Select the member to ban or write his name",
+    "guildBan": {
+      "hour": "Previous hour",
+      "nothing": "Don't delete any",
+      "day": "Previous 24 hours",
+      "week": "Previous 7 days",
+      "all": "All time"
+    },
+    "guildBan_ban": "Ban",
+    "guildBan_reason": "Enter ban reason",
+    "guildBan_user": "Enter user id or tag"
   },
   "server_general": {
     "no_default_channel": "No default channel",
@@ -66,6 +80,13 @@
     "description": "Active invites are displayed below.",
     "uses": "uses",
     "invite_create": "Create an invite"
+  },
+  "server_bans": {
+    "description": "Banned users are displayed below.",
+    "ban_create": "Ban user",
+    "reason": "Reason",
+    "banned_by": "Banned by",
+    "no_reason": "Not specified"
   },
   "server_permissions": {
     "administrator": "Administrator",
@@ -123,6 +144,7 @@
     "user_divider": "User",
     "profile": "Profile",
     "chat": "Chat",
-    "emotes": "Emotes"
+    "emotes": "Emotes",
+    "bans": "Bans"
   }
 }

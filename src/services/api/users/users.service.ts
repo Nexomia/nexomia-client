@@ -6,9 +6,9 @@ class UsersService {
   private rateLimit: boolean = false;
 
   async getUser(id: string) {
-    if (this.rateLimit) return;
+    // if (this.rateLimit) return;
 
-    this.rateLimit = true;
+    // this.rateLimit = true;
 
     const response = await CommonRequestManager.apiRequest('GET', '/users/' + id, {});
 
@@ -16,7 +16,7 @@ class UsersService {
       return false;
     }
 
-    this.rateLimit = false;
+    // this.rateLimit = false;
 
     return response.data;
   }
