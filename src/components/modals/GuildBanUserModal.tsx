@@ -8,7 +8,8 @@ import guildsService from '../../services/api/guilds/guilds.service';
 import usersService from '../../services/api/users/users.service';
 import $ContextMenuStore, { setContextMenu } from '../../store/ContextMenuStore';
 import { setModalState } from '../../store/ModalStore';
-import $UserCacheStore, { cacheUsers } from '../../store/UserCacheStore';
+import User from '../../store/models/User';
+import $UserCacheStore from '../../store/UserCacheStore';
 import getIconString from '../../utils/getIconString';
 import InactiveLayerCss from '../css/InactiveLayerCss';
 import LayerBackgroundShadeCss from '../css/LayerBackgroundShadeCss';
@@ -20,9 +21,11 @@ import Layer from '../ui/Layer';
 import Modal from '../ui/Modal';
 import ModalHeader from '../ui/ModalHeader';
 import StyledText from '../ui/StyledText';
+import Dots from '../animations/Dots';
 
 const Container = styled.div`
   width: 100%;
+  height: 32px;
   display: flex;
   flex-grow: 1;
   flex-direction: row;  
@@ -59,7 +62,11 @@ function GuildBanUserModal({ active }: ModalProps) {
   const UserCache = useStore($UserCacheStore);
 
   const [userValue, setUserValue] = useState('');
+  const [user, setUser] = useState<User>();
   const [reasonValue, setReasonValue] = useState('');
+  const [isUserLoading, setUserLoading] = useState(false);
+  const [isUserBanning, setUserBanning] = useState(false);
+  const [isError, setError] = useState(false);
   const [selected, setSelected]: [DropdownKey | null, any] = useState(null);
 
   useEffect(() => {
@@ -70,9 +77,25 @@ function GuildBanUserModal({ active }: ModalProps) {
   }, []);
 
   useEffect(() => {
-    if (userValue && userValue.length > 6 && !UserCache[userValue || data?.user_id]) {
-      const timeOutId = setTimeout(() => { loadUserInfo(userValue);}, 300);
-      return () => clearTimeout(timeOutId);
+    if (data?.user_id) setUser(UserCache[data?.user_id])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  useEffect(() => {
+    setError(false);
+    if (userValue && /(\d){15,}\b/.test(userValue)) {
+      if (UserCache[userValue || data?.user_id]) setUser(UserCache[userValue])
+      else {
+        const timeOutId = setTimeout(() => { setUserLoading(true); loadUserInfo({ ids: userValue || data?.user_id }); }, 300);
+        return () => clearTimeout(timeOutId);
+      }
+    } else if (userValue && /(\w){1,}(#)(\w){4,7}\b/.test(userValue) && userValue !== `${user?.username}#${user?.discriminator}`) {
+
+        const timeOutId = setTimeout(() => { setUserLoading(true); loadUserInfo({ tags: encodeURIComponent(userValue) }); }, 300);
+        return () => clearTimeout(timeOutId);
+    } else {
+      setUserLoading(false);
+      setUser(undefined);
     }
   }, [userValue]);
 
@@ -89,13 +112,22 @@ function GuildBanUserModal({ active }: ModalProps) {
       <Modal className={ css`width: 440px` }>
           <Fragment>
             <ModalHeader>{ t('modals.guildBan_header') }<br />
-            { (UserCache[userValue || data?.user_id] || data?.user_id) && (
+            { user && !isUserLoading && (
               <Container>
-                { UserCache[userValue || data?.user_id].avatar
-                  ? <Avatar src={ UserCache[userValue || data?.user_id].avatar.replace('/avatar.webp', '/avatar_40.webp') }/>
-                  : <LetterAvatar>{ getIconString(UserCache[userValue || data?.user_id].username || '') }</LetterAvatar>
+                { user?.avatar
+                  ? <Avatar src={ user?.avatar.replace('/avatar.webp', '/avatar_40.webp') }/>
+                  : <LetterAvatar>{ getIconString(user?.username || '') }</LetterAvatar>
                 }
-                <StyledText className={ css`transform: translateY(-4px);` }>{ UserCache[userValue || data?.user_id].username }#{UserCache[userValue || data?.user_id].discriminator}</StyledText>
+                <StyledText className={ css`transform: translateY(-4px);` }>{ user?.username }#{user?.discriminator}</StyledText>
+              </Container>
+            )}
+            { isUserLoading && (
+              <Container>
+                <Dots />
+              </Container>
+            )}
+            { !user && !isUserLoading && (
+              <Container>
               </Container>
             )}
               </ModalHeader>
@@ -109,7 +141,8 @@ function GuildBanUserModal({ active }: ModalProps) {
               defaultKey={ 0 }
               onChange={ setSelected }
             />
-            { UserCache[userValue || data?.user_id] && <FilledButton onClick={ banUser }>{ t('modals.guildBan_ban') }</FilledButton> }
+            { user && <FilledButton onClick={ banUser }>{ !isUserBanning ? t('modals.guildBan_ban') : <Dots /> }</FilledButton> }
+            { isError && <StyledText className={css`color: var(--text-negative); padding-top: 8px;`}>{ t('modals.guildBan_error') }</StyledText> }
           </Fragment>
       </Modal>
     </Layer>
@@ -117,24 +150,36 @@ function GuildBanUserModal({ active }: ModalProps) {
 
   function closeModal(event: any) {
     if (event.target !== layerRef.current) return;
+    setError(false);
+    setUserLoading(false);
+    setUserBanning(false);
+    setUser(undefined);
     setModalState({ guildBanUser: false });
   }
 
   async function banUser() {
-    if (id) {
-      const res = await guildsService.addGuildBan(id, userValue || data?.user_id, reasonValue && reasonValue !== '' ? { reason: reasonValue } : {});
+    if (id && user) {
+      setUserBanning(true)
+      const res = await guildsService.addGuildBan(id, user.id, reasonValue && reasonValue !== '' ? { reason: reasonValue } : {});
       if (res) {
         if (data?.update)
           data.update();
+        setUserBanning(false);
         setContextMenu({});
         setModalState({ guildBanUser: false });
+      } else {
+        setError(true);
+        setUserBanning(false);
       }
     }
   }
   
-  async function loadUserInfo(uid: string) {
-    const userInfo = await usersService.getUser(uid);
-      cacheUsers([userInfo]);
+  async function loadUserInfo(data: { ids?: string, tags?: string }) {
+    const userInfo = await usersService.getUsers(data);
+    setUserLoading(false);
+    if (userInfo)
+      setUser(userInfo[0]);
+    else setUser(undefined);
   }
 
 }

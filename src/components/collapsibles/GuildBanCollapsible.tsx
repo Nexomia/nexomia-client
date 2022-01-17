@@ -138,7 +138,7 @@ function GuildBanCollapsible({ban}: GuildBanCollapsibleProps) {
             }
             <StyledText className={ css`text-align: center; margin: 32px 0` }>{ban.users[userIndex].username}#{ban.users[userIndex].discriminator}</StyledText>
             <Splitter />
-            <StyledText className={ css`margin: 0; font-weight: 900; width: 200px; text-align: right; color: var(--text-secondary)` }>{ format(new Date(ban.date), 'DD.MM.YY hh:mm') }</StyledText>
+            <StyledText className={ css`margin: 0; font-weight: 900; width: 200px; text-align: right; color: var(--text-secondary)` }>{ format(new Date(ban.date), 'DD.MM.YY HH:mm') }</StyledText>
             </Container>
         )}
         </CollapsibleHead>

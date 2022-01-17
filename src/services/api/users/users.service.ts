@@ -21,6 +21,22 @@ class UsersService {
     return response.data;
   }
 
+  async getUsers(users: { ids?: string, tags?: string }) {
+    // if (this.rateLimit) return;
+
+    // this.rateLimit = true;
+
+    const response = await CommonRequestManager.apiRequest('GET', '/users', users);
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    // this.rateLimit = false;
+
+    return response.data;
+  }
+
   async patchMe(patch: object) {
     const response = await CommonRequestManager.apiRequest('PATCH', `/users/@me`, patch);
 

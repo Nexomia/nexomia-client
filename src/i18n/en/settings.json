@@ -47,7 +47,8 @@
     },
     "guildBan_ban": "Ban",
     "guildBan_reason": "Enter ban reason",
-    "guildBan_user": "Enter user id or tag"
+    "guildBan_user": "Enter user id or tag",
+    "guildBan_error": "Failed to ban this user."
   },
   "server_general": {
     "no_default_channel": "No default channel",
