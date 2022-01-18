@@ -15,18 +15,6 @@ import StyledIconCss from '../../css/StyledIconCss';
 import FilledButton from '../../ui/FilledButton';
 import StyledText from '../../ui/StyledText';
 
-const Container = styled.div`
-  padding: 16px;
-  border-radius: 4px;
-  background: var(--background-secondary-alt);
-  margin-bottom: 4px;
-  display: flex;
-  flex-direction: row;
-
-  &:hover {
-    background: var(--background-secondary);
-  }
-`
 const ButtonsContainer = styled.div`
   position: relative;
   top: -12px;

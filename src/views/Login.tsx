@@ -33,7 +33,6 @@ function Login() {
   const history = useHistory();
 
   useEffect(() => {
-    console.log(token)
     if (token && token !== '') {
       history.push('/home');
     }
@@ -49,10 +48,6 @@ function Login() {
 
   const emailInput = useRef<HTMLInputElement>(null);
   const passwordInput = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    console.log(emailInput);
-  }, []);
 
   return (
     <div className="Login dark-theme">

@@ -114,7 +114,6 @@ function App() {
 
   async function preloadUserInfo() {
     CommonRequestManager.setToken(token);
-    SocketManager.setToken(token);
     const receivedUserInfo = await UsersService.getUser('@me');
     if (!receivedUserInfo) {
       setToken('');
@@ -140,7 +139,8 @@ function App() {
     cacheChannels(dmChannels);
     setGuildChannels({ guild: '@me', channels: dmChannels.map((channel: Channel) => channel.id) });
 
-    SocketManager.init();
+    SocketManager.setToken(localStorage.getItem('authid') || ''); // need fix later
+    SocketManager.init(setLoaded);
 
     SocketManager.onLoad = () => setLoaded(true);
   }

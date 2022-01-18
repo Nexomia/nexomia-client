@@ -195,7 +195,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             onClick={ () => { history.push(`/settings/emotes`) } }
           />
 
-          <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }>Build 9<br />16.01.2022</StyledText>
+          <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }>Build 10<br />18.01.2022</StyledText>
         </Fragment>
       ) }
 
