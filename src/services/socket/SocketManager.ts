@@ -41,6 +41,7 @@ class SocketManager {
 
       this.socket.addEventListener('open', () => {
         this.initEventListeners();
+        setInterval(() => { this.socket?.send('{"event": "Ping!"}') }, 30000);
       });
     }
   }
@@ -51,8 +52,6 @@ class SocketManager {
         ...event,
         info: JSON.parse(event.data)
       };
-
-      console.log(eventData);
 
       this.handleEvent(eventData);
     });
