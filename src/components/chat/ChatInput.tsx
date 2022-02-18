@@ -27,6 +27,7 @@ import AttachmentPreview from './AttachmentPreview';
 import FilesService from '../../services/api/files/files.service';
 import ContentPicker from './ContentPicker';
 import EmojiPackType from '../../store/models/EmojiPackType';
+import $ChannelCacheStore from '../../store/ChannelCacheStore';
 
 type CustomElement = { type: 'paragraph'; children: CustomText[] };
 type CustomText = { text: string };
@@ -89,8 +90,11 @@ const EditableCss = css`
   outline: none;
   white-space: pre-wrap;
   word-break: break-all;
+  & > div > span > span > span[data-slate-placeholder="true"] { /* genius */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 `
-
 const ForwardsContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -136,6 +140,7 @@ function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps
   const containerRef = useRef<HTMLDivElement>(null);
 
   const InputCache = useStore($InputStore);
+  const CachedChannels = useStore($ChannelCacheStore);
 
   const { t } = useTranslation(['chat']);
 
@@ -277,6 +282,7 @@ function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps
 
   async function sendMessage() {
     if (sendLoading) return;
+    if (attachments.length && attachments.filter((att: any) => att.ready === true).length < attachments.length) return;
 
     const forwards = [ ...(InputCache[channel]?.forwards || []) ];
     const attaches = [ ...attachments ].map((attachment) => attachment.id);
@@ -300,6 +306,7 @@ function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps
     leanArray(response.channel_id);
 
     setSendLoading(false);
+    CachedChannels[channel].last_read_snowflake = response.id
 
     onMessageSent();
   }

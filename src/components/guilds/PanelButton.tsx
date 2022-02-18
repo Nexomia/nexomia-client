@@ -3,6 +3,7 @@ import { styled } from 'linaria/react';
 const PanelButton = styled.div`
   width: 48px;
   height: 48px;
+  position: relative;
   align-self: center;
   overflow: hidden;
   background: var(--background-primary);

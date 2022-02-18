@@ -80,11 +80,19 @@ function AudioRenderer({ file }: AudioRendererProps) {
         <Player>
           <InputButton
             className={ css`height: 34px; width: 34px; padding: 8px; margin-top: 8px;` }
+            onClick={ () => { 
+              if (playing) {
+                audioRef.current?.pause();
+                setPlaying(false);
+              } else {
+                audioRef.current?.play();
+                setPlaying(true);
+              }
+            }}
           >
             { !playing ? (
               <RiPlayFill
                 className={ classNames({ [StyledIconCss]: true, [SmallInputIconCss]: true }) }
-                onClick={ () => { audioRef.current?.play(); setPlaying(true) } }
               />
             ) : (
               <RiPauseFill

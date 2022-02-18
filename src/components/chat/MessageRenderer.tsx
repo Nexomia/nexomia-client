@@ -3,7 +3,7 @@ import { useStore } from 'effector-react';
 import { format } from 'fecha';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import $MessageCacheStore from '../../store/MessageCacheStore';
 import $UserCacheStore from '../../store/UserCacheStore';
 import $ChannelCacheStore from '../../store/ChannelCacheStore';
@@ -25,6 +25,10 @@ import GenericRenderer from './attachments/GenericRenderer';
 import TextRenderer from './attachments/TextRenderer';
 import EmoteHoverEffect from '../css/EmoteHoverEffect';
 import { setModalState } from '../../store/ModalStore';
+import $UnreadStore, { removeUnread } from '../../store/UnreadStore';
+import channelsService from '../../services/api/channels/channels.service';
+import $UserStore from '../../store/UserStore';
+import VideoRenderer from './attachments/VideoRenderer';
 
 const Spacer = styled.div`
   display: flex;
@@ -144,14 +148,18 @@ interface MessageProps {
   id: string,
   grouped: boolean,
   avatar?: boolean,
-  channel: string
+  date?: boolean,
+  channel: string,
+  last?: boolean,
+  unread?: boolean,
 }
 
-function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) {
+function MessageRenderer({ id, grouped, avatar = true, date = true, channel, last = false, unread = false, }: MessageProps) {
   const UserCache = useStore($UserCacheStore);
   const MessageCache = useStore($MessageCacheStore);
   const ChannelCache = useStore($ChannelCacheStore);
   const ContextMenu = useStore($ContextMenuStore);
+  const Unread = useStore($UnreadStore);
 
   const InputCache = useStore($InputStore);
 
@@ -159,16 +167,32 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
 
   const { t } = useTranslation(['chat']);
 
+  interface RouteParams {
+    guildId: string,
+    channelId: string
+  }
+  const { channelId } = useParams<RouteParams>();
+
   const history = useHistory();
+  const User = $UserStore.getState();
 
   const textRef = useRef<HTMLDivElement>(null);
+  if (!id.startsWith('$') && channel === channelId && Unread[ChannelCache[channel].guild_id || '@me'] && Unread[ChannelCache[channel].guild_id || '@me']?.find(un => !un.message_ids.includes(id)) && MessageCache[id].mentions?.includes(User.id)) {
+    removeUnread({guildId: ChannelCache[channel].guild_id || '@me', channelId: ChannelCache[channel].id, message_id: id});
+  }
+  if (last && Unread[ChannelCache[channel].guild_id || '@me']?.find(ch => ch.channel_id === channel && !ch.message_ids.length)) {
+    channelsService.readChannel(channel);
+    removeUnread({ guildId: ChannelCache[channel].guild_id || '@me', channelId: ChannelCache[channel].id, message_id: id });
+    ChannelCache[channel].last_read_snowflake = id
+  }
 
   return (
     <Container
       className={ classNames(
         (grouped && !MessageCache[id].type) && GroupedContainerCss,
         ContextMenu?.id === id && ContextMenu?.visible && avatar && 'active',
-        !avatar && css`animation: none`
+        !avatar && css`animation: none;`,
+        unread && css`border-top: 1px solid var(--text-negative); border-top-left-radius: 8px;`,
       ) }
       onContextMenu={ openContextMenu }
       onMouseEnter={ () => setHovered(true) }
@@ -183,9 +207,9 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
             ) : avatar ? (
               <LetterAvatar onClick={ showUserProfile }>{ getIconString(UserCache[MessageCache[id].author].username || '') }</LetterAvatar>
             ) : null
-          ) : !MessageCache[id].type ? (
+          ) : !MessageCache[id].type && date ? (
             <Spacer>{ format(new Date(MessageCache[id].created), 'HH:mm') }</Spacer>
-          ) : (
+          ) : date ? (
             <Spacer>
               { MessageCache[id].type === 5 ? (
                 <RiArrowLeftLine className={ classNames(StyledIconCss, MessageIconCss, LeaveColorCss) } />
@@ -195,7 +219,7 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
                 <RiPushpinFill className={ classNames(StyledIconCss, MessageIconCss) } />
               ) : null }
             </Spacer>
-          ) }
+          ) : null }
           <ContentContainer>
             { (!grouped || MessageCache[id].type) ? (
               <StyledText className={ css`margin: 0` }>
@@ -203,23 +227,23 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
                   className={ css`
                     display: inline-block;
                     cursor: pointer;
-                    &:hover {
-                      text-decoration: underline
-                    }
                     @-moz-document url-prefix() {
                       margin-top: 1px;
                     }
                   ` }
                   ref={ textRef }
+                  >
+                  <span
+                  onClick={ showUserProfile }
                   style={{
                     background: getMemberColor(ChannelCache[channel].guild_id || '', MessageCache[id].author) || 'var(--text-primary)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent'
                   }}
-                  onClick={ showUserProfile }
                 >
                   { UserCache[MessageCache[id].author].username }
-                  <span className={ css`color: var(--text-primary)` }>
+                  </span>
+                  <span className={ css`color: var(--text-primary); &:hover { text-decoration: underline; }` }>
                     { MessageCache[id].type === 5 ? ' ' + t('left_the_server') : '' }
                     { MessageCache[id].type === 4 ? ' ' + t('joined_the_server') : '' }
                     { MessageCache[id].type === 3 ? ' ' + t('pinned_a_message') : '' }
@@ -239,18 +263,19 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
                 </StyledText>
               </StyledText>
             ) : null }
-            { !!(MessageCache[id].forwarded_messages && MessageCache[id].forwarded_messages.length) && (
+            { !!((MessageCache[id].forwarded_messages && MessageCache[id].forwarded_messages.length)) && (
               <ForwardsContainer>
                 <ForwardDivider />
                 <ForwardedMessagesContainer>
                   {
-                    MessageCache[id].forwarded_messages.map((forwarded) => (
+                    MessageCache[id].forwarded_messages.map((forwarded, index) => (
                       <MessageRenderer
                         id={ '$' + forwarded.id }
                         key={ '$' +  forwarded.id }
-                        grouped={ false }
+                        grouped={ forwarded.author === MessageCache[id].forwarded_messages[index - 1]?.author && forwarded.channel_id === MessageCache[id]?.forwarded_messages[index - 1].channel_id && forwarded.created - MessageCache[id].forwarded_messages[index - 1]?.created < 900000 }
                         channel={ channel }
                         avatar={ false }
+                        date={ false }
                       />
                     ))
                   }
@@ -267,9 +292,11 @@ function MessageRenderer({ id, grouped, avatar = true, channel }: MessageProps) 
             { !!MessageCache[id]?.attachments?.length && MessageCache[id]?.attachments?.map((attachment: Attachment) => (
               attachment.mime_type.startsWith('image') ? (
                 <ImageRenderer file={ attachment } hovered={ hovered } />
-              ) : attachment.mime_type.startsWith('audio') ? (
-                <AudioRenderer file={ attachment } />
-              ) : attachment.mime_type.startsWith('text') ? (
+                ) : attachment.mime_type.startsWith('audio') || (attachment.mime_type.startsWith('video/webm') && !attachment.data?.preview_url) ? (
+                  <AudioRenderer file={ attachment } />
+                ) : attachment.mime_type.startsWith('video') && (attachment.mime_type.startsWith('video/webm') && attachment.data?.preview_url) ? (
+                  <VideoRenderer file={ attachment } />
+                ) : attachment.mime_type.startsWith('text') ? (
                 <TextRenderer file={ attachment } />
               ) : (
                 <GenericRenderer file={ attachment } />

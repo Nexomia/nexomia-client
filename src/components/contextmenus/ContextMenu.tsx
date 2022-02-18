@@ -132,7 +132,15 @@ function ContextMenu() {
                 ) &
                 ComputedPermissions.MANAGE_MESSAGES
               ) && !MessageCache[id || '']?.type) || ChannelCache[MessageCache[id || '']?.channel_id]?.recipients?.length ? (
-                <ContextTab title={ t('menu.pin') } onClick={ pinMessage } />
+                <ContextTab
+                  title={ ChannelCache[MessageCache[id || '']?.channel_id].pinned_messages_ids?.includes(id || '  ')
+                    ? t('menu.unpin')
+                    : t('menu.pin')
+                  }
+                  onClick={ ChannelCache[MessageCache[id || '']?.channel_id].pinned_messages_ids?.includes(id || '  ')
+                    ? unpinMessage
+                    : pinMessage
+                  } />
               ) : null }
 
               { (
@@ -230,6 +238,10 @@ function ContextMenu() {
 
   function pinMessage() {
     MessagesService.pinMessage(MessageCache[id || '']?.channel_id || '', id || '');
+  }
+
+  function unpinMessage() {
+    MessagesService.unpinMessage(MessageCache[id || '']?.channel_id || '', id || '');
   }
 
   function addReply() {

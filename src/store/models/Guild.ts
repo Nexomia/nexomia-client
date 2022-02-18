@@ -1,3 +1,4 @@
+import { NotifyState } from './Channel'
 import Emoji from './Emoji';
 import GuildBan from './GuildBan';
 import Invite from './Invite';
@@ -61,7 +62,7 @@ export default interface Guild {
   /**
    * default message notifications level
    */
-  default_message_notifications?: number;
+  default_message_notifications?: NotifyState;
 
   /**
    * Roles in the guild
@@ -159,4 +160,6 @@ export default interface Guild {
   invites?: Invite[];
 
   bans?: GuildBan[];
+
+  unread?: boolean;
 }

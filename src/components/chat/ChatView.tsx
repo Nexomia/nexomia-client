@@ -23,7 +23,6 @@ import { useTranslation } from 'react-i18next';
 
 import getNeededMessageCount from '../../utils/getNeededMessageCount';
 import { useParams } from 'react-router';
-import { removeUnread } from '../../store/UnreadStore';
 
 const MessageContainerWrapper = styled.div`
   flex-grow: 1;
@@ -89,12 +88,12 @@ function ChatView({ channel }: ChatViewProps) {
   const [addedLoading, setAddedLoading] = useState(false);
   const [addScroll, setAddScroll] = useState(0);
   const [showTopMargin, setShowTopMargin] = useState(true);
+  const [isTop, setTop] = useState(false);
 
   const { t } = useTranslation(['chat']);
 
   useEffect(() => {
     setInputVisible(getSendPermission());
-    removeUnread(channel);
     setShowTopMargin(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Roles, channel]);
@@ -112,7 +111,6 @@ function ChatView({ channel }: ChatViewProps) {
   useEffect(() => {
     if (!addedLoading) {
       setImmediate(() => {
-        console.log('scroll');
         scrollerRef.current?.scrollTo({
           top: scrollerRef?.current?.scrollHeight - addScroll,
           behavior: 'auto'
@@ -126,6 +124,10 @@ function ChatView({ channel }: ChatViewProps) {
     scrollView(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Messages[channel]]);
+
+  useEffect(() => {
+    setTop(false)
+  }, [channelId]);
 
   return (
     <Fragment>
@@ -194,7 +196,7 @@ function ChatView({ channel }: ChatViewProps) {
   }
 
   async function handleScroll() {
-    if (!Messages[channel]) return;
+    if (!Messages[channel] || isTop) return;
 
     if (
       scrollerRef?.current?.scrollTop &&
@@ -208,6 +210,7 @@ function ChatView({ channel }: ChatViewProps) {
         setShowTopMargin(false);
         setAddedLoading(false);
         setTimeout(() => setAddLoading(false), 1000);
+        setTop(true)
         return;
       }
       setAddScroll(scrollerRef?.current?.scrollHeight - scrollerRef?.current?.scrollTop);

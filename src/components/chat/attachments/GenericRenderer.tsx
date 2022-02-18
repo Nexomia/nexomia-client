@@ -49,9 +49,10 @@ function GenericRenderer({ file }: GenericRendererProps) {
       <NoPreviewContainer>
         <RiFileUnknowFill className={ classNames(StyledIconCss, AttachmentIconCss) } />
       </NoPreviewContainer>
-      <StyledText
-        className={ css`font-weight: 900; font-size: 22px; margin: 0; text-overflow: ellipsis; white-space: nowrap;` }
+      <div className={ css`width: 266px; overflow: hidden;`}>
+      <StyledText className={ css`font-weight: 900; font-size: 22px; margin: 0; text-overflow: ellipsis; white-space: nowrap;` }
       >{ file.name }</StyledText>
+      </div>
       <div className={ css`flex-grow: 1` } />
       <InputButton
         className={ css`height: 34px; width: 34px; padding: 8px; margin-top: 8px; margin-right: 16px` }

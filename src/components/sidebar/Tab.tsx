@@ -8,6 +8,10 @@ import { IconType } from 'react-icons/lib';
 import StyledIconCss from '../css/StyledIconCss';
 import StyledText from '../ui/StyledText';
 import { setContextMenu } from '../../store/ContextMenuStore';
+import $ChannelCacheStore from '../../store/ChannelCacheStore';
+import { useStore } from 'effector-react';
+import { useEffect, useState } from 'react';
+import $UnreadStore from '../../store/UnreadStore';
 
 const Container = styled.div`
   margin: 0 8px 8px 8px;
@@ -15,6 +19,7 @@ const Container = styled.div`
   border-radius: 4px;
   height: 36px;
   display: flex;
+  position: relative;
   alignSelf: stretch;
   flex-direction: row;
   cursor: pointer;
@@ -48,6 +53,18 @@ const TextCss = css`
   }
 `
 
+const ColorCss = css`
+  color: var(--text-negative);
+`
+const Unread = styled.div`
+    position: absolute;
+    height: 8px;
+    border: 3px solid #fff;
+    border-radius: 0 4px 4px 0;
+    margin-left: -16px;
+    top: calc(50% - 4px);
+`
+
 interface TabProps {
   Icon?: IconType,
   title: string,
@@ -55,6 +72,7 @@ interface TabProps {
   tabId?: string,
   contextEnabled?: boolean,
   onClick?: any
+  negative?: boolean
 }
 
 interface RouteParams {
@@ -62,8 +80,19 @@ interface RouteParams {
   channelId: string
 }
 
-function Tab({ Icon, title, active, onClick, tabId, contextEnabled = false }: TabProps) {
+function Tab({ Icon, title, active, onClick, tabId, negative, contextEnabled = false }: TabProps) {
+  const ChannelCache = useStore($ChannelCacheStore);
+  const Unreads = useStore($UnreadStore);
+
   const { guildId, channelId } = useParams<RouteParams>();
+  const [unread, setUnread] = useState<boolean>();
+
+  useEffect(() => {
+    if (tabId && Unreads[ChannelCache[tabId]?.guild_id || '@me']?.find(ch => ch.channel_id === tabId))
+      setUnread(true)
+    else
+      setUnread(false)
+  }, [Unreads]);
 
   return (
     <Container
@@ -71,8 +100,9 @@ function Tab({ Icon, title, active, onClick, tabId, contextEnabled = false }: Ta
       onContextMenu={ openContextMenu }
       className={ classNames({ active: active || tabId === channelId || tabId === guildId }) }
     >
+      { tabId && ChannelCache[tabId] && tabId !== channelId && tabId !== 'new' && unread && <Unread /> }
       { Icon && <Icon className={ classNames({ [StyledIconCss]: true, [TabIconCss]: true }) } /> }
-      <StyledText className={ TextCss }>{ title }</StyledText>
+      <StyledText className={ classNames(TextCss, negative ? ColorCss : null) }>{ title }</StyledText>
     </Container>
   );
 

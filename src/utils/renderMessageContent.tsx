@@ -14,10 +14,15 @@ const EmoteImage = css`
   padding: 4px;
   overflow: hidden;
 `
+const urlExp = /(http:\/\/|https:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)?/gm;
 
 export default function renderMessageContent(content: string) {
+  
+  content = content.replace(urlExp, (url) => { return `[${url.startsWith('http') ? url : 'https://' + url}](${url})` })
+
   const output = [];
   const bounds = getMessageMarkdownBounds(content);
+
   let latestStart = 0;
 
   let optimizeEmojiSliced: any;
@@ -26,6 +31,13 @@ export default function renderMessageContent(content: string) {
     output.push(content.slice(latestStart, bound.start));
 
     switch (bound.type) {
+      case 'url':
+        const link = content.slice(bound.start + 1, bound.length).split(']')[0]
+        const text = content.slice(bound.start, bound.length - 1).split('(')[1]
+        output.push(
+          <a href={ link } target="_blank" rel="noreferrer">{ text }</a>
+        );
+        break;
       case 'bold':
         output.push(
           <b>{ content.slice(bound.start + 2, bound.length - 2) }</b>
@@ -112,7 +124,6 @@ export default function renderMessageContent(content: string) {
 
     latestStart = bound.start + bound.length;
   }
-
   output.push(content.slice(latestStart));
 
   return output;

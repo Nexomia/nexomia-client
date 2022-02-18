@@ -9,7 +9,8 @@
     "add_reaction": "Add Reaction",
     "confirmation": "Are you sure?",
     "reply": "Reply",
-    "ban": "Ban"
+    "ban": "Ban",
+    "unpin": "Unpin"
   },
   "modals": {
     "channel_creating": "Creating Channel...",
@@ -146,6 +147,7 @@
     "profile": "Profile",
     "chat": "Chat",
     "emotes": "Emotes",
-    "bans": "Bans"
+    "bans": "Bans",
+    "logout": "Logout"
   }
 }

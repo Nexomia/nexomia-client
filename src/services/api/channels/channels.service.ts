@@ -36,6 +36,16 @@ class ChannelsService {
 
     return response.data;
   }
+
+  async readChannel(channel: string, message_id?: string) {
+    const response = await CommonRequestManager.apiRequest('POST', `/channels/${channel}/read`, { message_id });
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return;
+  }
 }
 
 export default new ChannelsService();

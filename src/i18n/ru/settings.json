@@ -9,7 +9,8 @@
     "add_reaction": "Добавить реакцию",
     "confirmation": "Вы уверены?",
     "reply": "Ответить",
-    "ban": "Забанить"
+    "ban": "Забанить",
+    "unpin": "Открепить"
   },
   "modals": {
     "channel_creating": "Создаем канал...",
@@ -139,7 +140,8 @@
     "profile": "Профиль",
     "chat": "Чат",
     "emotes": "Эмоции",
-    "bans": "Баны"
+    "bans": "Баны",
+    "logout": "Выйти из аккаунта"
   },
   "server_bans": {
     "reason": "Причина",

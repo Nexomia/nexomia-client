@@ -43,6 +43,17 @@ class MessagesService {
     return response.data;
   }
 
+
+  async unpinMessage(channel: string, message: string) {
+    const response = await CommonRequestManager.apiRequest('DELETE', `/channels/${channel}/pins/${message}`, {});
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
+
   async getChannelMessages(channel: string, offset: number = 0, count: number) {
     const response = await CommonRequestManager.apiRequest('GET', `/channels/${channel}/messages`, { offset, count });
 
