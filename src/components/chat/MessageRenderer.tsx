@@ -183,7 +183,6 @@ function MessageRenderer({ id, grouped, avatar = true, date = true, channel, las
   if (last && Unread[ChannelCache[channel].guild_id || '@me']?.find(ch => ch.channel_id === channel && !ch.message_ids.length)) {
     channelsService.readChannel(channel);
     removeUnread({ guildId: ChannelCache[channel].guild_id || '@me', channelId: ChannelCache[channel].id, message_id: id });
-    ChannelCache[channel].last_read_snowflake = id
   }
 
   return (

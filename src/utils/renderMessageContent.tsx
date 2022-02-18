@@ -37,6 +37,7 @@ export default function renderMessageContent(content: string) {
         output.push(
           <a href={ link } target="_blank" rel="noreferrer">{ text }</a>
         );
+        
         break;
       case 'bold':
         output.push(
@@ -122,7 +123,7 @@ export default function renderMessageContent(content: string) {
         break;
     }
 
-    latestStart = bound.start + bound.length;
+    latestStart = latestStart + bound.length;
   }
   output.push(content.slice(latestStart));
 
