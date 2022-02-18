@@ -5,6 +5,8 @@ import Attachment from '../../../store/models/Attachment';
 import { setModalState } from '../../../store/ModalStore';
 
 const Container = styled.div`
+  max-width: 400px;
+  max-height: 900px;
   display: inline-block;
   border-radius: 4px;
   background: var(--background-secondary-alt);
