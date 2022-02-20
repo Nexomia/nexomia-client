@@ -10,7 +10,9 @@
     "confirmation": "Вы уверены?",
     "reply": "Ответить",
     "ban": "Забанить",
-    "unpin": "Открепить"
+    "unpin": "Открепить",
+    "set_read": "Пометить прочитанным",
+    "invite_people": "Пригласить людей"
   },
   "modals": {
     "channel_creating": "Создаем канал...",
@@ -49,7 +51,8 @@
     "guildBan_ban": "Забанить",
     "guildBan_reason": "Введите причу бана",
     "guildBan_user": "Введите id пользователя или его тэг",
-    "guildBan_error": "При бане данного пользователя произошла ошибка."
+    "guildBan_error": "При бане данного пользователя произошла ошибка.",
+    "password": "Пароль"
   },
   "server_general": {
     "no_default_channel": "Нет стандартного канала",
@@ -62,7 +65,9 @@
     "edit": "Редактировать"
   },
   "user_general": {
-    "description": "Расскажите людям больше о вас!"
+    "description": "Расскажите людям больше о вас!",
+    "name": "Имя",
+    "tag": "Тэг"
   },
   "saving_changes": "Сохраняем изменения...",
   "save_changes": "Сохранить изменения",
@@ -141,11 +146,22 @@
     "chat": "Чат",
     "emotes": "Эмоции",
     "bans": "Баны",
-    "logout": "Выйти из аккаунта"
+    "logout": "Выйти из аккаунта",
+    "permissions": "Права доступа",
+    "webhooks": "Вебхуки",
+    "channel_settings": "Настройка канала"
   },
   "server_bans": {
     "reason": "Причина",
     "banned_by": "Забанен",
     "no_reason": "Не указана"
+  },
+  "channel_general": {
+    "channel_name": "Название канала",
+    "channel_topic": "Тема канала",
+    "nsfw": "NSFW канал"
+  },
+  "modal": {
+    "enter_password": "Введите пароль"
   }
 }

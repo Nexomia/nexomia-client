@@ -10,7 +10,9 @@
     "confirmation": "Are you sure?",
     "reply": "Reply",
     "ban": "Ban",
-    "unpin": "Unpin"
+    "unpin": "Unpin",
+    "set_read": "Mark as read",
+    "invite_people": "Invite people"
   },
   "modals": {
     "channel_creating": "Creating Channel...",
@@ -49,7 +51,8 @@
     "guildBan_ban": "Ban",
     "guildBan_reason": "Enter ban reason",
     "guildBan_user": "Enter user id or tag",
-    "guildBan_error": "Failed to ban this user."
+    "guildBan_error": "Failed to ban this user.",
+    "password": "Password"
   },
   "server_general": {
     "no_default_channel": "No default channel",
@@ -62,7 +65,9 @@
     "edit": "Edit"
   },
   "user_general": {
-    "description": "Tell people more about yourself!"
+    "description": "Tell people more about yourself!",
+    "name": "Username",
+    "tag": "Tag"
   },
   "saving_changes": "Saving Changes...",
   "save_changes": "Save Changes",
@@ -148,6 +153,20 @@
     "chat": "Chat",
     "emotes": "Emotes",
     "bans": "Bans",
-    "logout": "Logout"
+    "logout": "Logout",
+    "permissions": "Permissions",
+    "webhooks": "Webhooks",
+    "channel_settings": "Channel settings"
+  },
+  "channel_general": {
+    "channel_name": "Channel name",
+    "channel_topic_placeholder": "Let everyone know how to use this channel...",
+    "channel_topic": "Channel topic",
+    "channel_timeout": "Timeout mode",
+    "channel_timeout_placeholder": "Value in seconds",
+    "nsfw": "NSWF channel"
+  },
+  "modal": {
+    "enter_password": "Enter password"
   }
 }

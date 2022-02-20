@@ -12,6 +12,7 @@ import PackDeleteModal from '../modals/PackDeleteModal';
 import PackCreationModal from '../modals/PackCreationModal';
 import EmojiPackModal from '../modals/EmojiPackModal';
 import GuildBanUserModal from '../modals/GuildBanUserModal';
+import PasswordConfirmationModal from '../modals/PasswordConfirmationModal';
 
 function Modals() {
   const modals = useStore($ModalStore);
@@ -27,6 +28,7 @@ function Modals() {
       <PackDeleteModal active={ modals.packDelete[0] } />
       <PackCreationModal active={ modals.packCreation } />
       <EmojiPackModal active={ modals.emojiPack[0] } />
+      <PasswordConfirmationModal active={modals.passwordConfirmation} />
     </Fragment>
   )
 }

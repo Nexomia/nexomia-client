@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { useStore } from 'effector-react';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
@@ -6,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useFilePicker } from 'use-file-picker';
 import FilesService from '../../../services/api/files/files.service';
 import UsersService from '../../../services/api/users/users.service';
+import { setContextMenu } from '../../../store/ContextMenuStore';
 import { setModalState } from '../../../store/ModalStore';
 import $UserStore from '../../../store/UserStore';
 import FilledButton from '../../ui/FilledButton';
@@ -22,12 +24,17 @@ const BadgeContainer = styled.div`
   margin-bottom: 32px;
 `
 
+const tagExp = /^[a-z][a-z0-9]*$/;
+
 function GeneralUserView() {
   const { t } = useTranslation(['settings']);
 
   const UserCache = useStore($UserStore);
 
   const [userName, setUserName] = useState('');
+  const [tag, setTag] = useState(UserCache.discriminator);
+  const [tagError, setTagError] = useState(false);
+  const [password, sendPassword] = useState('');
   const [description, setDescription] = useState('');
   const [edited, setEdited] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
@@ -46,9 +53,31 @@ function GeneralUserView() {
   });
 
   useEffect(() => {
-    setModalState({ emojiPack: [false, ''] });
+    setTag(tag.startsWith('#') ? tag.slice(1) : tag)
+    if (
+      !tagExp.test(tag) ||
+      (tag.length > (UserCache.premium_type ? 7 : 4) || tag.length < (UserCache.premium_type ? 3 : 4) )
+    ) setTagError(true)
+    else setTagError(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [tag]);
+
+  useEffect(() => {
+    setTag(tag.startsWith('#') ? tag.slice(1) : tag)
+    if (
+      tag !== UserCache.discriminator &&
+      (!tagExp.test(tag) ||
+      (tag.length > (UserCache.premium_type ? 7 : 4) || tag.length < (UserCache.premium_type ? 3 : 4) ))
+    ) setTagError(true)
+    else setTagError(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tag]);
+
+  useEffect(() => {
+    if (password)
+      saveChanges()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [password]);
 
   useEffect(() => {
     if (!bannerResult.loading && bannerResult.filesContent?.length && preedited) {
@@ -57,14 +86,13 @@ function GeneralUserView() {
     } else if (!avatarResult.loading && avatarResult.filesContent?.length && preedited) {
       setAvatarEdited(true);
       setEdited(true);
-    } else if (!userName && !description) {
+    } else if (!userName && !description && !tag) {
       setAvatarEdited(false);
       setBannerEdited(false);
       setEdited(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bannerResult]);
-
   return (
     <Fragment>
       <LoadingPlaceholder title={ t('saving_changes') } active={ saveLoading } />
@@ -80,6 +108,7 @@ function GeneralUserView() {
         <InputField
           className={
             css`
+              display: inline-block;
               margin-top: -8px;
               margin-bottom: 16px;
               font-weight: 900;
@@ -87,16 +116,42 @@ function GeneralUserView() {
               text-align: center;
               background: var(--background-secondary);
               border: 2px solid var(--background-secondary);
-
-              &:not(:hover):not(:focus) {
-                background: transparent;
-                border-color: transparent;
-              }
             `
           }
           defaultValue={ UserCache.username }
-          placeholder={ t('server_general.name') }
-          onChange={ (event: ChangeEvent<HTMLInputElement>) => { setUserName(event.target.value); setEdited(true) } }
+          placeholder={ t('user_general.name') }
+          onChange={ (event: ChangeEvent<HTMLInputElement>) => { setUserName(event.target.value); setEdited(true); } }
+          minLength={1}
+          maxLength={20}
+        />
+        <InputField
+          className={
+            classNames(
+              css`
+                display: inline-block;
+                position: absolute;
+                width: 128px;
+                margin-top: -8px;
+                margin-left: -128px;
+                margin-bottom: 16px;
+                font-weight: 900;
+                font-size: 22px;
+                text-align: center;
+                background: transparent;
+                border-color: transparent;
+                color: var(--text-secondary);
+                &.error {
+                  border: 2px solid var(--text-negative);
+                }
+              `,
+              { error: tagError }
+            )
+          }
+          defaultValue={ '#' +  UserCache.discriminator }
+          placeholder={ '#' + t('user_general.tag') }
+          onChange={ (event: ChangeEvent<HTMLInputElement>) => { setTag(event.target.value); setEdited(true); } }
+          minLength={UserCache.premium_type ? 4 : 5}
+          maxLength={UserCache.premium_type ? 8 : 5}
         />
         <MultilineField
           className={
@@ -118,8 +173,14 @@ function GeneralUserView() {
     setSaveLoading(true);
 
     const userPatch: any = {};
-
+    if ((userName || tag) && (!password || password === ''))  {
+      setSaveLoading(false);
+      setContextMenu({ id: '', data: { hook: sendPassword } });
+       return setModalState({ passwordConfirmation: true });
+    }
+    else userPatch.password = password;
     if (userName) userPatch.username = userName;
+    if (tag) userPatch.discriminator = tag;
     if (description) userPatch.description = description;
 
     if (avatarEdited) {
@@ -136,7 +197,10 @@ function GeneralUserView() {
       userPatch.banner = fileInfo.id;
     }
 
-    await UsersService.patchMe(userPatch);
+    const res = await UsersService.patchMe(userPatch);
+
+    if (!res) setContextMenu({ data: { hook: sendPassword, error: true } })
+    else setContextMenu({ data: { hook: sendPassword, ok: true } })
 
     setSaveLoading(false);
     setEdited(false);

@@ -293,7 +293,7 @@ function MessageRenderer({ id, grouped, avatar = true, date = true, channel, las
                 <ImageRenderer file={ attachment } hovered={ hovered } />
                 ) : attachment.mime_type.startsWith('audio') || (attachment.mime_type.startsWith('video/webm') && !attachment.data?.preview_url) ? (
                   <AudioRenderer file={ attachment } />
-                ) : attachment.mime_type.startsWith('video') && (attachment.mime_type.startsWith('video/webm') && attachment.data?.preview_url) ? (
+                ) : attachment.mime_type.startsWith('video') || (attachment.mime_type.startsWith('video/webm') && attachment.data?.preview_url) ? (
                   <VideoRenderer file={ attachment } />
                 ) : attachment.mime_type.startsWith('text') ? (
                 <TextRenderer file={ attachment } />

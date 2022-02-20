@@ -29,7 +29,7 @@ function InviteCreationModal({ active }: ModalProps) {
 
   const { t } = useTranslation(['settings']);
 
-  const { id } = useStore($ContextMenuStore);
+  const { id, data } = useStore($ContextMenuStore);
   const Channels = useStore($ChannelStore);
   const ChannelsCache = useStore($ChannelCacheStore);
   const GuildsCache = useStore($GuildCacheStore);
@@ -54,16 +54,18 @@ function InviteCreationModal({ active }: ModalProps) {
             <ModalHeader>{ t('modals.invite_header') }<br /><StyledText>{ t('modals.invite_description') }</StyledText></ModalHeader>
             <DropdownInput
               keys={
-                Channels[id || '']?.map((channel) => ({
+                !data?.channel ? Channels[id || '']?.map((channel) => ({
                   id: channel,
                   text: ChannelsCache[channel].name || ''
                 })) ||
-                []
+                [] : [
+                  { id: ChannelsCache[id || ''].id, text: ChannelsCache[id || ''].name || '' }
+                ]
               }
-              defaultKey={ 0 }
+              defaultKey={ !data?.channel && id ? Number(id) : 0 }
               onChange={ setSelected }
             />
-            { selected && <FilledButton onClick={ createInvite }>Continue</FilledButton> }
+            { (selected || data?.channel) && <FilledButton onClick={ createInvite }>Continue</FilledButton> }
           </Fragment>
         ) : (
           <Fragment>
@@ -83,15 +85,15 @@ function InviteCreationModal({ active }: ModalProps) {
   async function createInvite() {
     setLoading(true);
 
-    const response = await ChannelsService.createInvite(selected?.id || '');
+    const response = await ChannelsService.createInvite(selected?.id || id || '');
     setLoading(false);
 
     if (!response) return;
 
     setCode(response.code);
 
-    if (GuildsCache[ChannelsCache[selected?.id || ''].guild_id || '']?.invites?.length)
-      addGuildInvites({ guild: ChannelsCache[selected?.id || ''].guild_id || '', invites: [response] });
+    if (GuildsCache[ChannelsCache[selected?.id || id || ''].guild_id || '']?.invites?.length)
+      addGuildInvites({ guild: ChannelsCache[selected?.id || id || '']?.guild_id || '', invites: [response] });
   }
 
   function copyCode() {

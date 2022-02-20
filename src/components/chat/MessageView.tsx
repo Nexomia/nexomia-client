@@ -26,7 +26,6 @@ function MessageView({ channel, onMessagesLoaded = () => null, type = 0 }: Messa
   const MessageStore = useStore($MessageStore);
   const MessageCacheStore = useStore($MessageCacheStore);
   const CachedChannels = useStore($ChannelCacheStore);
-  const Unreads = useStore($UnreadStore);
 
   const { t } = useTranslation(['chat']);
 
@@ -69,7 +68,7 @@ function MessageView({ channel, onMessagesLoaded = () => null, type = 0 }: Messa
                   grouped={ MessageCacheStore[prevMessage]?.author === MessageCacheStore[message]?.author && MessageCacheStore[message]?.created - MessageCacheStore[prevMessage]?.created < 900000 }
                   channel={ channel }
                   last={index === MessageStore[type === 0 ? channel : `0${channel}`].length - 1}
-                  unread={ (BigInt(MessageCacheStore[prevMessage]?.id || 0) <= BigInt(CachedChannels[channel].last_read_snowflake)) && BigInt(message) > BigInt(CachedChannels[channel].last_read_snowflake) ? true : false }
+                  unread={ (BigInt(MessageCacheStore[prevMessage]?.id || 0) <= BigInt(CachedChannels[channel].last_read_snowflake || 0)) && BigInt(message) > BigInt(CachedChannels[channel].last_read_snowflake || 0) ? true : false }
                 />
               );
 

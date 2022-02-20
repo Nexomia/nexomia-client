@@ -3,6 +3,7 @@ import { styled } from 'linaria/react';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
+import channelsService from '../../services/api/channels/channels.service';
 import GuildsService from '../../services/api/guilds/guilds.service';
 import MessagesService from '../../services/api/messages/messages.service';
 import $ChannelCacheStore from '../../store/ChannelCacheStore';
@@ -13,6 +14,7 @@ import { addForwards } from '../../store/InputStore';
 import $MessageCacheStore from '../../store/MessageCacheStore';
 import { setModalState } from '../../store/ModalStore';
 import { ComputedPermissions } from '../../store/models/ComputedPermissions';
+import $UnreadStore, { removeUnread } from '../../store/UnreadStore';
 import $UserStore from '../../store/UserStore';
 import PermissionCalculator from '../../utils/PermissionCalculator';
 import ContextTab from './ContextTab';
@@ -42,6 +44,7 @@ function ContextMenu() {
   const ChannelCache = useStore($ChannelCacheStore);
   const GuildCache = useStore($GuildCacheStore);
   const User = useStore($UserStore);
+  const Unreads = useStore($UnreadStore);
 
   useEffect(() => {
     if (!visible) {
@@ -68,7 +71,7 @@ function ContextMenu() {
 
   return (
     <Fragment>
-      { visible && (
+      { visible && id && id !== 'new' && (
         <Base style={{ top, left, opacity: blockVisible ? 1 : 0, transform: `translateY(-${offset}px)` }} ref={ baseRef }>
           { type === 'guild' && (
             <Fragment>
@@ -180,15 +183,46 @@ function ContextMenu() {
 
           { type === 'channel' && (
             <Fragment>
+              { (Unreads[ChannelCache[id].guild_id || '@me']?.filter(ch => ch.channel_id === id).length) ? (
+                <ContextTab title={ t('menu.set_read') } onClick={ markChannelAsRead } />
+              ) : null }
+
               { (
                 PermissionCalculator.getUserPermissions(
                   ChannelCache[id || '']?.guild_id || '',
                   id || '',
                   ''
-                ) &
-                ComputedPermissions.MANAGE_CHANNELS
+                ) & (
+                  ComputedPermissions.OWNER |
+                  ComputedPermissions.ADMINISTRATOR |
+                  ComputedPermissions.MANAGE_CHANNELS |
+                  ComputedPermissions.CREATE_INVITES
+                )
               ) ? (
-                <ContextTab title={ step ? t('menu.confirmation') : t('menu.delete') } onClick={ deleteChannel } />
+                <Fragment>
+                  <ContextTab title={ t('menu.invite_people') } onClick={ () => {
+                    setContextMenu({ id, data: { channel: true, fast: true } })
+                    setModalState({ inviteCreation: true })
+                  }}
+                  />
+                </Fragment>
+              ) : null }
+
+              { (
+                PermissionCalculator.getUserPermissions(
+                  ChannelCache[id || '']?.guild_id || '',
+                  id || '',
+                  ''
+                ) & (
+                  ComputedPermissions.OWNER |
+                  ComputedPermissions.ADMINISTRATOR |
+                  ComputedPermissions.MANAGE_CHANNELS
+                )
+              ) ? (
+                <Fragment>
+                  <ContextTab title={ t('menu.edit') } onClick={ () => history.push(`/channelsettings/${id}/general`) } />
+                  <ContextTab title={ step ? t('menu.confirmation') : t('menu.delete') } onClick={ deleteChannel } />
+                </Fragment>
               ) : null }
 
               <ContextTab title={ t('menu.copy_id') } onClick={ copyId } />
@@ -233,6 +267,13 @@ function ContextMenu() {
       if (guildId === id) {
         history.push('/home');
       }
+    }
+  }
+
+  function markChannelAsRead() {
+    if (id) {
+      removeUnread({ guildId: ChannelCache[id].guild_id || '@me', channelId: id, force: true, message_id: "0"})
+      channelsService.readChannel(id)
     }
   }
 

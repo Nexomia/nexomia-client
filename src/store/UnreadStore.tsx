@@ -18,6 +18,7 @@ interface UnreadEvent {
   channelId: string,
   message_id: string,
   countable_ids?: string[],
+  force?: boolean,
 }
 
 const $UnreadStore = createStore<Unreads>({});
@@ -51,7 +52,7 @@ $UnreadStore
     const index = modifiedState[info.guildId].findIndex(ch => ch.channel_id === info.channelId);
     if (index + 1) {
 
-      if (BigInt(info.message_id) >= BigInt(modifiedState[info.guildId][index].last_message_id) && !modifiedState[info.guildId][index].message_ids.length) {
+      if (info.force || (BigInt(info.message_id) >= BigInt(modifiedState[info.guildId][index].last_message_id) && !modifiedState[info.guildId][index].message_ids.length)) {
         modifiedState[info.guildId].splice(index, 1);
         if (!Object.entries(modifiedState[info.guildId]).length) delete modifiedState[info.guildId]
       }
