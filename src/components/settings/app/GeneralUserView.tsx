@@ -31,7 +31,7 @@ function GeneralUserView() {
 
   const UserCache = useStore($UserStore);
 
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState(UserCache.username);
   const [tag, setTag] = useState(UserCache.discriminator);
   const [tagError, setTagError] = useState(false);
   const [password, sendPassword] = useState('');
@@ -56,7 +56,8 @@ function GeneralUserView() {
     setTag(tag.startsWith('#') ? tag.slice(1) : tag)
     if (
       !tagExp.test(tag) ||
-      (tag.length > (UserCache.premium_type ? 7 : 4) || tag.length < (UserCache.premium_type ? 3 : 4) )
+      (tag.length > (UserCache.premium_type ? 7 : 4) || tag.length < (UserCache.premium_type ? 3 : 4)
+    )
     ) setTagError(true)
     else setTagError(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -171,16 +172,17 @@ function GeneralUserView() {
 
   async function saveChanges() {
     setSaveLoading(true);
-
+    if (tag.startsWith('#')) setTag(tag.slice(1))
     const userPatch: any = {};
-    if ((userName || tag) && (!password || password === ''))  {
-      setSaveLoading(false);
-      setContextMenu({ id: '', data: { hook: sendPassword } });
-       return setModalState({ passwordConfirmation: true });
+    if (((userName && userName !== UserCache.username) || (tag && (tag !== UserCache.discriminator))))  {
+      if (!password) {
+        setSaveLoading(false);
+        setContextMenu({ id: '', data: { hook: sendPassword } });
+        return setModalState({ passwordConfirmation: true });
+      } else userPatch.password = password;
     }
-    else userPatch.password = password;
-    if (userName) userPatch.username = userName;
-    if (tag) userPatch.discriminator = tag;
+    if (userName && userName !== UserCache.username) userPatch.username = userName;
+    if (tag && (tag !== UserCache.discriminator)) userPatch.discriminator = tag;
     if (description) userPatch.description = description;
 
     if (avatarEdited) {
