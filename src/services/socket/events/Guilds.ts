@@ -1,5 +1,5 @@
 import $GuildCacheStore, { addGuildMembers, removeGuildMember } from '../../../store/GuildCacheStore';
-import $RoleCacheStore, { addRoleMember, removeRoleMember } from '../../../store/RolesCacheStore';
+import $RoleCacheStore from '../../../store/RolesCacheStore';
 import { cacheUsers } from '../../../store/UserCacheStore';
 import $UserStore from '../../../store/UserStore';
 import TryGet from '../../../utils/TryGet';
@@ -14,20 +14,12 @@ class GuildEventHandler {
 
     cacheUsers([user]);
     addGuildMembers({ guild: event.info.data.guild, members: [event.info.data.id] });
-    addRoleMember({
-      role: $GuildCacheStore.getState()[event.info.data.guild].roles?.filter((role) => Roles[role].default)[0] || '',
-      member: event.info.data.id
-    });
   }
 
   async memberLeft(event: CustomMessageEvent) {
     const Roles = $RoleCacheStore.getState();
 
     removeGuildMember({ guild: event.info.data.guild, member: event.info.data.id });
-    removeRoleMember({
-      role: $GuildCacheStore.getState()[event.info.data.guild].roles?.filter((role) => Roles[role].default)[0] || '',
-      member: event.info.data.id
-    });
   }
 }
 

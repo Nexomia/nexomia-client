@@ -37,16 +37,6 @@ $RoleCacheStore
     modifiedState = { ...modifiedState, [info.role]: { ...modifiedState[info.role], ...info.patch } };
     return modifiedState;
   })
-  .on(addRoleMember, (state: RoleCache, info: RoleMemberInfo) => {
-    const modifiedState = { ...state };
-    modifiedState[info.role].members = [...(state[info.role].members || []), info.member];
-    return modifiedState;
-  })
-  .on(removeRoleMember, (state: RoleCache, info: RoleMemberInfo) => {
-    const modifiedState = { ...state };
-    modifiedState[info.role].members.splice(modifiedState[info.role].members.indexOf(info.member), 1);
-    return modifiedState;
-  });
 
 export default $RoleCacheStore;
-export { cacheRoles, updateRole, addRoleMember, removeRoleMember };
+export { cacheRoles, updateRole };

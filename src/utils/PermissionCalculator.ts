@@ -19,18 +19,20 @@ class PermissionCalculator {
     }
     
     [ ...(GuildStore[guild]?.roles || []) ]?.reverse().map((roleId) => {
-      if (RolesStore[roleId]?.members?.includes(user || UserStore.id)) {
+      if (MemberStore[user ? user + guild : UserStore.id + guild].roles.includes(roleId)) {
         const permissions = RolesStore[roleId]?.permissions;
+        if (channel && ChannelStore[channel]?.permission_overwrites.length) {
+          const overwrite = ChannelStore[channel]?.permission_overwrites.filter(ow => ow.id === roleId)[0] || false
+          if (overwrite) {
+            permissions.deny &= ~overwrite.deny;
+            permissions.allow |= overwrite.allow;
+          }
+        }
         result &= ~permissions.deny;
         result |= permissions.allow;
       }
       return null;
     });
-
-    if (channel) {
-      result &= ~(ChannelStore[channel]?.permission_overwrites?.deny || 0);
-      result |= ChannelStore[channel]?.permission_overwrites?.allow || 0;
-    }
 
     result &= ~(MemberStore[(user || UserStore.id) + guild]?.permissions?.deny || 0);
     result |= (MemberStore[(user || UserStore.id) + guild]?.permissions?.allow || 0);
