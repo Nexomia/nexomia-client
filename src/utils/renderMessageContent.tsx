@@ -4,6 +4,7 @@ import { parse } from 'twemoji-parser';
 import emojis from 'emojibase-data/en/data.json';
 import Emoji from '../components/chat/markdown/Emoji';
 import $EmojiCacheStore from '../store/EmojiStore';
+import '../styles/prism-nord.css'
 
 const EmoteImage = css`
   display: inline-block;
@@ -17,7 +18,7 @@ const EmoteImage = css`
 const urlExp = /(http:\/\/|https:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)?/gm;
 
 export default function renderMessageContent(content: string) {
-  
+
   content = content.replace(urlExp, (url) => { return `[${url.startsWith('http') ? url : 'https://' + url}](${url})` })
 
   const output = [];
@@ -72,8 +73,9 @@ export default function renderMessageContent(content: string) {
         break;
 
       case 'code':
+        const lang = content.slice(bound.start + 3, bound.length - 3).trim().split('\n')[0].split(' ')[0]
         output.push(
-          <code style={{ display: 'block', padding: '12px' }}>{ content.slice(bound.start + 3, bound.length - 3).trim() }</code>
+          <code className={ `language-${lang}`} style={{ display: 'block', padding: '12px' }}>{ content.slice(bound.start + 3 + lang.length, bound.length - 3).trim() }</code>
         );
         break;
 

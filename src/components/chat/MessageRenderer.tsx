@@ -15,7 +15,7 @@ import { RiArrowLeftLine, RiArrowRightLine, RiPushpinFill } from 'react-icons/ri
 import StyledIconCss from '../css/StyledIconCss';
 import { useTranslation } from 'react-i18next';
 import renderMessageContent from '../../utils/renderMessageContent';
-import { Fragment, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import Dots from '../animations/Dots';
 import $InputStore from '../../store/InputStore';
 import Attachment from '../../store/models/Attachment';
@@ -29,6 +29,7 @@ import $UnreadStore, { removeUnread } from '../../store/UnreadStore';
 import channelsService from '../../services/api/channels/channels.service';
 import $UserStore from '../../store/UserStore';
 import VideoRenderer from './attachments/VideoRenderer';
+import Prism from "prismjs";
 
 const Spacer = styled.div`
   display: flex;
@@ -184,6 +185,10 @@ function MessageRenderer({ id, grouped, avatar = true, date = true, channel, las
     channelsService.readChannel(channel);
     removeUnread({ guildId: ChannelCache[channel].guild_id || '@me', channelId: ChannelCache[channel].id, message_id: id });
   }
+
+  useEffect(() => {
+    Prism.highlightAll();
+  }, []);
 
   return (
     <Container
