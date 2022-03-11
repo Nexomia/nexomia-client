@@ -28,6 +28,9 @@ import FilesService from '../../services/api/files/files.service';
 import ContentPicker from './ContentPicker';
 import EmojiPackType from '../../store/models/EmojiPackType';
 import $ChannelCacheStore from '../../store/ChannelCacheStore';
+import PermissionCalculator from '../../utils/PermissionCalculator';
+import { ComputedPermissions } from '../../store/models/ComputedPermissions';
+import $RoleCacheStore from '../../store/RolesCacheStore';
 
 type CustomElement = { type: 'paragraph'; children: CustomText[] };
 type CustomText = { text: string };
@@ -57,6 +60,10 @@ const Container = styled.div`
   flex-direction: row;
   flex-grow: 0;
   overflow: hidden;
+
+  & > div.i1qjsqhi:first-child {
+    margin-left: 14px;
+  }
 `
 
 const InputIconCss = css`
@@ -90,7 +97,7 @@ const EditableCss = css`
   outline: none;
   white-space: pre-wrap;
   word-break: break-all;
-  & > div > span > span > span[data-slate-placeholder="true"] { /* genius */
+  & span[data-slate-placeholder="true"] {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
@@ -141,6 +148,7 @@ function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps
 
   const InputCache = useStore($InputStore);
   const CachedChannels = useStore($ChannelCacheStore);
+  const Roles = useStore($RoleCacheStore);
 
   const { t } = useTranslation(['chat']);
 
@@ -149,6 +157,7 @@ function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps
   const [sendLocked, setSendLocked] = useState(false);
   const [attachments, setAttachments]: any[] = useState([]);
   const [pickerOpened, setPickerOpened]: any = useState(null);
+  const [permissions, setPermissions]: any = useState(null);
 
   const editor = useMemo(() => withReact(createEditor()), []);
   const initialValue: CustomElement[] = [
@@ -191,12 +200,19 @@ function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => onAttachmentAdded(), [attachments, InputCache[channel]]);
 
+  useEffect(() => {
+    setPermissions(PermissionCalculator.getUserPermissions(CachedChannels[channel]?.guild_id || '', channel, ''))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [Roles, channel, CachedChannels]);
+
   return (
     <OuterContainer>
       <Container ref={ containerRef }>
+      { ((permissions & ComputedPermissions.ATTACH_FILES) || !!CachedChannels[channel]?.recipients?.length) &&  
         <InputButton onClick={ openFilePicker }>
           <RiAddCircleFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
         </InputButton>
+      }
         <Input ref={ inputRef }>
           <Slate
             editor={ editor }
@@ -214,12 +230,14 @@ function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps
             />
           </Slate>
         </Input>
-        <InputButton
-          onClick={ () => togglePickerType(EmojiPackType.STICKER) }
-          className={ classNames(css`margin-right: 0`, { hover: pickerOpened === EmojiPackType.STICKER }) }
-        >
-          <RiStickyNoteFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
-        </InputButton>
+        { ((permissions & ComputedPermissions.ATTACH_STICKERS) || !!CachedChannels[channel]?.recipients?.length) && 
+          <InputButton
+            onClick={ () => togglePickerType(EmojiPackType.STICKER) }
+            className={ classNames(css`margin-right: 0`, { hover: pickerOpened === EmojiPackType.STICKER }) }
+          >
+            <RiStickyNoteFill className={ classNames({ [StyledIconCss]: true, [InputIconCss]: true }) } />
+          </InputButton>
+        }
         <InputButton
           onClick={ () => togglePickerType(EmojiPackType.EMOJI) }
           className={ classNames(css`margin-right: 0`, { hover: pickerOpened === EmojiPackType.EMOJI }) }
@@ -347,6 +365,7 @@ function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps
   }
 
   function handlePaste(event: ClipboardEvent<HTMLDivElement>) {
+    if (!(permissions & ComputedPermissions.ATTACH_STICKERS) && !CachedChannels[channel]?.recipients?.length) return;
     let modifiedAttachments = [ ...attachments ];
     // @ts-expect-error
     for (const file of event.clipboardData.files) {

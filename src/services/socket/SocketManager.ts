@@ -124,6 +124,10 @@ class SocketManager {
         ChannelEventHandler.channelDeleted(event);
         break;
 
+      case 'guild.channel_permission_overwrite':
+        GuildEventHandler.channelPermissionOverwrite(event);
+        break;
+
       case 'guild.user_joined':
         GuildEventHandler.memberJoined(event);
         break;

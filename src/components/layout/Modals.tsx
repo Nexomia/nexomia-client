@@ -13,6 +13,7 @@ import PackCreationModal from '../modals/PackCreationModal';
 import EmojiPackModal from '../modals/EmojiPackModal';
 import GuildBanUserModal from '../modals/GuildBanUserModal';
 import PasswordConfirmationModal from '../modals/PasswordConfirmationModal';
+import PickOverwriteModal from '../modals/PickOverwriteModal';
 
 function Modals() {
   const modals = useStore($ModalStore);
@@ -29,6 +30,7 @@ function Modals() {
       <PackCreationModal active={ modals.packCreation } />
       <EmojiPackModal active={ modals.emojiPack[0] } />
       <PasswordConfirmationModal active={modals.passwordConfirmation} />
+      <PickOverwriteModal active={ modals.pickOverwrite } />
     </Fragment>
   )
 }

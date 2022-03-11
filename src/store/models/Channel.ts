@@ -6,13 +6,25 @@ export enum NotifyState {
   NOTHING = 3,
 }
 
+export enum OverwriteType {
+  ROLE = 1,
+  MEMBER = 0
+}
+
+export interface ChannelOverwrites {
+  id: string
+  type?: OverwriteType
+  allow: number
+  deny: number
+}
+
 export default interface Channel {
   id: string,
   created?: number,
   type?: number,
   guild_id?: string,
   position?: number,
-  permission_overwrites?: PermissionOverwrites,
+  permission_overwrites: ChannelOverwrites[],
   name?: string,
   topic?: string,
   nsfw?: boolean,

@@ -52,7 +52,11 @@
     "guildBan_reason": "Enter ban reason",
     "guildBan_user": "Enter user id or tag",
     "guildBan_error": "Failed to ban this user.",
-    "password": "Password"
+    "password": "Password",
+    "overwrite": {
+      "user": "Enter user tag or id",
+      "title": "Add ovewrite"
+    }
   },
   "server_general": {
     "no_default_channel": "No default channel",
@@ -164,9 +168,12 @@
     "channel_topic": "Channel topic",
     "channel_timeout": "Timeout mode",
     "channel_timeout_placeholder": "Value in seconds",
-    "nsfw": "NSWF channel"
+    "nsfw": "NSFW channel"
   },
   "modal": {
     "enter_password": "Enter password"
+  },
+  "channel": {
+    "add_overwrite": "Add overwrite"
   }
 }

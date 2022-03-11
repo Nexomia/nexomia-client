@@ -27,13 +27,6 @@ body {
   --text-negative: #ff3d70;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-  padding: 4px;
-  background: var(--background-secondary);
-  border-radius: 4px;
-}
-
 h2 {
   margin: 0;
   font-size: 24px;

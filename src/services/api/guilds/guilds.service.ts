@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ChannelOverwrites } from '../../../store/models/Channel';
 
 import CommonRequestManager from '../common';
 
@@ -119,6 +120,35 @@ class GuildsService {
 
   async removeGuildBan(guild: string, user: string) {
     const response = await CommonRequestManager.apiRequest('DELETE', `/guilds/${guild}/bans/${user}`, {});
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
+
+  async patchChannel(guild: string, channel: string, dto: object) {
+    const response = await CommonRequestManager.apiRequest('PATCH', `/guilds/${guild}/channels/${channel}`, dto);
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
+  async patchChannelOverwrite(guild: string, channel: string, dto: ChannelOverwrites) {
+    const response = await CommonRequestManager.apiRequest('PATCH', `/guilds/${guild}/channels/${channel}/permissions/${dto.id}`, dto);
+
+    if (axios.isAxiosError(response)) {
+      return false;
+    }
+
+    return response.data;
+  }
+
+  async deleteChannelOverwrite(guild: string, channel: string, dto: ChannelOverwrites) {
+    const response = await CommonRequestManager.apiRequest('DELETE', `/guilds/${guild}/channels/${channel}/permissions/${dto.id}`, {});
 
     if (axios.isAxiosError(response)) {
       return false;

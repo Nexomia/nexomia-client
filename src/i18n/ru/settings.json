@@ -52,7 +52,11 @@
     "guildBan_reason": "Введите причу бана",
     "guildBan_user": "Введите id пользователя или его тэг",
     "guildBan_error": "При бане данного пользователя произошла ошибка.",
-    "password": "Пароль"
+    "password": "Пароль",
+    "overwrite": {
+      "user": "Введите тэг или id пользователя",
+      "title": "Добавить правило"
+    }
   },
   "server_general": {
     "no_default_channel": "Нет стандартного канала",
@@ -163,5 +167,8 @@
   },
   "modal": {
     "enter_password": "Введите пароль"
+  },
+  "channel": {
+    "add_overwrite": "Добавить правило"
   }
 }

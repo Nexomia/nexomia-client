@@ -114,7 +114,7 @@ function RolesView() {
   const [canMove, setCanMove] = useState(false);
 
   const [roleSelected, setRoleSelected] = useState('');
-  const [editedPermissions, setEditedPermissions] = useState<PermissionOverwrites>({ allow: 0, deny: 0 });
+  const [editedPermissions, setEditedPermissions] = useState<PermissionOverwrites | undefined>();
   const [permissionsWasEdited, setPermissionsWasEdited] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
 
@@ -209,6 +209,7 @@ function RolesView() {
             initialPermissions={ RolesCache[roleSelected].permissions }
             inherit={ !RolesCache[roleSelected].default }
             onChange={ permissionsEdited }
+            guild={ true }
           />
         </Fragment>
       ) }

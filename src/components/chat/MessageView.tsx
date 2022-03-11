@@ -68,7 +68,7 @@ function MessageView({ channel, onMessagesLoaded = () => null, type = 0 }: Messa
                   grouped={ MessageCacheStore[prevMessage]?.author === MessageCacheStore[message]?.author && MessageCacheStore[message]?.created - MessageCacheStore[prevMessage]?.created < 900000 }
                   channel={ channel }
                   last={index === MessageStore[type === 0 ? channel : `0${channel}`].length - 1}
-                  unread={ (BigInt(MessageCacheStore[prevMessage]?.id || 0) <= BigInt(CachedChannels[channel].last_read_snowflake || 0)) && BigInt(message) > BigInt(CachedChannels[channel].last_read_snowflake || 0) ? true : false }
+                  unread={ (MessageCacheStore[prevMessage]?.author !== MessageCacheStore[message].author && (BigInt(MessageCacheStore[prevMessage]?.id || 0) <= BigInt(CachedChannels[channel].last_read_snowflake || 0)) && BigInt(message) > BigInt(CachedChannels[channel].last_read_snowflake || 0)) ? true : false }
                 />
               );
 
@@ -102,7 +102,7 @@ function MessageView({ channel, onMessagesLoaded = () => null, type = 0 }: Messa
       response = await MessagesService.getChannelMessages(channel, 0, getNeededMessageCount());
     }
 
-    if (!response) return;
+    if (!response) return setLoading(false);;
     cacheMessages(response);
     setChannelMessages({
       channel: type === 0 ? channel : `0${channel}`,

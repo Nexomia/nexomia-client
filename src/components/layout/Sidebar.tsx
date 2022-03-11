@@ -135,7 +135,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
   }, [channels]);
 
   return (
-    <SidebarContainer className={ classNames({ [WideSidebarCss]: path === 'guildsettings' || path === 'settings' }) }>
+    <SidebarContainer className={ classNames({ [WideSidebarCss]: path === 'channelsettings' ||path === 'guildsettings' || path === 'settings' }) }>
       { !path && guildId === '@me' && type === 'channels' && (
         <SidebarHeader>
           <Content>{ t('tabs.direct_messages') }</Content>
@@ -232,6 +232,35 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             title={ t('tabs.bans') }
             tabId={ 'bans' }
             onClick={ () => { history.push(`/guildsettings/${guildId}/bans`) } }
+          />
+                    
+        </Fragment>
+      ) }
+
+      { path === 'channelsettings' && type === 'channels' && (
+        <Fragment>
+          <SidebarHeader>
+            <Content>{ t('tabs.channel_settings') }</Content>
+          </SidebarHeader>
+          <Tab
+            title={ t('tabs.general') }
+            tabId={ 'general' }
+            onClick={ () => { history.push(`/channelsettings/${guildId}/general`) } }
+          />
+          <Tab
+            title={ t('tabs.permissions') }
+            tabId={ 'permissions' }
+            onClick={ () => { history.push(`/channelsettings/${guildId}/permissions`) } }
+          />
+          <Tab
+            title={ t('tabs.invites') }
+            tabId={ 'invites' }
+            onClick={ () => { history.push(`/channelsettings/${guildId}/invites`) } }
+          />
+          <Tab
+            title={ t('tabs.webhooks') }
+            tabId={ 'webhooks' }
+            onClick={ () => { history.push(`/channelsettings/${guildId}/webhooks`) } }
           />
                     
         </Fragment>

@@ -5,6 +5,7 @@ import emojis from 'emojibase-data/en/data.json';
 import Emoji from '../components/chat/markdown/Emoji';
 import $EmojiCacheStore from '../store/EmojiStore';
 import '../styles/prism-nord.css'
+const Markdown = require('react-markdown-it') //fix later
 
 const EmoteImage = css`
   display: inline-block;
