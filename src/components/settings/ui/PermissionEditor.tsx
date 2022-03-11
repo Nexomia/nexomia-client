@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { css } from 'linaria';
 import { ComputedPermissions } from '../../../store/models/ComputedPermissions';
 import PermissionOverwrites from '../../../store/models/PermissionOverwrites';
@@ -9,18 +9,24 @@ import { useTranslation } from 'react-i18next';
 interface PermissionProps {
   initialPermissions: PermissionOverwrites,
   inherit: boolean,
-  onChange: any
+  guild?: boolean,
+  category?: boolean,
+  channel?: boolean,
+  onChange: any,
 }
 
-function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionProps) {
+function PermissionEditor({ initialPermissions, inherit, onChange, guild, category, channel }: PermissionProps) {
   const [permissions, setPermissions] = useState(initialPermissions);
 
   const { t } = useTranslation(['settings']);
-
+    useEffect(() => {
+      setPermissions(initialPermissions); 
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [initialPermissions]);
   return (
     <Fragment>
-      <FilledButton onClick={ clearPermissions } className={ css`margin: 0 0 8px 0` }>{ t('server_permissions.action_clear_permissions') }</FilledButton>
-      <Permission 
+      <FilledButton onClick={ clearPermissions } className={ css`margin: 0 0 8px 0; width: 100%;` }>{ t('server_permissions.action_clear_permissions') }</FilledButton>
+      {guild && <Permission 
         name={ t('server_permissions.administrator') }
         description={ t('server_permissions.administrator_description') }
         active={ getPermissionState(ComputedPermissions.ADMINISTRATOR) }
@@ -28,8 +34,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onEnablePerm={ () => enablePermission(ComputedPermissions.ADMINISTRATOR) }
         onDisablePerm={ () => disablePermission(ComputedPermissions.ADMINISTRATOR) }
         onInheritPerm={ () => inheritPermission(ComputedPermissions.ADMINISTRATOR) }
-      />
-      <Permission
+      />}
+      { guild && <Permission
         name={ t('server_permissions.manage_guild') }
         description={ t('server_permissions.manage_guild_description') }
         active={ getPermissionState(ComputedPermissions.MANAGE_GUILD) }
@@ -37,8 +43,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onEnablePerm={ () => enablePermission(ComputedPermissions.MANAGE_GUILD) }
         onDisablePerm={ () => disablePermission(ComputedPermissions.MANAGE_GUILD) }
         onInheritPerm={ () => inheritPermission(ComputedPermissions.MANAGE_GUILD) }
-      />
-      <Permission
+      />}
+      { guild && <Permission
         name={ t('server_permissions.manage_roles') }
         description={ t('server_permissions.manage_roles_description') }
         active={ getPermissionState(ComputedPermissions.MANAGE_ROLES) }
@@ -46,8 +52,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onEnablePerm={ () => enablePermission(ComputedPermissions.MANAGE_ROLES) }
         onDisablePerm={ () => disablePermission(ComputedPermissions.MANAGE_ROLES) }
         onInheritPerm={ () => inheritPermission(ComputedPermissions.MANAGE_ROLES) }
-      />
-      <Permission
+      />}
+      { guild && <Permission
         name={ t('server_permissions.manage_messages') }
         description={ t('server_permissions.manage_messages_description') }
         active={ getPermissionState(ComputedPermissions.MANAGE_MESSAGES) }
@@ -55,8 +61,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onEnablePerm={ () => enablePermission(ComputedPermissions.MANAGE_MESSAGES) }
         onDisablePerm={ () => disablePermission(ComputedPermissions.MANAGE_MESSAGES) }
         onInheritPerm={ () => inheritPermission(ComputedPermissions.MANAGE_MESSAGES) }
-      />
-      <Permission
+      />}
+      {guild && <Permission
         name={ t('server_permissions.manage_emojis') }
         description={ t('server_permissions.manage_emojis_description') }
         active={ getPermissionState(ComputedPermissions.MANAGE_EMOJIS) }
@@ -64,7 +70,7 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onEnablePerm={ () => enablePermission(ComputedPermissions.MANAGE_EMOJIS) }
         onDisablePerm={ () => disablePermission(ComputedPermissions.MANAGE_EMOJIS) }
         onInheritPerm={ () => inheritPermission(ComputedPermissions.MANAGE_EMOJIS) }
-      />
+      />}
       <Permission
         name={ t('server_permissions.view_channels') }
         description={ t('server_permissions.view_channels_description') }
@@ -137,7 +143,7 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onDisablePerm={ () => disablePermission(ComputedPermissions.FORWARD_MESSAGES_FROM_SERVER) }
         onInheritPerm={ () => inheritPermission(ComputedPermissions.FORWARD_MESSAGES_FROM_SERVER) }
       />
-      <Permission
+      { guild && <Permission
         name={ t('server_permissions.change_nickname') }
         description={ t('server_permissions.change_nickname_description') }
         active={ getPermissionState(ComputedPermissions.CHANGE_SELF_NICKNAME) }
@@ -145,8 +151,8 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onEnablePerm={ () => enablePermission(ComputedPermissions.CHANGE_SELF_NICKNAME) }
         onDisablePerm={ () => disablePermission(ComputedPermissions.CHANGE_SELF_NICKNAME) }
         onInheritPerm={ () => inheritPermission(ComputedPermissions.CHANGE_SELF_NICKNAME) }
-      />
-      <Permission
+      />}
+      { guild && <Permission
         name={ t('server_permissions.change_member_nicknames') }
         description={ t('server_permissions.change_member_nicknames_description') }
         active={ getPermissionState(ComputedPermissions.CHANGE_MEMBER_NICKNAMES) }
@@ -154,7 +160,7 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onEnablePerm={ () => enablePermission(ComputedPermissions.CHANGE_MEMBER_NICKNAMES) }
         onDisablePerm={ () => disablePermission(ComputedPermissions.CHANGE_MEMBER_NICKNAMES) }
         onInheritPerm={ () => inheritPermission(ComputedPermissions.CHANGE_MEMBER_NICKNAMES) }
-      />
+      />}
       <Permission
         name={ t('server_permissions.add_reactions') }
         description={ t('server_permissions.add_reactions_description') }
@@ -173,7 +179,7 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onDisablePerm={ () => disablePermission(ComputedPermissions.ADD_EXTERNAL_REACTIONS) }
         onInheritPerm={ () => inheritPermission(ComputedPermissions.ADD_EXTERNAL_REACTIONS) }
       />
-      <Permission
+      { guild && <Permission
         name={ t('server_permissions.delete_multiple_messages') }
         description={ t('server_permissions.delete_multiple_messages_description') }
         active={ getPermissionState(ComputedPermissions.BULK_DELETE) }
@@ -181,7 +187,7 @@ function PermissionEditor({ initialPermissions, inherit, onChange }: PermissionP
         onEnablePerm={ () => enablePermission(ComputedPermissions.BULK_DELETE) }
         onDisablePerm={ () => disablePermission(ComputedPermissions.BULK_DELETE) }
         onInheritPerm={ () => inheritPermission(ComputedPermissions.BULK_DELETE) }
-      />
+      />}
       <div className={ css`height: 58px` } />
     </Fragment>
   )

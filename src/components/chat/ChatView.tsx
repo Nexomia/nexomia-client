@@ -23,7 +23,6 @@ import { useTranslation } from 'react-i18next';
 
 import getNeededMessageCount from '../../utils/getNeededMessageCount';
 import { useParams } from 'react-router';
-import { removeUnread } from '../../store/UnreadStore';
 
 const MessageContainerWrapper = styled.div`
   flex-grow: 1;
@@ -66,15 +65,11 @@ const TypersContainer = styled.div`
   margin-bottom: 20px;
 `
 
-interface ChatViewProps {
-  channel: string
-}
-
 interface RouteParams {
   channelId: string
 }
 
-function ChatView({ channel }: ChatViewProps) {
+function ChatView() {
   const { channelId } = useParams<RouteParams>();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const Messages = useStore($MessageStore);
@@ -83,36 +78,39 @@ function ChatView({ channel }: ChatViewProps) {
   const Users = useStore($UserCacheStore);
   const Typers = useStore($TypersStore);
 
-  const [inputVisible, setInputVisible] = useState(getSendPermission());
+  const [permissions, setPermissions] = useState(getSendPermission(channelId));
   const [loading, setLoading] = useState(false);
   const [addLoading, setAddLoading] = useState(false);
   const [addedLoading, setAddedLoading] = useState(false);
   const [addScroll, setAddScroll] = useState(0);
   const [showTopMargin, setShowTopMargin] = useState(true);
+  const [isTop, setTop] = useState(false);
 
   const { t } = useTranslation(['chat']);
 
   useEffect(() => {
-    setInputVisible(getSendPermission());
-    removeUnread(channel);
     setShowTopMargin(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Roles, channel]);
+  }, [Roles, channelId, Channels]);
+
+  useEffect(() => {
+    setPermissions(PermissionCalculator.getUserPermissions(Channels[channelId]?.guild_id || '', channelId, ''))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [Roles, channelId, Channels]);
 
   useEffect(() => {
     if (!loading) {
       scrollView(true);
-      document.title = `#${Channels[channel].name} - Nexomia`;
+      document.title = `#${Channels[channelId].name} - Nexomia`;
     } else {
       setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [channel, channelId, loading]);
+  }, [channelId, loading]);
 
   useEffect(() => {
     if (!addedLoading) {
       setImmediate(() => {
-        console.log('scroll');
         scrollerRef.current?.scrollTo({
           top: scrollerRef?.current?.scrollHeight - addScroll,
           behavior: 'auto'
@@ -125,33 +123,40 @@ function ChatView({ channel }: ChatViewProps) {
   useEffect(() => {
     scrollView(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Messages[channel]]);
+  }, [Messages[channelId]]);
+
+  useEffect(() => {
+    setTop(false)
+  }, [channelId]);
 
   return (
     <Fragment>
       <MessageContainerWrapper>
         <MessageContainer>
           <ScrollableContent ref={ scrollerRef } onScroll={ handleScroll }>
-            { Messages[channel]?.length > 10 && showTopMargin && (
+            { Messages[channelId]?.length > 10 && showTopMargin && (
               <div className={ css`height: 3500px` } />
             ) }
             <MessageWrapper>
-              <MessageView channel={ channel } onMessagesLoaded={ () => scrollView(true) } />
+              { 
+                !!(permissions & ComputedPermissions.VIEW_CHANNEL) && 
+                <MessageView channel={ channelId } onMessagesLoaded={ () => scrollView(true) } />
+              }
             </MessageWrapper>
             <TypersContainer>
-              { !!Typers[channel]?.length && (
+              { !!Typers[channelId]?.length && (
                 <Fragment>
                   <Dots />
                   <StyledText className={ css`margin-left: 15px; margin-top: 0;` }>
-                    { Typers[channel].map((user) => (
+                    { Typers[channelId].map((user) => (
                       <Fragment>
-                        <div style={{ color: getMemberColor(Channels[channel].guild_id || '', user), display: 'inline-block' }}>
+                        <div style={{ color: getMemberColor(Channels[channelId].guild_id || '', user), display: 'inline-block' }}>
                           { Users[user].username }
                         </div>
-                        { Typers[channel].indexOf(user) !== Typers[channel].length - 1 && ', ' }
+                        { Typers[channelId].indexOf(user) !== Typers[channelId].length - 1 && ', ' }
                       </Fragment>
                     )) }
-                    { ' ' + (Typers[channel].length > 1 ? t('are_typing') : t('is_typing')) }
+                    { ' ' + (Typers[channelId].length > 1 ? t('are_typing') : t('is_typing')) }
                   </StyledText>
                 </Fragment>
               ) }
@@ -159,9 +164,10 @@ function ChatView({ channel }: ChatViewProps) {
           </ScrollableContent>
         </MessageContainer>
       </MessageContainerWrapper>
-      { inputVisible ? (
+      { permissions & (ComputedPermissions.WRITE_MESSAGES) &&
+        permissions & (ComputedPermissions.VIEW_CHANNEL)  ? (
         <ChatInput
-          channel={ channel }
+          channel={ channelId }
           onMessageSent={ () => scrollView(true) }
           onAttachmentAdded={ () => scrollView(true) }
         />
@@ -187,14 +193,12 @@ function ChatView({ channel }: ChatViewProps) {
     }
   }
 
-  function getSendPermission() {
-    return !!(
-      PermissionCalculator.getUserPermissions(Channels[channel]?.guild_id || '', channel, '') & ComputedPermissions.WRITE_MESSAGES
-    ) || Channels[channel]?.recipients?.length;
+  function getSendPermission(id: string) {
+    return PermissionCalculator.getUserPermissions(Channels[channelId]?.guild_id || '', id, '');
   }
 
   async function handleScroll() {
-    if (!Messages[channel]) return;
+    if (!Messages[channelId] || isTop) return;
 
     if (
       scrollerRef?.current?.scrollTop &&
@@ -203,25 +207,26 @@ function ChatView({ channel }: ChatViewProps) {
     ) {
       setAddLoading(true);
       setAddedLoading(true);
-      const response = await MessagesService.getChannelMessages(channel, Messages[channel].length, getNeededMessageCount());
+      const response = await MessagesService.getChannelMessages(channelId, Messages[channelId].length, getNeededMessageCount());
       if (!response || !response.length) {
         setShowTopMargin(false);
         setAddedLoading(false);
         setTimeout(() => setAddLoading(false), 1000);
+        setTop(true)
         return;
       }
       setAddScroll(scrollerRef?.current?.scrollHeight - scrollerRef?.current?.scrollTop);
       cacheMessages(response);
-      appendChannelMessages({ channel, messages: response.map((message: Message) => message.id) });
+      appendChannelMessages({ channel: channelId, messages: response.map((message: Message) => message.id) });
       setAddedLoading(false);
       setTimeout(() => setAddLoading(false), 1000);
     } else if (
       scrollerRef?.current?.scrollTop &&
       scrollerRef?.current?.scrollTop + scrollerRef?.current?.clientHeight > scrollerRef?.current?.scrollHeight - 100 &&
-      Messages[channel].length > getNeededMessageCount()
+      Messages[channelId].length > getNeededMessageCount()
     ) {
-      clearLoadedMesssages(channel);
-      leanArray(channel);
+      clearLoadedMesssages(channelId);
+      leanArray(channelId);
     }
   }
 }

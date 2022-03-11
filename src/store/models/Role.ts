@@ -7,8 +7,6 @@ export default interface Role {
 
   name: string;
 
-  members: string[];
-
   permissions: PermissionOverwrites;
 
   color?: string;

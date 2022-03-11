@@ -1,4 +1,3 @@
-import User from './User';
 import PermissionOverwrites from './PermissionOverwrites';
 
 export default interface GuildMember {
@@ -7,5 +6,6 @@ export default interface GuildMember {
   mute: false,
   deaf: false,
   guild: string,
-  permissions: PermissionOverwrites
+  permissions: PermissionOverwrites,
+  roles: string[]
 }

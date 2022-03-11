@@ -62,7 +62,7 @@ export default interface User {
   /**
    * The user's avatar
    */
-  avatar?: string;
+  avatar: string;
 
   /**
    * The user's banner

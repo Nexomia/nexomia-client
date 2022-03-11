@@ -8,10 +8,16 @@ interface NotifyProps {
   title: string,
   content: string,
   image: string,
-  type: number
+  type: NotifyType,
+  sound?: boolean
 }
 
-export default function notify({ title, content, image, type }: NotifyProps) {
+export enum NotifyType {
+  NEW_MESSAGE = 1
+}
+
+export default function notify({ title, content, image, type, sound = true }: NotifyProps) {
   new Notification(title, { body: content, image });
-  messageSound.play();
+  if (type === NotifyType.NEW_MESSAGE && sound)
+    messageSound.play();
 }

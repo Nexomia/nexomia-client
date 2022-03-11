@@ -3,9 +3,9 @@ export default interface Invite {
 
   guild_id?: string;
 
-  channel_id?: string;
+  channel_id: string;
 
-  inviter_id?: string;
+  inviter_id: string;
 
   expires_at?: number;
 

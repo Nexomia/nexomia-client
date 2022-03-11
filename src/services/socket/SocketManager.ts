@@ -9,23 +9,41 @@ import UserEventHandler from './events/Users';
 import RoleEventHandler from './events/Roles';
 import ChannelEventHandler from './events/Channels';
 import GuildEventHandler from './events/Guilds';
+import { Dispatch, SetStateAction } from 'react';
 
 class SocketManager {
   public socket: WebSocket | null = null;
   private token: string = '';
+  private setLoaded: any;
 
   public onLoad = () => {};
+
+  private checkConnection = () => {
+      this.socket = new WebSocket(config.socket.url + `?token=`);
+      this.socket.addEventListener('open', () => {
+        // eslint-disable-next-line no-restricted-globals
+        location.reload();
+      });
+
+      this.socket.addEventListener('error', () => {
+        setTimeout(this.checkConnection, 3000);
+      });
+  }
   
   setToken(token: string) {
     this.token = token;
   }
 
-  init() {
-    if (!this.socket) this.socket = new WebSocket(config.socket.url + `?token=${this.token}`);
+  init(loading?: Dispatch<SetStateAction<boolean>>) {
+    this.setLoaded = loading
+    if (this.token && this.token !== '' && !this.socket) {
+      this.socket = new WebSocket(config.socket.url + `?token=${this.token}`);
 
-    this.socket.addEventListener('open', () => {
-      this.initEventListeners();
-    });
+      this.socket.addEventListener('open', () => {
+        this.initEventListeners();
+        setInterval(() => { this.socket?.send('{"event": "Ping!"}') }, 30000);
+      });
+    }
   }
 
   initEventListeners() {
@@ -35,9 +53,13 @@ class SocketManager {
         info: JSON.parse(event.data)
       };
 
-      console.log(eventData);
-
       this.handleEvent(eventData);
+    });
+
+    this.socket?.addEventListener('close', () => {
+      this.setLoaded(false);
+      this.checkConnection();
+      this.socket = null;
     });
   }
 
@@ -100,6 +122,10 @@ class SocketManager {
 
       case 'guild.channel_deleted':
         ChannelEventHandler.channelDeleted(event);
+        break;
+
+      case 'guild.channel_permission_overwrite':
+        GuildEventHandler.channelPermissionOverwrite(event);
         break;
 
       case 'guild.user_joined':

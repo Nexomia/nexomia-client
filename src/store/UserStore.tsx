@@ -13,7 +13,7 @@ interface UserInfo {
   banner: string,
   verified: boolean,
   flags: number,
-  premiumType: boolean,
+  premium_type: boolean,
   publicFlags: number,
   email: string,
   emojiPacks: string[]
@@ -28,7 +28,7 @@ const $UserStore = createStore<UserInfo>({
   banner: '',
   verified: false,
   flags: 0,
-  premiumType: false,
+  premium_type: false,
   publicFlags: 0,
   email: '',
   emojiPacks: []

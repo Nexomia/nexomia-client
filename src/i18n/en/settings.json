@@ -8,7 +8,11 @@
     "edit": "Edit",
     "add_reaction": "Add Reaction",
     "confirmation": "Are you sure?",
-    "reply": "Reply"
+    "reply": "Reply",
+    "ban": "Ban",
+    "unpin": "Unpin",
+    "set_read": "Mark as read",
+    "invite_people": "Invite people"
   },
   "modals": {
     "channel_creating": "Creating Channel...",
@@ -33,7 +37,26 @@
     "invite_header": "Invite your friends!",
     "invite_description": "Choose the channel to create invite in.",
     "invite_created": "Here is your invite!",
-    "invite_created_description": "Click to copy it."
+    "invite_created_description": "Click to copy it.",
+    "guildBan_header": "Ban user:",
+    "guildBan_banning": "Bananning...",
+    "guildBan_description": "Select the member to ban or write his name",
+    "guildBan": {
+      "hour": "Previous hour",
+      "nothing": "Don't delete any",
+      "day": "Previous 24 hours",
+      "week": "Previous 7 days",
+      "all": "All time"
+    },
+    "guildBan_ban": "Ban",
+    "guildBan_reason": "Enter ban reason",
+    "guildBan_user": "Enter user id or tag",
+    "guildBan_error": "Failed to ban this user.",
+    "password": "Password",
+    "overwrite": {
+      "user": "Enter user tag or id",
+      "title": "Add ovewrite"
+    }
   },
   "server_general": {
     "no_default_channel": "No default channel",
@@ -46,7 +69,9 @@
     "edit": "Edit"
   },
   "user_general": {
-    "description": "Tell people more about yourself!"
+    "description": "Tell people more about yourself!",
+    "name": "Username",
+    "tag": "Tag"
   },
   "saving_changes": "Saving Changes...",
   "save_changes": "Save Changes",
@@ -66,6 +91,13 @@
     "description": "Active invites are displayed below.",
     "uses": "uses",
     "invite_create": "Create an invite"
+  },
+  "server_bans": {
+    "description": "Banned users are displayed below.",
+    "ban_create": "Ban user",
+    "reason": "Reason",
+    "banned_by": "Banned by",
+    "no_reason": "Not specified"
   },
   "server_permissions": {
     "administrator": "Administrator",
@@ -123,6 +155,25 @@
     "user_divider": "User",
     "profile": "Profile",
     "chat": "Chat",
-    "emotes": "Emotes"
+    "emotes": "Emotes",
+    "bans": "Bans",
+    "logout": "Logout",
+    "permissions": "Permissions",
+    "webhooks": "Webhooks",
+    "channel_settings": "Channel settings"
+  },
+  "channel_general": {
+    "channel_name": "Channel name",
+    "channel_topic_placeholder": "Let everyone know how to use this channel...",
+    "channel_topic": "Channel topic",
+    "channel_timeout": "Timeout mode",
+    "channel_timeout_placeholder": "Value in seconds",
+    "nsfw": "NSFW channel"
+  },
+  "modal": {
+    "enter_password": "Enter password"
+  },
+  "channel": {
+    "add_overwrite": "Add overwrite"
   }
 }

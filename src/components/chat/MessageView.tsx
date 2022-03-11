@@ -13,6 +13,7 @@ import Message from '../../store/models/Message';
 import StyledText from '../ui/StyledText';
 import { useTranslation } from 'react-i18next';
 import getNeededMessageCount from '../../utils/getNeededMessageCount';
+import $UnreadStore from '../../store/UnreadStore';
 
 interface MessageViewProps {
   channel: string,
@@ -46,7 +47,7 @@ function MessageView({ channel, onMessagesLoaded = () => null, type = 0 }: Messa
       return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [channel, CachedChannels]);
+  }, [MessageStore[type === 0 ? channel : `0${channel}`]]);
 
   return (
     <Fragment>
@@ -59,18 +60,20 @@ function MessageView({ channel, onMessagesLoaded = () => null, type = 0 }: Messa
           MessageStore[type === 0 ? channel : `0${channel}`] &&
           (MessageStore[type === 0 ? channel : `0${channel}`].length &&
           MessageStore[type === 0 ? channel : `0${channel}`].length !== 0) ? (
-            MessageStore[type === 0 ? channel : `0${channel}`].map((message) => {
+            MessageStore[type === 0 ? channel : `0${channel}`].map((message, index) => {
               const rendered =  (
                 <MessageRenderer
                   id={ message }
                   key={ message }
-                  grouped={ MessageCacheStore[prevMessage]?.author === MessageCacheStore[message]?.author }
+                  grouped={ MessageCacheStore[prevMessage]?.author === MessageCacheStore[message]?.author && MessageCacheStore[message]?.created - MessageCacheStore[prevMessage]?.created < 900000 }
                   channel={ channel }
+                  last={index === MessageStore[type === 0 ? channel : `0${channel}`].length - 1}
+                  unread={ (MessageCacheStore[prevMessage]?.author !== MessageCacheStore[message].author && (BigInt(MessageCacheStore[prevMessage]?.id || 0) <= BigInt(CachedChannels[channel].last_read_snowflake || 0)) && BigInt(message) > BigInt(CachedChannels[channel].last_read_snowflake || 0)) ? true : false }
                 />
               );
 
               if (!MessageCacheStore[message].deleted) {
-                prevMessage = type === 0 && !MessageCacheStore[message]?.type ? message : '';
+                prevMessage = type === 0 && !MessageCacheStore[message]?.type ? message : ''; 
                 return rendered;
               } else {
                 return null;
@@ -99,7 +102,7 @@ function MessageView({ channel, onMessagesLoaded = () => null, type = 0 }: Messa
       response = await MessagesService.getChannelMessages(channel, 0, getNeededMessageCount());
     }
 
-    if (!response) return;
+    if (!response) return setLoading(false);;
     cacheMessages(response);
     setChannelMessages({
       channel: type === 0 ? channel : `0${channel}`,

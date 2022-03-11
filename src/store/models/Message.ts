@@ -26,4 +26,5 @@ export default interface Message {
   emojis?: Emoji[];
   forwarded_ids: string[];
   forwarded_messages: Message[]
+  guild_id?: string;
 }

@@ -6,7 +6,10 @@ interface ContextMenu {
   left?: number,
   visible?: boolean,
   lock?: boolean,
-  id?: string
+  id?: string,
+  data?: {
+    [key: string]: any
+  }
 }
 
 const $ContextMenuStore = createStore<ContextMenu>({
@@ -14,7 +17,8 @@ const $ContextMenuStore = createStore<ContextMenu>({
   top: 0,
   left: 0,
   visible: false,
-  lock: false
+  lock: false,
+  data: {}
 });
 
 const setContextMenu = createEvent<ContextMenu>();

@@ -48,6 +48,7 @@ function BrandLoading({ active, solid = false }: BrandLoadingPlaceholderProps) {
   const [clearElements, setClearElements] = useState(false);
 
   useEffect(() => {
+    if (active && clearElements) setClearElements(false)
     if (active) return;
     setTimeout(() => setClearElements(true), 1000);
   }, [active]);

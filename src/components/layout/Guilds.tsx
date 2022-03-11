@@ -23,6 +23,7 @@ import StyledText from '../ui/StyledText';
 import PanelIconCss from '../css/PanelIconCss';
 import getIconString from '../../utils/getIconString';
 import $ChannelStore from '../../store/ChannelStore';
+import $UnreadStore from '../../store/UnreadStore';
 
 const GuildsContainer = styled.div`
   display: flex;
@@ -31,11 +32,17 @@ const GuildsContainer = styled.div`
   width: 64px;
   align-self: stretch;
   background: var(--background-secondary);
-  overflow: auto
+  overflow: auto;
+  scrollbar-width: none;
 
   &::-webkit-scrollbar {
     width: 0;
   }
+`
+const GuildContainer = styled.div`
+  width: 64px;
+  height: 56px;
+  padding-left: 8px;
 `
 
 const Splitter = styled.div`
@@ -55,6 +62,30 @@ const GuildLetters = css`
   margin: 0;
 `
 
+const Indicator = styled.div`
+
+  width: 2px;
+  background: #fff;
+  position: relative;
+  height: 8px;
+  border: 0px solid #fff;
+  border-radius: 0 4px 4px 0;
+  top: 50%;
+  margin-top: -8px;
+  margin-left: -10px;
+  transition: transform .2s ease-in, border-radius .2s ease-in, border .2s ease-in;
+
+  &.unread {
+    border: 2px solid #fff;
+  }
+
+  &.selected {
+    border: 2px solid #fff;
+    transform: scaleY(3);
+    border-radius: 0 1px 1px 0;
+  }
+`
+
 interface RouteParams {
   guildId: string
 }
@@ -66,6 +97,7 @@ function Guilds() {
   const guildList = useStore($GuildStore);
   const guilds = useStore($GuildCacheStore);
   const channels = useStore($ChannelStore);
+  const Unreads = useStore($UnreadStore);
 
   return (
     <GuildsContainer>
@@ -73,26 +105,29 @@ function Guilds() {
       <Splitter />
       {
         guildList.map((guildListId) => (
-          <PanelButton
-            onClick={ () => switchGuild(guildListId) }
-            onContextMenu={ (event: any) => openContextMenu(event, guildListId) }
-            key={ guildListId }
-            className={ classNames({ active: guildId === guildListId }) }
-          >
-            { guilds[guildListId]?.icon && (
-              <ReactFreezeframe className={ css`width: 100%; height: 100%` } src={ guilds[guildListId]?.icon } />
-            ) }
-            {
-              !guilds[guildListId]?.icon &&
-              (
-                <StyledText className={ GuildLetters }>
-                  {
-                    guilds[guildListId]?.name && getIconString(guilds[guildListId].name)
-                  }
-                </StyledText>
-              )
-            }
-          </PanelButton>
+          <GuildContainer>
+            <Indicator className={ `${ guildId === guildListId ? 'selected' : undefined } ${ (Unreads[guildListId] || (guilds[guildListId].unread && !channels[guildListId])) ? 'unread' : undefined }` }/>
+            <PanelButton
+              onClick={ () => switchGuild(guildListId) }
+              onContextMenu={ (event: any) => openContextMenu(event, guildListId) }
+              key={ guildListId }
+              className={ classNames({ active: guildId === guildListId }) }
+            >
+              { guilds[guildListId]?.icon && (
+                <ReactFreezeframe className={ css`width: 100%; height: 100%` } src={ guilds[guildListId]?.icon } />
+              ) }
+              {
+                !guilds[guildListId]?.icon &&
+                (
+                  <StyledText className={ GuildLetters }>
+                    {
+                      guilds[guildListId]?.name && getIconString(guilds[guildListId].name)
+                    }
+                  </StyledText>
+                )
+              }
+            </PanelButton>
+            </GuildContainer>
         ))
       }
       <PanelButton className={ css`margin-bottom: 0` } onClick={ () => { setModalState({ serverCreation: true }) } }>

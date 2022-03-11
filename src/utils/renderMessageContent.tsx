@@ -4,6 +4,8 @@ import { parse } from 'twemoji-parser';
 import emojis from 'emojibase-data/en/data.json';
 import Emoji from '../components/chat/markdown/Emoji';
 import $EmojiCacheStore from '../store/EmojiStore';
+import '../styles/prism-nord.css'
+const Markdown = require('react-markdown-it') //fix later
 
 const EmoteImage = css`
   display: inline-block;
@@ -14,10 +16,15 @@ const EmoteImage = css`
   padding: 4px;
   overflow: hidden;
 `
+const urlExp = /(http:\/\/|https:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)?/gm;
 
 export default function renderMessageContent(content: string) {
+
+  content = content.replace(urlExp, (url) => { return `[${url.startsWith('http') ? url : 'https://' + url}](${url})` })
+
   const output = [];
   const bounds = getMessageMarkdownBounds(content);
+
   let latestStart = 0;
 
   let optimizeEmojiSliced: any;
@@ -26,6 +33,14 @@ export default function renderMessageContent(content: string) {
     output.push(content.slice(latestStart, bound.start));
 
     switch (bound.type) {
+      case 'url':
+        const link = content.slice(bound.start + 1, bound.length).split(']')[0]
+        const text = content.slice(bound.start, bound.length - 1).split('(')[1]
+        output.push(
+          <a href={ link } target="_blank" rel="noreferrer">{ text }</a>
+        );
+        
+        break;
       case 'bold':
         output.push(
           <b>{ content.slice(bound.start + 2, bound.length - 2) }</b>
@@ -59,8 +74,9 @@ export default function renderMessageContent(content: string) {
         break;
 
       case 'code':
+        const lang = content.slice(bound.start + 3, bound.length - 3).trim().split('\n')[0].split(' ')[0]
         output.push(
-          <code style={{ display: 'block', padding: '12px' }}>{ content.slice(bound.start + 3, bound.length - 3).trim() }</code>
+          <code className={ `language-${lang}`} style={{ display: 'block', padding: '12px' }}>{ content.slice(bound.start + 3 + lang.length, bound.length - 3).trim() }</code>
         );
         break;
 
@@ -110,9 +126,8 @@ export default function renderMessageContent(content: string) {
         break;
     }
 
-    latestStart = bound.start + bound.length;
+    latestStart = latestStart + bound.length;
   }
-
   output.push(content.slice(latestStart));
 
   return output;

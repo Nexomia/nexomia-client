@@ -5,6 +5,7 @@ import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import $GuildCacheStore from '../../store/GuildCacheStore';
+import $MemberCacheStore from '../../store/MemberCacheStore';
 import { ComputedPermissions } from '../../store/models/ComputedPermissions';
 import $RoleCacheStore from '../../store/RolesCacheStore';
 import $UserCacheStore from '../../store/UserCacheStore';
@@ -42,6 +43,7 @@ function MemberSidebar() {
   const GuildStore = useStore($GuildCacheStore);
   const RoleCacheStore = useStore($RoleCacheStore);
   const UserCacheStore = useStore($UserCacheStore);
+  const MemberCacheStore = useStore($MemberCacheStore);
 
   const { t } = useTranslation(['chat']);
 
@@ -54,11 +56,12 @@ function MemberSidebar() {
         <SidebarHeader />
         <Scrollable>
           { GuildStore[guildId]?.roles && GuildStore[guildId].roles?.map((role: string) => {
+            console.log(MemberCacheStore)
             if (!RoleCacheStore[role]?.hoist) return null;
 
             const onlineMembers = GuildStore[guildId].members?.map((memberId) => (
               UserCacheStore[memberId].presence !== 4 &&
-              RoleCacheStore[role].members.includes(memberId) &&
+              MemberCacheStore[memberId + guildId].roles.includes(role) &&
               !renderedUsers.includes(memberId) &&
               UserCacheStore[memberId].connected
             ));
@@ -72,7 +75,7 @@ function MemberSidebar() {
                     (a: string, b: string) => UserCacheStore[a]?.username?.localeCompare(UserCacheStore[b]?.username || '') || 0
                   ))?.map((memberId: string) => {
                     if (
-                      !RoleCacheStore[role].members.includes(memberId) ||
+                      !MemberCacheStore[memberId + guildId].roles.includes(role) ||
                       renderedUsers.includes(memberId) ||
                       UserCacheStore[memberId].presence === 4 ||
                       !UserCacheStore[memberId].connected

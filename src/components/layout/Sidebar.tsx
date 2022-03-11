@@ -35,6 +35,7 @@ import { setModalState } from '../../store/ModalStore';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import Member from '../sidebar/Member';
+import { addUnread } from '../../store/UnreadStore';
 
 
 const SidebarContainer = styled.div`
@@ -134,7 +135,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
   }, [channels]);
 
   return (
-    <SidebarContainer className={ classNames({ [WideSidebarCss]: path === 'guildsettings' || path === 'settings' }) }>
+    <SidebarContainer className={ classNames({ [WideSidebarCss]: path === 'channelsettings' ||path === 'guildsettings' || path === 'settings' }) }>
       { !path && guildId === '@me' && type === 'channels' && (
         <SidebarHeader>
           <Content>{ t('tabs.direct_messages') }</Content>
@@ -195,7 +196,15 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             onClick={ () => { history.push(`/settings/emotes`) } }
           />
 
-          <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }>Build 8<br />19.12.2021</StyledText>
+          <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }></StyledText>
+          <Tab
+            negative={ true }
+            title={ t('tabs.logout') }
+            tabId={ 'logout' }
+            onClick={ () => { history.push(`/settings/emotes`) } }
+          />
+
+          <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }>Build 12<br />18.02.2022</StyledText>
         </Fragment>
       ) }
 
@@ -219,6 +228,41 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             tabId={ 'invites' }
             onClick={ () => { history.push(`/guildsettings/${guildId}/invites`) } }
           />
+          <Tab
+            title={ t('tabs.bans') }
+            tabId={ 'bans' }
+            onClick={ () => { history.push(`/guildsettings/${guildId}/bans`) } }
+          />
+                    
+        </Fragment>
+      ) }
+
+      { path === 'channelsettings' && type === 'channels' && (
+        <Fragment>
+          <SidebarHeader>
+            <Content>{ t('tabs.channel_settings') }</Content>
+          </SidebarHeader>
+          <Tab
+            title={ t('tabs.general') }
+            tabId={ 'general' }
+            onClick={ () => { history.push(`/channelsettings/${guildId}/general`) } }
+          />
+          <Tab
+            title={ t('tabs.permissions') }
+            tabId={ 'permissions' }
+            onClick={ () => { history.push(`/channelsettings/${guildId}/permissions`) } }
+          />
+          <Tab
+            title={ t('tabs.invites') }
+            tabId={ 'invites' }
+            onClick={ () => { history.push(`/channelsettings/${guildId}/invites`) } }
+          />
+          <Tab
+            title={ t('tabs.webhooks') }
+            tabId={ 'webhooks' }
+            onClick={ () => { history.push(`/channelsettings/${guildId}/webhooks`) } }
+          />
+                    
         </Fragment>
       ) }
 
@@ -305,7 +349,6 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
     if (!response) return history.push('/home');
 
     const { channels, members, roles, ...guild } = response;
-
     cacheGuilds([guild]);
     cacheUsers([...membersResponse].map((member: any) => member.user));
     setGuildMembers({ guild: guildId, members: [...membersResponse].map((member: any) => member.id) });
@@ -320,6 +363,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
     setGuildChannelsValue(channels.map((channel: Channel) => channel.id));
 
     if (channels.length) {
+      channels.forEach((ch: Channel) => BigInt(ch.last_message_id) > BigInt(ch.last_read_snowflake) ? addUnread({ guildId: ch.guild_id || '@me', channelId: ch.id, message_id: ch.last_message_id}) : null)
       const defaultChannel = channels[channels.findIndex((channel: Channel) => guild?.default_channel === channel.id)]?.id || channels[0].id;
       if (defaultChannel && !channelId && guildId !== '@me') {
         history.push(`/channels/${guildId}/${defaultChannel}`);

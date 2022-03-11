@@ -1,33 +1,52 @@
 import $ChannelCacheStore from '../../../store/ChannelCacheStore';
 import $MessageCacheStore, { cacheMessages, patchMessage } from '../../../store/MessageCacheStore';
 import $MessageStore, { preaddMessage, addMessage, deleteMessage } from '../../../store/MessageStore';
+import { NotifyState } from '../../../store/models/Channel';
+import Message from '../../../store/models/Message';
 import { removeTyper } from '../../../store/TypersStore';
-import $UserCacheStore from '../../../store/UserCacheStore';
-import notify from '../../../utils/notify';
+import { addUnread } from '../../../store/UnreadStore';
+import $UserStore from '../../../store/UserStore';
+import notify, { NotifyType } from '../../../utils/notify';
 import MessagesService from '../../api/messages/messages.service';
 import CustomMessageEvent from '../models/CustomMessageEvent';
 class MessageEventHandler {
   messageCreated(event: CustomMessageEvent) {
     const MessageCache = $MessageCacheStore.getState();
     const ChannelCache = $ChannelCacheStore.getState();
-    const UserCache = $UserCacheStore.getState();
     const Messages = $MessageStore.getState();
+    const User = $UserStore.getState();
+
+    const msg: Message = event.info.data;
+    
 
     if (
-      MessageCache[event.info.data.id] ||
-      !Messages[event.info.data.channel_id]?.length
+      !MessageCache[msg.id] &&
+      msg.author !== User.id) {
+        addUnread({guildId: msg.guild_id || '@me', channelId: msg.channel_id, message_id: msg.id, countable_ids: !msg.guild_id ? [msg.channel_id] : undefined })
+        if (ChannelCache[msg.channel_id]) {
+          notify({
+            title: msg.user?.username + ' - #' + ChannelCache[msg.channel_id].name,
+            content: msg.content || '',
+            image: msg.user?.avatar || '',
+            type: NotifyType.NEW_MESSAGE,
+            sound: 
+              ChannelCache[msg.channel_id].message_notifications === NotifyState.ALL_MESSAGES
+              || (
+                ChannelCache[msg.channel_id].message_notifications === NotifyState.ONLY_MENTIONS
+                && msg.mentions?.includes(User.id)
+              )
+          });
+        }
+      }
+
+    if (
+      MessageCache[msg.id] ||
+      !Messages[msg.channel_id]?.length
     ) return;
 
-    cacheMessages([event.info.data]);
-    addMessage({ channel: event.info.data.channel_id, message: event.info.data.id });
-    removeTyper({ channel: event.info.data.channel_id, user: event.info.data.author });
-
-    notify({
-      title: UserCache[event.info.data.author].username + ' - #' + ChannelCache[event.info.data.channel_id].name,
-      content: event.info.data.content,
-      image: UserCache[event.info.data.author].avatar || '',
-      type: 0
-    });
+    cacheMessages([msg]);
+    addMessage({ channel: msg.channel_id, message: msg.id });
+    removeTyper({ channel: msg.channel_id, user: msg.author });
   }
 
   messageDeleted(event: CustomMessageEvent) {
@@ -39,7 +58,6 @@ class MessageEventHandler {
     const MessageCache = $MessageCacheStore.getState();
 
     if (!MessageCache[`0${event.info.data.channel_id}`]) return;
-
     if (!MessageCache[event.info.data.id]) {
       const response = await MessagesService.getMessage(event.info.data.channel_id, event.info.data.id);
       cacheMessages([response]);

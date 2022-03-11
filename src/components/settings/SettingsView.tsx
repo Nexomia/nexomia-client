@@ -5,6 +5,10 @@ import { useParams } from 'react-router-dom';
 import $GuildCacheStore from '../../store/GuildCacheStore';
 import EmotesUserView from './app/EmotesUserView';
 import GeneralUserView from './app/GeneralUserView';
+import ChannelGeneralView from './channel/ChannelGeneralView';
+import ChannelInvitesView from './channel/ChannelInvitesView';
+import ChannelPermissionsView from './channel/ChannelPermissionsView';
+import BansView from './guild/BansView';
 import GeneralView from './guild/GeneralView';
 import InvitesView from './guild/InvitesView';
 import RolesView from './guild/RolesView';
@@ -19,11 +23,12 @@ const Wrapper = styled.div`
 
 interface RouteParams {
   guildId: string,
-  channelId: string
+  channelId: string,
+  path: string
 }
 
 function SettingsView() {
-  const { guildId, channelId } = useParams<RouteParams>();
+  const { guildId, channelId, path } = useParams<RouteParams>();
 
   const Guilds = useStore($GuildCacheStore);
 
@@ -44,16 +49,37 @@ function SettingsView() {
       ) }
 
       { /* Guild */ }
-      { channelId === 'general' && (
+      { path === 'guildsettings' && channelId === 'general' && (
         <GeneralView />
       ) }
 
-      { channelId === 'roles' && (
+      { path === 'guildsettings' && channelId === 'roles' && (
         <RolesView />
       ) }
 
-      { channelId === 'invites' && (
+      { path === 'guildsettings' && channelId === 'invites' && (
         <InvitesView />
+      ) }
+
+      { path === 'guildsettings' && channelId === 'bans' && (
+        <BansView />
+      ) }
+
+      { /* Channel */ }
+      { path === 'channelsettings' && channelId === 'general' && (
+        <ChannelGeneralView />
+      ) }
+
+      { path === 'channelsettings' && channelId === 'permissions' && (
+        <ChannelPermissionsView />
+      ) }
+
+      { path === 'channelsettings' && channelId === 'invites' && (
+        <ChannelInvitesView />
+      ) }
+
+      { path === 'channelsettings' && channelId === 'bans' && (
+        <BansView />
       ) }
     </Wrapper>
   ) 
