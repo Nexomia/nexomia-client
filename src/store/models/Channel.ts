@@ -1,5 +1,3 @@
-import PermissionOverwrites from './PermissionOverwrites';
-
 export enum NotifyState {
   ALL_MESSAGES = 1,
   ONLY_MENTIONS = 2,

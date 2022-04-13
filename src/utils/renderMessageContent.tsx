@@ -4,8 +4,7 @@ import { parse } from 'twemoji-parser';
 import emojis from 'emojibase-data/en/data.json';
 import Emoji from '../components/chat/markdown/Emoji';
 import $EmojiCacheStore from '../store/EmojiStore';
-import '../styles/prism-nord.css'
-const Markdown = require('react-markdown-it') //fix later
+import '../styles/prism-nord.css';
 
 const EmoteImage = css`
   display: inline-block;
@@ -16,6 +15,7 @@ const EmoteImage = css`
   padding: 4px;
   overflow: hidden;
 `
+// eslint-disable-next-line
 const urlExp = /(http:\/\/|https:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)?/gm;
 
 export default function renderMessageContent(content: string) {

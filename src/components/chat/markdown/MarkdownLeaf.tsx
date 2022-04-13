@@ -28,7 +28,29 @@ let optimizeParsed: any = null;
 function MarkdownLeaf({ attributes, children, leaf }: any) {
   return (
     <Fragment>
-      { leaf.type === 'tag' &&
+      { leaf.type === 'bold'
+      ? (
+        <b { ...attributes }>{ children }</b>
+      )
+      : leaf.type === 'italic'
+      ? (
+        <i { ...attributes }>{ children }</i>
+      )
+      : leaf.type === 'strike'
+      ? (
+        <s { ...attributes }>{ children }</s>
+      )
+      : leaf.type === 'title' ? (
+        <h2 { ...attributes }>{ children }</h2>
+      )
+      : leaf.type === 'code-snippet' ? (
+        <code { ...attributes }>{ children }</code>
+      )
+      : leaf.type === 'code'
+      ? (
+        <code style={{ display: 'block', padding: '12px' }} { ...attributes }>{ children }</code>
+      )
+      : leaf.type === 'tag' &&
         leaf.text.startsWith('<i') &&
         (optimizeParsed = parse(
           emojis.find((e: any) => e?.label === leaf.text.split(':')[1].split('>')[0])?.emoji || ''

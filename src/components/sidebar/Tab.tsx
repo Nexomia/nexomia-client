@@ -88,10 +88,12 @@ function Tab({ Icon, title, active, onClick, tabId, negative, contextEnabled = f
   const [unread, setUnread] = useState<boolean>();
 
   useEffect(() => {
-    if (tabId && Unreads[ChannelCache[tabId]?.guild_id || '@me']?.find(ch => ch.channel_id === tabId))
-      setUnread(true)
-    else
-      setUnread(false)
+    if (tabId && Unreads[ChannelCache[tabId]?.guild_id || '@me']?.find(ch => ch.channel_id === tabId)) {
+      setUnread(true);
+    } else {
+      setUnread(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Unreads]);
 
   return (

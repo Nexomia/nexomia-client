@@ -42,9 +42,7 @@ function InvitesView() {
   const Channels = useStore($ChannelCacheStore);
 
   useEffect(() => {
-    if (!Guilds[guildId]?.invites?.length) {
-      loadInvites();
-    }
+    if (!Guilds[guildId]?.invites?.length) loadInvites();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -53,23 +51,29 @@ function InvitesView() {
       <StyledText className={ css`text-align: center; margin: 32px 0` }>
         { t('server_invites.description') }
       </StyledText>
+
       <FilledButton
         className={ css`margin: 0 0 8px 0` }
         onClick={ () => {
           setContextMenu({ id: guildId });
           setModalState({ inviteCreation: true });
         } }
-      >{ t('server_invites.invite_create') }</FilledButton>
+      >
+        { t('server_invites.invite_create') }
+      </FilledButton>
+
       { !!Guilds[guildId]?.invites?.length && (
         Guilds[guildId]?.invites?.map((invite) => (
           <Container>
             <StyledText className={ css`margin: 0; font-weight: 900; width: 200px; text-align: left; user-select: text` }>
               { invite.code }
             </StyledText>
+
             <Splitter />
             <StyledText className={ css`margin: 0; font-weight: 900; width: 200px; text-align: left; color: var(--text-secondary)` }>
               #{ Channels[invite.channel_id || '']?.name }
             </StyledText>
+            
             <Splitter />
             <StyledText className={ css`margin: 0; font-weight: 900; width: 200px; text-align: right; color: var(--text-secondary)` }>
               { invite.uses || 0 } { t('server_invites.uses') }

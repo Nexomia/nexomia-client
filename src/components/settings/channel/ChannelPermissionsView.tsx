@@ -1,53 +1,22 @@
-import classNames from 'classnames';
 import { useStore } from 'effector-react';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
 import { Fragment, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import RolesService from '../../../services/api/roles/roles.service';
-import PermissionOverwrites from '../../../store/models/PermissionOverwrites';
-import $RoleCacheStore, { updateRole } from '../../../store/RolesCacheStore';
-import StyledIconCss from '../../css/StyledIconCss';
+import $RoleCacheStore from '../../../store/RolesCacheStore';
 import LoadingPlaceholder from '../../ui/LoadingPlaceholder';
 import StyledText from '../../ui/StyledText';
 import PermissionEditor from '../ui/PermissionEditor';
-import Role from '../ui/Role';
-import PermissionCalculator from '../../../utils/PermissionCalculator';
-import { ComputedPermissions } from '../../../store/models/ComputedPermissions';
 import { useTranslation } from 'react-i18next';
 import $ChannelCacheStore, { cacheChannels } from '../../../store/ChannelCacheStore';
-import $ChannelStore from '../../../store/ChannelStore';
-import { RiArrowLeftLine } from 'react-icons/ri';
 import $GuildCacheStore from '../../../store/GuildCacheStore';
 import Tab from '../../sidebar/Tab';
 import { ChannelOverwrites, OverwriteType } from '../../../store/models/Channel';
-import TryGet from '../../../utils/TryGet';
 import $UserCacheStore from '../../../store/UserCacheStore';
 import FilledButton from '../../ui/FilledButton';
-import channelsService from '../../../services/api/channels/channels.service';
 import guildsService from '../../../services/api/guilds/guilds.service';
 import { setContextMenu } from '../../../store/ContextMenuStore';
 import { setModalState } from '../../../store/ModalStore';
-
-const ButtonContainer = styled.div`
-  display: flex;
-  padding: 14px;
-  cursor: pointer;
-  border-radius: 4px;
-  flex-grow: 1;
-  flex-direction: row;
-  margin: 16px 0;
-
-  &:hover {
-    background: var(--background-light);
-  }
-`
-
-const IconCss = css`
-  width: 20px;
-  height: 20px;
-  margin-right: 14px;
-`
 
 const Container = styled.div`
   display: flex;
@@ -75,7 +44,6 @@ interface RouteParams {
 function ChannelPermissionsView() {
   const { guildId } = useParams<RouteParams>();
   const GuildsCache = useStore($GuildCacheStore);
-  const Channels = useStore($ChannelStore);
   const ChannelsCache = useStore($ChannelCacheStore);
   const UserCache = useStore($UserCacheStore);
   const RolesCache = useStore($RoleCacheStore);
@@ -90,10 +58,11 @@ function ChannelPermissionsView() {
 
   useEffect(() => {
     if (!overwriteSelected) {
-      setOverwriteSelected(ChannelsCache[guildId]?.permission_overwrites[0]?.id || defoult_role.id)
+      setOverwriteSelected(ChannelsCache[guildId]?.permission_overwrites[0]?.id || defoult_role.id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
     <Fragment>
       <LoadingPlaceholder title={ t('saving_changes') } active={ saveLoading } />
@@ -105,49 +74,52 @@ function ChannelPermissionsView() {
         { t('server_roles.permissions_description') }
       </StyledText>
       <Container>
-        <Overwrites>
+      <Overwrites>
         <FilledButton
-            className={ css`margin: 0 0 12px 0; width 100%;` }
-            onClick={ ()=> {
-              setContextMenu({ id: guildId });
-              setModalState({ pickOverwrite: true });
-            } }
-          >{ t('channel.add_overwrite') }</FilledButton>
-          { ChannelsCache[guildId] && ChannelsCache[guildId].guild_id && (
-            <Fragment>
-              {!!ChannelsCache[guildId].permission_overwrites.length ? ChannelsCache[guildId].permission_overwrites?.map((overwrite) => {
-                if (overwrite.id !== defoult_role.id)
-                return <Tab
-                key={overwrite.id}
-                title={ overwrite.type === OverwriteType.MEMBER ? (UserCache[overwrite.id] ? `${UserCache[overwrite.id].username}#${UserCache[overwrite.id].discriminator}`: 'loading...') : `@${RolesCache[overwrite.id].name }` }
-                tabId={ overwrite.id }
-                active={ overwriteSelected === overwrite.id }
-                onClick={ () => { setOverwriteSelected(overwrite.id) } }
+          className={ css`margin: 0 0 12px 0; width 100%;` }
+          onClick={ ()=> {
+            setContextMenu({ id: guildId });
+            setModalState({ pickOverwrite: true });
+          } }
+        >{ t('channel.add_overwrite') }</FilledButton>
+        { ChannelsCache[guildId] && ChannelsCache[guildId].guild_id && (
+          <Fragment>
+            {!!ChannelsCache[guildId].permission_overwrites.length ? ChannelsCache[guildId].permission_overwrites?.map((overwrite) => {
+              if (overwrite.id !== defoult_role.id) {
+                return (
+                  <Tab
+                    key={overwrite.id}
+                    title={ overwrite.type === OverwriteType.MEMBER ? (UserCache[overwrite.id] ? `${UserCache[overwrite.id].username}#${UserCache[overwrite.id].discriminator}`: 'loading...') : `@${RolesCache[overwrite.id].name }` }
+                    tabId={ overwrite.id }
+                    active={ overwriteSelected === overwrite.id }
+                    onClick={ () => { setOverwriteSelected(overwrite.id) } }
+                  />
+                );
+              } else return null;
+            }) : null }
+            <Tab
+              key={ defoult_role.id }
+              title={ `@${defoult_role.name}` }
+              tabId={ defoult_role.id }
+              active={ overwriteSelected === defoult_role.id }
+              onClick={ () => { setOverwriteSelected(defoult_role.id) }}
+            />
+          </Fragment>
+        ) }
+      </Overwrites>
+        <Permissions>
+          <Fragment>
+            { overwriteSelected && (
+              <PermissionEditor
+                initialPermissions={ ChannelsCache[guildId].permission_overwrites.filter(ow => ow.id === overwriteSelected)[0] || { allow: 0, deny: 0 } }
+                inherit={ true }
+                onChange={ permissionsEdited }
               />
-              }) : null }
-              <Tab
-                key={ defoult_role.id }
-                title={ `@${defoult_role.name}` }
-                tabId={ defoult_role.id }
-                active={ overwriteSelected === defoult_role.id }
-                onClick={ () => { setOverwriteSelected(defoult_role.id) }}
-              />
-            </Fragment>
-          ) }
-        </Overwrites>
-          <Permissions>
-            <Fragment>
-              {  overwriteSelected && (
-                <PermissionEditor
-                  initialPermissions={ ChannelsCache[guildId].permission_overwrites.filter(ow => ow.id === overwriteSelected)[0] || { allow: 0, deny: 0 } }
-                  inherit={ true }
-                  onChange={ permissionsEdited }
-                />
-              )}
-            </Fragment>
-          </Permissions>
-        </Container>
-      </Fragment>
+            ) }
+          </Fragment>
+        </Permissions>
+      </Container>
+    </Fragment>
   )
 
   function permissionsEdited(permissions: ChannelOverwrites) {

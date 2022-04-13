@@ -4,7 +4,9 @@ import Role from './models/Role';
 
 const cacheRoles = createEvent<Role[]>();
 const updateRole = createEvent<RoleUpdateInfo>();
+// eslint-disable-next-line
 const addRoleMember = createEvent<RoleMemberInfo>();
+// eslint-disable-next-line
 const removeRoleMember = createEvent<RoleMemberInfo>();
 
 interface RoleUpdateInfo {

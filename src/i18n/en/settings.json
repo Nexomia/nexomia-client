@@ -38,9 +38,9 @@
     "invite_description": "Choose the channel to create invite in.",
     "invite_created": "Here is your invite!",
     "invite_created_description": "Click to copy it.",
-    "guildBan_header": "Ban user:",
-    "guildBan_banning": "Bananning...",
-    "guildBan_description": "Select the member to ban or write his name",
+    "guildBan_header": "Ban user",
+    "guildBan_banning": "Banning...",
+    "guildBan_description": "Select a member or write their username",
     "guildBan": {
       "hour": "Previous hour",
       "nothing": "Don't delete any",
@@ -54,8 +54,8 @@
     "guildBan_error": "Failed to ban this user.",
     "password": "Password",
     "overwrite": {
-      "user": "Enter user tag or id",
-      "title": "Add ovewrite"
+      "user": "Enter user id or tag",
+      "title": "Add overwrite"
     }
   },
   "server_general": {

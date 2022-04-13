@@ -51,6 +51,7 @@ function BrandLoading({ active, solid = false }: BrandLoadingPlaceholderProps) {
     if (active && clearElements) setClearElements(false)
     if (active) return;
     setTimeout(() => setClearElements(true), 1000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active]);
 
   return (

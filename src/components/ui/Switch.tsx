@@ -1,18 +1,20 @@
-import classNames from "classnames"
-import { styled } from "linaria/lib/react"
+// TODO: Reimplement from scratch
+
+import classNames from 'classnames';
+import { styled } from 'linaria/lib/react';
 
 type SwitchProps = {
-  active: boolean,
+  active: boolean
 }
 
-const SwitchCss = styled.div`
+const SwitchContainer = styled.div`
   position: relative;
   display: inline-block;
-  width: 48px;
-  height: 24px;
+  width: 44px;
+  height: 26px;
 `
 
-const SliderCss = styled.span`
+const Slider = styled.span`
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -26,8 +28,8 @@ const SliderCss = styled.span`
   &::before {
     position: absolute;
     content: "";
-    height: 16px;
-    width: 16px;
+    height: 18px;
+    width: 18px;
     left: 4px;
     bottom: 4px;
     background-color: var(--text-primary);
@@ -40,16 +42,16 @@ const SliderCss = styled.span`
   }
 
   &.active::before {
-    transform: translateX(22px);
+    transform: translateX(18px);
   }
 `
 
 function Switch({ active }: SwitchProps) {
   return (
-    <SwitchCss>
-      <SliderCss className={ classNames(active ? 'active' : undefined) }/>
-    </SwitchCss>
-  )
+    <SwitchContainer>
+      <Slider className={ classNames(active ? 'active' : undefined) }/>
+    </SwitchContainer>
+  );
 }
 
 export default Switch;

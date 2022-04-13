@@ -38,9 +38,9 @@
     "invite_description": "Выбери канал, в котором создадим приглашение.",
     "invite_created": "Приглашение создано!",
     "invite_created_description": "Нажмите по нему, чтобы скопировать.",
-    "guildBan_header": "Забанить пользователя:",
-    "guildBan_banning": "Бананим...",
-    "guildBan_description": "Выберите участника или напишите его имя",
+    "guildBan_header": "Забанить пользователя",
+    "guildBan_banning": "Баним...",
+    "guildBan_description": "Выберите участника или напишите ник",
     "guildBan": {
       "hour": "Последний час",
       "nothing": "Ничего не удалять",
@@ -49,9 +49,9 @@
       "all": "Все время"
     },
     "guildBan_ban": "Забанить",
-    "guildBan_reason": "Введите причу бана",
-    "guildBan_user": "Введите id пользователя или его тэг",
-    "guildBan_error": "При бане данного пользователя произошла ошибка.",
+    "guildBan_reason": "Введите причину бана",
+    "guildBan_user": "Введите тэг или id пользователя",
+    "guildBan_error": "Не удалось забанить пользователя.",
     "password": "Пароль",
     "overwrite": {
       "user": "Введите тэг или id пользователя",

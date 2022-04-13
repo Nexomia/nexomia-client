@@ -13,7 +13,6 @@ import Message from '../../store/models/Message';
 import StyledText from '../ui/StyledText';
 import { useTranslation } from 'react-i18next';
 import getNeededMessageCount from '../../utils/getNeededMessageCount';
-import $UnreadStore from '../../store/UnreadStore';
 
 interface MessageViewProps {
   channel: string,

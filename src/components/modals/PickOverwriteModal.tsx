@@ -6,10 +6,9 @@ import { Fragment, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import guildsService from '../../services/api/guilds/guilds.service';
 import usersService from '../../services/api/users/users.service';
-import $ContextMenuStore, { setContextMenu } from '../../store/ContextMenuStore';
+import $ContextMenuStore from '../../store/ContextMenuStore';
 import { setModalState } from '../../store/ModalStore';
 import User from '../../store/models/User';
-import $UserCacheStore from '../../store/UserCacheStore';
 import getIconString from '../../utils/getIconString';
 import InactiveLayerCss from '../css/InactiveLayerCss';
 import LayerBackgroundShadeCss from '../css/LayerBackgroundShadeCss';
@@ -69,28 +68,26 @@ function PickOverwriteModal({ active }: ModalProps) {
   const { t } = useTranslation(['settings']);
   const { guildId } = useParams<RouteParams>();
   const { id } = useStore($ContextMenuStore);
-  const UserCache = useStore($UserCacheStore);
   const GuildCache = useStore($GuildCacheStore);
   const RoleCache = useStore($RoleCacheStore);
   const ChannelCache = useStore($ChannelCacheStore);
 
   const [userValue, setUserValue] = useState('');
   const [user, setUser] = useState<User>();
-  const [reasonValue, setReasonValue] = useState('');
   const [isUserLoading, setUserLoading] = useState(false);
   const [isUserBanning, setUserBanning] = useState(false);
-  const [isError, setError] = useState(false);
   const [selected, setSelected]: [DropdownKey | null, any] = useState(null);
 
   const [roleList, setRoleList] = useState<DropdownKey[]>([]);
   
   useEffect(() => {
-    const guild = ChannelCache[guildId]?.guild_id!
-    console.log(GuildCache[guild])
-    const roles: DropdownKey[] = []
+    const guild = ChannelCache[guildId]?.guild_id!;
+    const roles: DropdownKey[] = [];
+
     GuildCache[guild!]?.roles!.forEach((role) => {
-      roles.push({ id: RoleCache[role].id, text: `@${RoleCache[role].name}`, color: RoleCache[role].color })
-    })
+      roles.push({ id: RoleCache[role].id, text: `@${ RoleCache[role].name }`, color: RoleCache[role].color });
+    });
+
     setRoleList(roles);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, active, ChannelCache[guildId]]);
@@ -99,30 +96,30 @@ function PickOverwriteModal({ active }: ModalProps) {
     if (active) {
       setSelected(null);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    setError(false);
     if (userValue && /(\d){15,}\b/.test(userValue)) {
       const timeOutId = setTimeout(() => { setUserLoading(true); loadUserInfo({ ids: userValue}); }, 300);
       return () => clearTimeout(timeOutId);
     } else if (userValue && /(\S){1,}(#)(\S){4,7}\b/.test(userValue) && userValue !== `${user?.username}#${user?.discriminator}`) {
-
-        const timeOutId = setTimeout(() => { setUserLoading(true); loadUserInfo({ tags: encodeURIComponent(userValue) }); }, 300);
-        return () => clearTimeout(timeOutId);
+      const timeOutId = setTimeout(() => { setUserLoading(true); loadUserInfo({ tags: encodeURIComponent(userValue) }); }, 300);
+      return () => clearTimeout(timeOutId);
     } else {
       setUserLoading(false);
       setUser(undefined);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userValue]);
 
   return (
     <Layer className={ classNames({ [LayerBackgroundShadeCss]: true, [InactiveLayerCss]: !active }) } onClick={ (event) => { closeModal(event) } } ref={ layerRef }>
       <Modal className={ css`width: 440px` }>
-          <Fragment>
-            <ModalHeader>{ t('modals.overwrite.title') }<br />
+        <Fragment>
+          <ModalHeader>
+            { t('modals.overwrite.title') }<br />
+
             { user && !isUserLoading && (
               <Container>
                 { user?.avatar
@@ -132,33 +129,37 @@ function PickOverwriteModal({ active }: ModalProps) {
                 <StyledText className={ css`transform: translateY(-4px);` }>{ user?.username }#{user?.discriminator}</StyledText>
               </Container>
             )}
+
             { isUserLoading && (
               <Container>
                 <Dots />
               </Container>
             )}
+
             { !user && !isUserLoading && (
               <Container>
               </Container>
             )}
-              </ModalHeader>
-            
-            <InputField placeholder={ t('modals.overwrite.user') } onChange={ (event) => { setUserValue(event.target.value) } } />
-            { !user && <DropdownInput
+          </ModalHeader>
+          
+          <InputField placeholder={ t('modals.overwrite.user') } onChange={ (event) => { setUserValue(event.target.value) } } />
+
+          { !user && (
+            <DropdownInput
               keys={ roleList }
               defaultKey={ 0 }
               onChange={ setSelected }
             />
-            }
-            { (!user || setSelected) && <FilledButton onClick={ banUser }>{ !isUserBanning ? t('channel.add_overwrite') : <Dots /> }</FilledButton> }
-          </Fragment>
+          ) }
+
+          { (!user || setSelected) && <FilledButton onClick={ banUser }>{ !isUserBanning ? t('channel.add_overwrite') : <Dots /> }</FilledButton> }
+        </Fragment>
       </Modal>
     </Layer>
   )
 
   function closeModal(event?: any) {
     if (event.target !== layerRef.current) return;
-    setError(false);
     setUserLoading(false);
     setUserBanning(false);
     setUser(undefined);
@@ -167,26 +168,28 @@ function PickOverwriteModal({ active }: ModalProps) {
 
   async function banUser() {
     if (selected || user) {
-        const response = await guildsService.patchChannelOverwrite(ChannelCache[guildId].guild_id!, guildId, {
-          id: user ? user.id : selected!.id,
-          type: !user ? OverwriteType.ROLE : OverwriteType.MEMBER,
-          allow: 0,
-          deny: 0,
-        });
+      const response = await guildsService.patchChannelOverwrite(ChannelCache[guildId].guild_id!, guildId, {
+        id: user ? user.id : selected!.id,
+        type: !user ? OverwriteType.ROLE : OverwriteType.MEMBER,
+        allow: 0,
+        deny: 0,
+      });
 
       if (response) {
-        const index = ChannelCache[guildId].permission_overwrites.findIndex(ow => ow.id === response.id)
+        const index = ChannelCache[guildId].permission_overwrites.findIndex(ow => ow.id === response.id);
+
         if (index + 1) {
-          ChannelCache[guildId].permission_overwrites[index] = response
-          cacheChannels([ChannelCache[guildId]])
+          ChannelCache[guildId].permission_overwrites[index] = response;
+          cacheChannels([ChannelCache[guildId]]);
         } else {
-          ChannelCache[guildId].permission_overwrites.push(response)
-          cacheChannels([ChannelCache[guildId]])
+          ChannelCache[guildId].permission_overwrites.push(response);
+          cacheChannels([ChannelCache[guildId]]);
         }
-        setError(false);
+
         setUserLoading(false);
         setUserBanning(false);
         setUser(undefined);
+
         return setModalState({ pickOverwrite: false });
       }
     }
@@ -195,9 +198,11 @@ function PickOverwriteModal({ active }: ModalProps) {
   async function loadUserInfo(data: { ids?: string, tags?: string }) {
     const userInfo = await usersService.getUsers(data);
     setUserLoading(false);
-    if (userInfo)
+    if (userInfo) {
       setUser(userInfo[0]);
-    else setUser(undefined);
+    } else {
+      setUser(undefined);
+    }
   }
 
 }

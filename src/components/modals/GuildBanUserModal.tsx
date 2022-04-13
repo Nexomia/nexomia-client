@@ -67,32 +67,26 @@ function GuildBanUserModal({ active }: ModalProps) {
   const [isUserLoading, setUserLoading] = useState(false);
   const [isUserBanning, setUserBanning] = useState(false);
   const [isError, setError] = useState(false);
+   // eslint-disable-next-line
   const [selected, setSelected]: [DropdownKey | null, any] = useState(null);
 
   useEffect(() => {
-    if (active) {
-      setSelected(null);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (data?.user_id) setUser(UserCache[data?.user_id])
+    if (data?.user_id) setUser(UserCache[data?.user_id]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   useEffect(() => {
     setError(false);
+
     if (userValue && /(\d){15,}\b/.test(userValue)) {
-      if (UserCache[userValue || data?.user_id]) setUser(UserCache[userValue])
+      if (UserCache[userValue || data?.user_id]) setUser(UserCache[userValue]);
       else {
         const timeOutId = setTimeout(() => { setUserLoading(true); loadUserInfo({ ids: userValue || data?.user_id }); }, 300);
         return () => clearTimeout(timeOutId);
       }
     } else if (userValue && /(\S){1,}(#)(\S){4,7}\b/.test(userValue) && userValue !== `${user?.username}#${user?.discriminator}`) {
-
-        const timeOutId = setTimeout(() => { setUserLoading(true); loadUserInfo({ tags: encodeURIComponent(userValue) }); }, 300);
-        return () => clearTimeout(timeOutId);
+      const timeOutId = setTimeout(() => { setUserLoading(true); loadUserInfo({ tags: encodeURIComponent(userValue) }); }, 300);
+      return () => clearTimeout(timeOutId);
     } else {
       setUserLoading(false);
       setUser(undefined);
@@ -101,56 +95,69 @@ function GuildBanUserModal({ active }: ModalProps) {
   }, [userValue]);
 
   const messageDeletionInterval: DropdownKey[] = [
-    {id: "0", text: t('modals.guildBan.nothing')},
-    {id: "3600", text: t('modals.guildBan.hour')},
-    {id: "86400", text: t('modals.guildBan.day')},
-    {id: "604800", text: t('modals.guildBan.week')},
-    {id: "-1", text: t('modals.guildBan.all')},
+    { id: "0",      text: t('modals.guildBan.nothing') },
+    { id: "3600",   text: t('modals.guildBan.hour') },
+    { id: "86400",  text: t('modals.guildBan.day') },
+    { id: "604800", text: t('modals.guildBan.week') },
+    { id: "-1",     text: t('modals.guildBan.all') },
   ];
 
   return (
-    <Layer className={ classNames({ [LayerBackgroundShadeCss]: true, [InactiveLayerCss]: !active }) } onClick={ (event) => { closeModal(event) } } ref={ layerRef }>
+    <Layer
+      className={ classNames({ [LayerBackgroundShadeCss]: true, [InactiveLayerCss]: !active }) }
+      onClick={ (event) => { closeModal(event) } }
+      ref={ layerRef }
+    >
       <Modal className={ css`width: 440px` }>
-          <Fragment>
-            <ModalHeader>{ t('modals.guildBan_header') }<br />
+        <Fragment>
+          <ModalHeader>
+            { t('modals.guildBan_header') }<br />
+
             { user && !isUserLoading && (
               <Container>
-                { user?.avatar
+                {
+                  user?.avatar
                   ? <Avatar src={ user?.avatar.replace('/avatar.webp', '/avatar_40.webp') }/>
                   : <LetterAvatar>{ getIconString(user?.username || '') }</LetterAvatar>
                 }
                 <StyledText className={ css`transform: translateY(-4px);` }>{ user?.username }#{user?.discriminator}</StyledText>
               </Container>
-            )}
+            ) }
+
             { isUserLoading && (
               <Container>
                 <Dots />
               </Container>
-            )}
+            ) }
+
             { !user && !isUserLoading && (
               <Container>
               </Container>
-            )}
-              </ModalHeader>
-            
-            { !data?.user_id && (
-              <InputField placeholder={ t('modals.guildBan_user') } onChange={ (event) => { setUserValue(event.target.value) } } />
-            )}
-            <InputField placeholder={ t('modals.guildBan_reason') } onChange={ (event) => { setReasonValue(event.target.value) } } />
-            <DropdownInput
-              keys={ messageDeletionInterval }
-              defaultKey={ 0 }
-              onChange={ setSelected }
-            />
-            { user && <FilledButton onClick={ banUser }>{ !isUserBanning ? t('modals.guildBan_ban') : <Dots /> }</FilledButton> }
-            { isError && <StyledText className={css`color: var(--text-negative); padding-top: 8px;`}>{ t('modals.guildBan_error') }</StyledText> }
-          </Fragment>
+            ) }
+          </ModalHeader>
+          
+          { !data?.user_id && (
+            <InputField placeholder={ t('modals.guildBan_user') } onChange={ (event) => { setUserValue(event.target.value) } } />
+          ) }
+
+          <InputField placeholder={ t('modals.guildBan_reason') } onChange={ (event) => { setReasonValue(event.target.value) } } />
+
+          <DropdownInput
+            keys={ messageDeletionInterval }
+            defaultKey={ 0 }
+            onChange={ setSelected }
+          />
+
+          { user && <FilledButton onClick={ banUser }>{ !isUserBanning ? t('modals.guildBan_ban') : <Dots /> }</FilledButton> }
+          { isError && <StyledText className={css`color: var(--text-negative); padding-top: 8px;`}>{ t('modals.guildBan_error') }</StyledText> }
+        </Fragment>
       </Modal>
     </Layer>
   )
 
   function closeModal(event: any) {
     if (event.target !== layerRef.current) return;
+
     setError(false);
     setUserLoading(false);
     setUserBanning(false);
@@ -159,30 +166,33 @@ function GuildBanUserModal({ active }: ModalProps) {
   }
 
   async function banUser() {
-    if (id && user) {
-      setUserBanning(true)
-      const res = await guildsService.addGuildBan(id, user.id, reasonValue && reasonValue !== '' ? { reason: reasonValue } : {});
-      if (res) {
-        if (data?.update)
-          data.update();
-        setUserBanning(false);
-        setContextMenu({});
-        setModalState({ guildBanUser: false });
-      } else {
-        setError(true);
-        setUserBanning(false);
-      }
+    if (!id || !user) return;
+
+    setUserBanning(true);
+    const res = await guildsService.addGuildBan(id, user.id, reasonValue && reasonValue !== '' ? { reason: reasonValue } : {});
+
+    if (res) {
+      if (data?.update) data.update();
+      setUserBanning(false);
+      setContextMenu({});
+      setModalState({ guildBanUser: false });
+    } else {
+      setError(true);
+      setUserBanning(false);
     }
   }
   
   async function loadUserInfo(data: { ids?: string, tags?: string }) {
     const userInfo = await usersService.getUsers(data);
-    setUserLoading(false);
-    if (userInfo)
-      setUser(userInfo[0]);
-    else setUser(undefined);
-  }
 
+    setUserLoading(false);
+
+    if (userInfo) {
+      setUser(userInfo[0]);
+    } else {
+      setUser(undefined);
+    }
+  }
 }
 
 export default GuildBanUserModal;
