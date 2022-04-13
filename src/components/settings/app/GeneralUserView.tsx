@@ -53,30 +53,30 @@ function GeneralUserView() {
   });
 
   useEffect(() => {
-    setTag(tag.startsWith('#') ? tag.slice(1) : tag)
-    if (
-      !tagExp.test(tag) ||
-      (tag.length > (UserCache.premium_type ? 7 : 4) || tag.length < (UserCache.premium_type ? 3 : 4)
-    )
-    ) setTagError(true)
-    else setTagError(false)
+    setTag(tag.startsWith('#') ? tag.slice(1) : tag);
+    setTagError(
+      !!(
+        !tagExp.test(tag) ||
+        (tag.length > (UserCache.premium_type ? 7 : 4) || tag.length < (UserCache.premium_type ? 3 : 4))
+      )
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tag]);
 
   useEffect(() => {
-    setTag(tag.startsWith('#') ? tag.slice(1) : tag)
-    if (
-      tag !== UserCache.discriminator &&
-      (!tagExp.test(tag) ||
-      (tag.length > (UserCache.premium_type ? 7 : 4) || tag.length < (UserCache.premium_type ? 3 : 4) ))
-    ) setTagError(true)
-    else setTagError(false)
+    setTag(tag.startsWith('#') ? tag.slice(1) : tag);
+    setTagError(
+      !!(
+        tag !== UserCache.discriminator &&
+        (!tagExp.test(tag) ||
+        (tag.length > (UserCache.premium_type ? 7 : 4) || tag.length < (UserCache.premium_type ? 3 : 4) ))
+      )
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tag]);
 
   useEffect(() => {
-    if (password)
-      saveChanges()
+    if (password) saveChanges();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [password]);
 
@@ -111,7 +111,7 @@ function GeneralUserView() {
             css`
               display: inline-block;
               margin-top: -8px;
-              margin-bottom: 16px;
+              margin-bottom: 0px;
               font-weight: 900;
               font-size: 22px;
               text-align: center;
@@ -134,7 +134,7 @@ function GeneralUserView() {
                 width: 128px;
                 margin-top: -8px;
                 margin-left: -128px;
-                margin-bottom: 16px;
+                margin-bottom: 0px;
                 font-weight: 900;
                 font-size: 22px;
                 text-align: center;
@@ -174,7 +174,10 @@ function GeneralUserView() {
     setSaveLoading(true);
     if (tag.startsWith('#')) setTag(tag.slice(1))
     const userPatch: any = {};
-    if (((userName && userName !== UserCache.username) || (tag && (tag !== UserCache.discriminator))))  {
+    if (
+      ((userName && userName !== UserCache.username) ||
+      (tag && (tag !== UserCache.discriminator)))
+    )  {
       if (!password) {
         setSaveLoading(false);
         setContextMenu({ id: '', data: { hook: sendPassword } });
@@ -201,8 +204,8 @@ function GeneralUserView() {
 
     const res = await UsersService.patchMe(userPatch);
 
-    if (!res) setContextMenu({ data: { hook: sendPassword, error: true } })
-    else setContextMenu({ data: { hook: sendPassword, ok: true } })
+    if (!res) setContextMenu({ data: { hook: sendPassword, error: true } });
+    else setContextMenu({ data: { hook: sendPassword, ok: true } });
 
     setSaveLoading(false);
     setEdited(false);

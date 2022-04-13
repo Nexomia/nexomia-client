@@ -180,8 +180,9 @@ function PackCard({
   )
 
   async function loadUserInfo() {
+    if (!author) return;
     const user = await UsersService.getUser(author);
-    console.log(user);
+    if (!user) return;
     cacheUsers([user]);
     setAuthorUser(user);
   }
