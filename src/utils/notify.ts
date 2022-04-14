@@ -18,6 +18,11 @@ export enum NotifyType {
 
 export default function notify({ title, content, image, type, sound = true }: NotifyProps) {
   new Notification(title, { body: content, image });
-  if (type === NotifyType.NEW_MESSAGE && sound)
-    messageSound.play();
+
+  if (sound) switch (type) {
+
+    case NotifyType.NEW_MESSAGE: messageSound.play();
+    break;
+
+  }
 }

@@ -1,11 +1,11 @@
-import { styled } from "linaria/lib/react";
-import GuildBan from "../../store/models/GuildBan";
-import StyledText from "../ui/StyledText";
-import { format } from "fecha";
-import { css } from "linaria";
-import getIconString from "../../utils/getIconString";
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { styled } from 'linaria/react';
+import GuildBan from '../../store/models/GuildBan';
+import StyledText from '../ui/StyledText';
+import { format } from 'fecha';
+import { css } from 'linaria';
+import getIconString from '../../utils/getIconString';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 
 const Container = styled.div`
@@ -112,7 +112,7 @@ interface GuildBanCollapsibleProps {
   ban: GuildBan
 }
 
-function GuildBanCollapsible({ban}: GuildBanCollapsibleProps) {
+function GuildBanCollapsible({ ban }: GuildBanCollapsibleProps) {
 
   const { t } = useTranslation(['settings']);
 
@@ -128,37 +128,37 @@ function GuildBanCollapsible({ban}: GuildBanCollapsibleProps) {
 
   return (
     <CollapsibleContainer>
-        <CollapsibleHead onClick={() => toggle(!collapsed)} className={collapsed ? css`background: var(--background-secondary);` : ''}>
-        { ban.users && (
-          <Container>
+      <CollapsibleHead onClick={ () => toggle(!collapsed) } className={ collapsed ? css`background: var(--background-secondary);` : '' }>
+      { ban.users && (
+        <Container>
+          {
+            ban.users[userIndex].avatar
+            ? <Avatar src={ ban.users[userIndex].avatar.replace('/avatar.webp', '/avatar_40.webp') }/>
+            : <LetterAvatar>{ getIconString(ban.users[userIndex].username || '') }</LetterAvatar>
+          }
+          <StyledText className={ css`text-align: center; margin: 32px 0` }>{ ban.users[userIndex].username }#{ ban.users[userIndex].discriminator }</StyledText>
+          <Splitter />
+          <StyledText className={ css`margin: 0; font-weight: 900; width: 200px; text-align: right; color: var(--text-secondary)` }>{ format(new Date(ban.date), 'DD.MM.YY HH:mm') }</StyledText>
+          </Container>
+      )}
+      </CollapsibleHead>
+      <CollapsibleContent className={ collapsed ? CollapsibleContentActive : CollapsibleContentHidden }>
+        <ContentContainer>
+          <StyledText className={ css`margin-top: 0; color: var(--text-secondary)` }>{ t('server_bans.reason') }:</StyledText>
+          <StyledText className={ css`margin-left: 8px;` }>{ ban.reason ? ban.reason : t('server_bans.no_reason') }</StyledText>
+          <StyledText className={ css`color: var(--text-secondary); margin-top: 16px;` }>{ t('server_bans.banned_by') }:</StyledText>
+          { ban.users && (
+          <Container className={ css`margin-left: 8px; margin-top: 8px;` }>
             {
-              ban.users[userIndex].avatar
-              ? <Avatar src={ ban.users[userIndex].avatar.replace('/avatar.webp', '/avatar_40.webp') }/>
-              : <LetterAvatar>{ getIconString(ban.users[userIndex].username || '') }</LetterAvatar>
+              ban.users[bannedIndex].avatar
+              ? <AvatarSmall src={ ban.users[bannedIndex].avatar?.replace('/avatar.webp', '/avatar_40.webp') }/>
+              : <LetterAvatarSmall>{ getIconString(ban.users[bannedIndex].username || '') }</LetterAvatarSmall>
             }
-            <StyledText className={ css`text-align: center; margin: 32px 0` }>{ban.users[userIndex].username}#{ban.users[userIndex].discriminator}</StyledText>
-            <Splitter />
-            <StyledText className={ css`margin: 0; font-weight: 900; width: 200px; text-align: right; color: var(--text-secondary)` }>{ format(new Date(ban.date), 'DD.MM.YY HH:mm') }</StyledText>
-            </Container>
-        )}
-        </CollapsibleHead>
-        <CollapsibleContent className={ collapsed ? CollapsibleContentActive : CollapsibleContentHidden }>
-          <ContentContainer>
-            <StyledText className={ css`margin-top: 0; color: var(--text-secondary)` }>{ t('server_bans.reason') }:</StyledText>
-            <StyledText className={ css`margin-left: 8px;` }>{ ban.reason ? ban.reason : t('server_bans.no_reason') }</StyledText>
-            <StyledText className={ css`color: var(--text-secondary); margin-top: 16px;` }>{ t('server_bans.banned_by') }:</StyledText>
-            { ban.users && (
-            <Container className={ css`margin-left: 8px; margin-top: 8px;` }>
-              {
-                ban.users[bannedIndex].avatar
-                ? <AvatarSmall src={ ban.users[bannedIndex].avatar?.replace('/avatar.webp', '/avatar_40.webp') }/>
-                : <LetterAvatarSmall>{ getIconString(ban.users[bannedIndex].username || '') }</LetterAvatarSmall>
-              }
-              <StyledText className={ css`transform: translateY(-4px); margin-left: 8px;` }>{ban.users[bannedIndex].username}#{ban.users[bannedIndex].discriminator}</StyledText>
-            </Container>
-            )}
-          </ContentContainer> 
-        </CollapsibleContent>
+            <StyledText className={ css`transform: translateY(-4px); margin-left: 8px;` }>{ ban.users[bannedIndex].username }#{ ban.users[bannedIndex].discriminator }</StyledText>
+          </Container>
+          )}
+        </ContentContainer> 
+      </CollapsibleContent>
     </CollapsibleContainer>
   )
 }

@@ -3,7 +3,7 @@ import { css } from 'linaria';
 
 import classNames from 'classnames';
 
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   RiAddFill
@@ -91,7 +91,7 @@ interface RouteParams {
 }
 
 function Guilds() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { guildId } = useParams<RouteParams>();
 
   const guildList = useStore($GuildStore);
@@ -138,9 +138,9 @@ function Guilds() {
 
   function switchGuild(id: string) {
     if (channels[id] && channels[id].length) {
-      history.push(`/channels/${id}/${channels[id][channels[id].indexOf(guilds[id]?.default_channel || '')] || channels[id][0]}`);
+      navigate(`/channels/${id}/${channels[id][channels[id].indexOf(guilds[id]?.default_channel || '')] || channels[id][0]}`);
     } else {
-      history.push(`/channels/${id}`);
+      navigate(`/channels/${id}`);
     }
   }
 

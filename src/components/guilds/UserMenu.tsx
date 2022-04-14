@@ -14,7 +14,7 @@ import {
 import { useStore } from 'effector-react';
 import $UserStore from '../../store/UserStore';
 
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import PanelButton from './PanelButton';
 import PanelIconCss from '../css/PanelIconCss';
@@ -67,7 +67,7 @@ interface RouteParams {
 }
 
 function UserMenu() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { path, guildId } = useParams<RouteParams>();
 
   const [containerOpened, setContainerOpened] = useState(true);
@@ -83,16 +83,16 @@ function UserMenu() {
           <AvatarLetters>{ getIconString(user.username) }</AvatarLetters>
         ) }
       </PanelButton>
-      <PanelButton onClick={ () => history.push('/home') } className={ classNames({ active: path === 'home' }) }>
+      <PanelButton onClick={ () => navigate('/home') } className={ classNames({ active: path === 'home' }) }>
         <RiHomeFill className={ PanelIconCss } />
       </PanelButton>
-      <PanelButton onClick={ () => history.push('/discover') } className={ classNames({ active: path === 'discover' || path === 'profiles' }) }>
+      <PanelButton onClick={ () => navigate('/discover') } className={ classNames({ active: path === 'discover' || path === 'profiles' }) }>
         <RiCompassFill className={ PanelIconCss } />
       </PanelButton>
-      <PanelButton onClick={ () => history.push('/channels/@me') } className={ classNames({ active: guildId === '@me' }) }>
+      <PanelButton onClick={ () => navigate('/channels/@me') } className={ classNames({ active: guildId === '@me' }) }>
         <RiMailFill className={ PanelIconCss } />
       </PanelButton>
-      <PanelButton onClick={ () => history.push('/settings/general') } className={ classNames({ active: path === 'guildsettings' || path === 'settings' }) }>
+      <PanelButton onClick={ () => navigate('/settings/general') } className={ classNames({ active: path === 'guildsettings' || path === 'settings' }) }>
         <RiSettings4Fill className={ PanelIconCss } />
       </PanelButton>
       <PanelButton className={ css`margin-bottom: 0` }>

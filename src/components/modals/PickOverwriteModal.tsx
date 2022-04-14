@@ -59,7 +59,7 @@ interface ModalProps {
 }
 
 interface RouteParams {
-  guildId: string,
+  guildId: string
 }
 
 function PickOverwriteModal({ active }: ModalProps) {

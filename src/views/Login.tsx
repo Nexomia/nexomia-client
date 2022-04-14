@@ -1,7 +1,7 @@
 import { css } from 'linaria';
 
 import { useState, useRef, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { useTranslation } from 'react-i18next';
 
@@ -30,11 +30,11 @@ const negativeColorCss = css`
 
 function Login() {
   const { token } = useStore($AuthStore);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (token && token !== '') {
-      history.push('/home');
+      navigate('/home');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -88,7 +88,7 @@ function Login() {
     setToken(response.access_token);
     setRefreshToken(response.refresh_token);
 
-    history.push('/home');
+    navigate('/home');
   }
 }
 

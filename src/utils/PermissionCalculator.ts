@@ -24,11 +24,10 @@ class PermissionCalculator {
         result &= ~permissions.deny;
         result |= permissions.allow;
         if (channel && ChannelStore[channel]?.permission_overwrites.length) {
-          console.log(channel )
-          const overwrite = ChannelStore[channel]?.permission_overwrites.filter(ow => ow.id === roleId)[0] || false
+          const overwrite = ChannelStore[channel]?.permission_overwrites.filter(ow => ow.id === roleId)[0] || false;
           if (overwrite) {
-          result &= ~overwrite.deny;
-          result |= overwrite.allow;
+            result &= ~overwrite.deny;
+            result |= overwrite.allow;
           }
         }
       }
@@ -36,12 +35,10 @@ class PermissionCalculator {
     });
 
     if (channel && ChannelStore[channel]?.permission_overwrites.length) {
-      const overwrite = ChannelStore[channel]?.permission_overwrites.filter(ow => ow.id === user || UserStore.id)[0] || false
+      const overwrite = ChannelStore[channel]?.permission_overwrites.filter(ow => ow.id === user || UserStore.id)[0] || false;
       if (overwrite) {
-        console.log(overwrite)
-          result &= ~overwrite.deny;
-          result |= overwrite.allow;
-          console.log(result)
+        result &= ~overwrite.deny;
+        result |= overwrite.allow;
       }
     }
 

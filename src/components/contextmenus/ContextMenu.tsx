@@ -2,7 +2,7 @@ import { useStore } from 'effector-react';
 import { styled } from 'linaria/react';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router-dom';
 import channelsService from '../../services/api/channels/channels.service';
 import GuildsService from '../../services/api/guilds/guilds.service';
 import MessagesService from '../../services/api/messages/messages.service';
@@ -39,7 +39,7 @@ function ContextMenu() {
   const { guildId } = useParams<RouteParams>();
   const ContextMenu = useStore($ContextMenuStore)
   const { top, left, visible, type, id } = ContextMenu;
-  const history = useHistory();
+  const navigate = useNavigate();
   const MessageCache = useStore($MessageCacheStore);
   const ChannelCache = useStore($ChannelCacheStore);
   const GuildCache = useStore($GuildCacheStore);
@@ -56,7 +56,7 @@ function ContextMenu() {
       } else {
         setOffset(0);
       }
-      setImmediate(() => setBlockVisible(true));
+      setTimeout(() => setBlockVisible(true), 0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ContextMenu]);
@@ -79,7 +79,7 @@ function ContextMenu() {
                 PermissionCalculator.getUserPermissions(id || '', '', '')
                 & ComputedPermissions.MANAGE_GUILD
               ) ? (
-                <ContextTab title={ t('menu.settings') } onClick={ () => history.push(`/guildsettings/${id}/general`) } />
+                <ContextTab title={ t('menu.settings') } onClick={ () => navigate(`/guildsettings/${id}/general`) } />
               ) : null }
 
               { (
@@ -220,7 +220,7 @@ function ContextMenu() {
                 )
               ) ? (
                 <Fragment>
-                  <ContextTab title={ t('menu.edit') } onClick={ () => history.push(`/channelsettings/${id}/general`) } />
+                  <ContextTab title={ t('menu.edit') } onClick={ () => navigate(`/channelsettings/${id}/general`) } />
                   <ContextTab title={ step ? t('menu.confirmation') : t('menu.delete') } onClick={ deleteChannel } />
                 </Fragment>
               ) : null }
@@ -265,7 +265,7 @@ function ContextMenu() {
       setContextMenu({ visible: false, lock: false });
 
       if (guildId === id) {
-        history.push('/home');
+        navigate('/home');
       }
     }
   }

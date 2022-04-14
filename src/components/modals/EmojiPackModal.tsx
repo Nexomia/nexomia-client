@@ -13,7 +13,7 @@ import Modal from '../ui/Modal';
 import ModalHeader from '../ui/ModalHeader';
 import StyledText from '../ui/StyledText';
 import EmojisService from '../../services/api/emojis/emojis.service';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import $UserStore from '../../store/UserStore';
 
 interface ModalProps {
@@ -56,7 +56,7 @@ function EmojiPackModal({ active }: ModalProps) {
   const EmojiPacks = useStore($EmojiPackCacheStore);
   const User = useStore($UserStore);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   // const { t } = useTranslation(['settings']);
 
@@ -117,7 +117,7 @@ function EmojiPackModal({ active }: ModalProps) {
 
   function explore() {
     setModalState({ emojiPack: [false, Modals.emojiPack[1]] });
-    history.push('/settings/emotes');
+    navigate('/settings/emotes');
   }
 }
 

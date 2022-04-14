@@ -110,12 +110,12 @@ function ChatView() {
 
   useEffect(() => {
     if (!addedLoading) {
-      setImmediate(() => {
+      setTimeout(() => {
         scrollerRef.current?.scrollTo({
           top: scrollerRef?.current?.scrollHeight - addScroll,
           behavior: 'auto'
         });
-      });
+      }, 0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addedLoading]);
@@ -184,12 +184,12 @@ function ChatView() {
         force
       )
     ) {
-      setImmediate(() => {
+      setTimeout(() => {
         scrollerRef.current?.scrollTo({
           top: scrollerRef.current.scrollHeight * 2,
           behavior: 'auto'
         });
-      });
+      }, 0);
     }
   }
 

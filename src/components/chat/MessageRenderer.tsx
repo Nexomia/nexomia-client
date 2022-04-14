@@ -3,7 +3,7 @@
   import { format } from 'fecha';
   import { css } from 'linaria';
   import { styled } from 'linaria/react';
-  import { useHistory, useParams } from 'react-router-dom';
+  import { useNavigate, useParams } from 'react-router-dom';
   import $MessageCacheStore from '../../store/MessageCacheStore';
   import $UserCacheStore from '../../store/UserCacheStore';
   import $ChannelCacheStore from '../../store/ChannelCacheStore';
@@ -155,54 +155,6 @@
 
   `
 
-  // const MarkdownContentCss = css`
-  // & p {
-  //   margin: 0;
-  // }
-  // & > div {
-  //   margin-bottom: -20px;
-  // }
-  // & ul:first-child {
-  //   margin: 0;
-  //   padding-inline-start: 32px;
-  //   margin-block-start: 0;
-  // }
-  // & ul:not(:first-child) {
-  //   margin: 0;
-  //   padding-inline-start: 32px;
-  //   margin-block-start: -24px;
-  // }
-  // & h1, h2, h3, h4, h5, h6, hr {
-  //   margin-block-start: 0;
-  //   margin-block-end: 0;
-  // }
-  // & a {
-  //   text-decoration: none;
-  //   color: var(--accent);
-  // }
-  // & pre {
-  //   background: var(--background-secondary);
-  //   padding: 1em;
-  //   margin: 0.5em 0;
-  //   overflow: auto;
-  //   border-radius: 0.3em;
-  // }
-  // & code {
-  //   background: var(--background-secondary);
-  // }
-  // & blockquote {
-  //   display: flex;
-  //   margin: 0 16px;
-  //   margin-block-start: 8px;
-  //   margin-block-end: 8px;
-  //   margin-inline-start: 0;
-  //   margin-inline-end: 0;
-  //   border-left: 4px var(--accent) solid;
-  //   border-radius: 2px;
-  //   padding-left: 8px;
-  // }
-  // `
-
   interface MessageProps {
     id: string,
     grouped: boolean,
@@ -232,7 +184,7 @@
     }
     const { channelId } = useParams<RouteParams>();
 
-    const history = useHistory();
+    const navigate = useNavigate();
     const User = $UserStore.getState();
 
     const textRef = useRef<HTMLDivElement>(null);
@@ -382,7 +334,7 @@
     )
 
     function showUserProfile() {
-      history.push(`/profiles/${ MessageCache[id].author }`);
+      navigate(`/profiles/${ MessageCache[id].author }`);
     }
 
     function openContextMenu(event: any) {

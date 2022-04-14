@@ -22,15 +22,16 @@ class GuildEventHandler {
   async channelPermissionOverwrite(event: CustomMessageEvent) {
     const ChannelsCache = $ChannelCacheStore.getState();
     if (!ChannelsCache[event.info.data.channel_id]) return;
-    console.log(event.info.data)
-    const index = ChannelsCache[event.info.data.channel_id].permission_overwrites.findIndex(ow => ow.id === event.info.data.data.id)
-    if (index + 1)
-      ChannelsCache[event.info.data.channel_id].permission_overwrites[index] = event.info.data.data
-    else {
-      ChannelsCache[event.info.data.channel_id].permission_overwrites.push(event.info.data.data)
+
+    const index = ChannelsCache[event.info.data.channel_id].permission_overwrites.findIndex(ow => ow.id === event.info.data.data.id);
+
+    if (index + 1) {
+      ChannelsCache[event.info.data.channel_id].permission_overwrites[index] = event.info.data.data;
+    } else {
+      ChannelsCache[event.info.data.channel_id].permission_overwrites.push(event.info.data.data);
     }
-    cacheChannels([ChannelsCache[event.info.data.channel_id]])
-    console.log(ChannelsCache[event.info.data.channel_id])
+
+    cacheChannels([ChannelsCache[event.info.data.channel_id]]);
   }
 
 }

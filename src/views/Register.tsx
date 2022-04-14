@@ -1,7 +1,7 @@
 import { css } from 'linaria';
 
 import { useState, Fragment, useRef, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { useTranslation } from 'react-i18next';
 
@@ -30,11 +30,11 @@ const negativeColorCss = css`
 
 function Register() {
   const { token } = useStore($AuthStore);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (token) {
-      history.push('/channels/@me');
+      navigate('/channels/@me');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -105,7 +105,7 @@ function Register() {
   }
 
   function login() {
-    history.push('/login');
+    navigate('/login');
   }
 }
 

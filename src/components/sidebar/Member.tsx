@@ -3,7 +3,7 @@ import { useStore } from 'effector-react';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
 import { useEffect, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import UsersService from '../../services/api/users/users.service';
 import $UserCacheStore, { cacheUsers } from '../../store/UserCacheStore';
 import getIconString from '../../utils/getIconString';
@@ -82,7 +82,7 @@ interface MemberProps {
 
 function Member({ id, guild, offline = false, tab = false, onClick = () => null, active = false }: MemberProps) {
   const UserCache = useStore($UserCacheStore);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const textRef = useRef<HTMLDivElement>(null);
 
@@ -141,7 +141,7 @@ function Member({ id, guild, offline = false, tab = false, onClick = () => null,
 
   function openProfile() {
     if (tab) onClick();
-    else history.push(`/profiles/${id}`);
+    else navigate(`/profiles/${id}`);
   }
 
   async function loadUser() {

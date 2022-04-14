@@ -1,14 +1,15 @@
 import {
-  Switch,
+  Routes,
   Route,
-  useHistory
+  useNavigate,
+  Navigate
 } from 'react-router-dom';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 
 import { useStore } from 'effector-react';
 import $AuthStore, { setToken } from '../store/AuthStore';
-import $UserStore, { setUser } from '../store/UserStore';
+import { setUser } from '../store/UserStore';
 import { setGuilds } from '../store/GuildStore';
 import { cacheGuilds } from '../store/GuildCacheStore';
 import $ContextMenuStore, { setContextMenu } from '../store/ContextMenuStore';
@@ -42,9 +43,8 @@ import { cacheEmojiPacks } from '../store/EmojiPackStore';
 
 function App() {
   const { token } = useStore($AuthStore);
-  const User = useStore($UserStore);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [loaded, setLoaded] = useState(false);
 
@@ -60,54 +60,78 @@ function App() {
         solid={ true }
       />
       { loaded && (
-        <Switch>
-          <Route path={`/channels/:guildId/:channelId`}>
-            <ContextMenu />
-            <Modals />
-            <Guilds />
-            <Sidebar />
-            <Content />
-            <MemberSidebar />
-          </Route>
+        <Routes>
+          <Route
+            path={ `/channels/:guildId/:channelId` }
+            element={
+              <Fragment>
+                <ContextMenu />
+                <Modals />
+                <Guilds />
+                <Sidebar />
+                <Content />
+                <MemberSidebar />
+              </Fragment>
+            }
+          />
 
-          <Route path={`/channels/:guildId`}>
-            <ContextMenu />
-            <Modals />
-            <Guilds />
-            <Sidebar />
-            <Content />
-          </Route>
+          <Route
+            path={ `/channels/:guildId` }
+            element={
+              <Fragment>
+                <ContextMenu />
+                <Modals />
+                <Guilds />
+                <Sidebar />
+                <Content />
+              </Fragment>
+            }
+          />
 
-          <Route path={`/:path/:guildId/:channelId`}>
-            <ContextMenu />
-            <Modals />
-            <Guilds />
-            <Sidebar />
-            <Content />
-          </Route>
+          <Route
+            path={ `/:path/:guildId/:channelId` }
+            element={
+              <Fragment>
+                <ContextMenu />
+                <Modals />
+                <Guilds />
+                <Sidebar />
+                <Content />
+              </Fragment>
+            }
+          />
 
-          <Route path={`/:path/:guildId`}>
-            <ContextMenu />
-            <Modals />
-            <Guilds />
-            <Sidebar />
-            <Content />
-          </Route>
+          <Route
+            path={ `/:path/:guildId` }
+            element={
+              <Fragment>
+                <ContextMenu />
+                <Modals />
+                <Guilds />
+                <Sidebar />
+                <Content />
+              </Fragment>
+            }
+          />
 
-          <Route path={`/:path`}>
-            <ContextMenu />
-            <Modals />
-            <Guilds />
-            <Sidebar />
-            <Content />
-          </Route>
+          <Route
+            path={ `/:path` }
+            element={
+              <Fragment>
+                <ContextMenu />
+                <Modals />
+                <Guilds />
+                <Sidebar />
+                <Content />
+              </Fragment>
+            }
+          />
 
-          { User ? (
-            <Route path='/'>
-              { () => history.push('/home') }
-            </Route>
-          ) : null }
-        </Switch>
+          <Route
+            path={ `/` }
+            element={ <Navigate to={ `/home` } /> }
+          />
+        </Routes>
       ) }
     </div>
   );
@@ -117,7 +141,7 @@ function App() {
     const receivedUserInfo = await UsersService.getUser('@me');
     if (!receivedUserInfo) {
       setToken('');
-      history.push('/login');
+      navigate('/login');
       return;
     }
 
@@ -139,7 +163,7 @@ function App() {
     cacheChannels(dmChannels);
     setGuildChannels({ guild: '@me', channels: dmChannels.map((channel: Channel) => channel.id) });
 
-    SocketManager.setToken(localStorage.getItem('authid') || ''); // need fix later
+    SocketManager.setToken(token);
     SocketManager.init(setLoaded);
 
     SocketManager.onLoad = () => setLoaded(true);
