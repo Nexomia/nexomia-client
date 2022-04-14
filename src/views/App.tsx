@@ -40,6 +40,7 @@ import { cacheChannels } from '../store/ChannelCacheStore';
 import { setGuildChannels } from '../store/ChannelStore';
 import { cacheUsers } from '../store/UserCacheStore';
 import { cacheEmojiPacks } from '../store/EmojiPackStore';
+import EmojiCacheManager from '../utils/EmojiCacheManager';
 
 function App() {
   const { token } = useStore($AuthStore);
@@ -47,6 +48,7 @@ function App() {
   const navigate = useNavigate();
 
   const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     preloadUserInfo();
@@ -137,6 +139,10 @@ function App() {
   );
 
   async function preloadUserInfo() {
+    if (loading) return;
+    setLoading(true);
+    EmojiCacheManager.generateCache();
+    
     CommonRequestManager.setToken(token);
     const receivedUserInfo = await UsersService.getUser('@me');
     if (!receivedUserInfo) {

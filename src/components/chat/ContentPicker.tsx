@@ -1,13 +1,12 @@
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
-import { ChangeEvent, Fragment, useEffect, useState } from 'react';
+import { ChangeEvent, Fragment, startTransition, useEffect, useState } from 'react';
 import InputField from '../ui/InputField';
 import StyledText from '../ui/StyledText';
 
 import emojis from 'emojibase-data/en/data.json';
 
 import { Emoji } from 'emojibase';
-import { parse } from 'twemoji-parser';
 import classNames from 'classnames';
 import { RiBuildingFill, RiCakeFill, RiEmotion2Fill, RiFlagFill, RiGlobalFill, RiGroupFill, RiHeartPulseFill, RiLeafFill, RiOutletFill, RiStarFill } from 'react-icons/ri';
 import StyledIconCss from '../css/StyledIconCss';
@@ -19,6 +18,7 @@ import $EmojiPackCacheStore from '../../store/EmojiPackStore';
 import $EmojiCacheStore from '../../store/EmojiStore';
 import EmojiPackType from '../../store/models/EmojiPackType';
 import EmoteHoverEffect from '../css/EmoteHoverEffect';
+import EmojiCacheManager from '../../utils/EmojiCacheManager';
 
 const Container = styled.div`
   position: absolute;
@@ -137,7 +137,9 @@ function ContentPicker({ onSelect = () => null, type }: PickerProps) {
 
   const [hoveredId, setHoveredId]: any = useState(0);
   const [selectedGroup, setSelectedGroup] = useState('0');
+  const [selectedGroupIndication, setSelectedGroupIndication] = useState('0');
   const [searchText, setSearchText] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     setSelectedGroup(
@@ -148,6 +150,20 @@ function ContentPicker({ onSelect = () => null, type }: PickerProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
+  useEffect(() => {
+    const currentSearchQuery = `${ searchQuery }`;
+    startTransition(() => {
+      setSearchText(currentSearchQuery);
+    });
+  }, [searchQuery]);
+
+  useEffect(() => {
+    const currentSelectedGroup = `${ selectedGroupIndication }`;
+    startTransition(() => {
+      setSelectedGroup(currentSelectedGroup);
+    });
+  }, [selectedGroupIndication]);
+
   let parsedOptimize: any = null
 
   return (
@@ -157,7 +173,7 @@ function ContentPicker({ onSelect = () => null, type }: PickerProps) {
           UserCache.emojiPacks.map((pack: string) => EmojiPacks[pack].type === type && (
             <InputButton
               className={ classNames(CategoryButtonCss, { hover: selectedGroup === pack && !searchText }) }
-              onClick={ () => setSelectedGroup(pack) }
+              onClick={ () => setSelectedGroupIndication(pack) }
             >
               <img
                 alt=''
@@ -171,62 +187,62 @@ function ContentPicker({ onSelect = () => null, type }: PickerProps) {
           type === EmojiPackType.EMOJI && (
             <Fragment>
               <InputButton
-                className={ classNames(CategoryButtonCss, { hover: selectedGroup === '0' && !searchText }) }
-                onClick={ () => setSelectedGroup('0') }
+                className={ classNames(CategoryButtonCss, { hover: selectedGroupIndication === '0' && !searchText }) }
+                onClick={ () => setSelectedGroupIndication('0') }
               >
                 <RiEmotion2Fill className={ classNames(StyledIconCss, InputIconCss) } />
               </InputButton>
               <InputButton
-                className={ classNames(CategoryButtonCss, { hover: selectedGroup === '1' && !searchText }) }
-                onClick={ () => setSelectedGroup('1') }
+                className={ classNames(CategoryButtonCss, { hover: selectedGroupIndication === '1' && !searchText }) }
+                onClick={ () => setSelectedGroupIndication('1') }
               >
                 <RiGroupFill className={ classNames(StyledIconCss, InputIconCss) } />
               </InputButton>
               <InputButton
-                className={ classNames(CategoryButtonCss, { hover: selectedGroup === '2' && !searchText }) }
-                onClick={ () => setSelectedGroup('2') }
+                className={ classNames(CategoryButtonCss, { hover: selectedGroupIndication === '2' && !searchText }) }
+                onClick={ () => setSelectedGroupIndication('2') }
               >
                 <RiOutletFill className={ classNames(StyledIconCss, InputIconCss) } />
               </InputButton>
               <InputButton
-                className={ classNames(CategoryButtonCss, { hover: selectedGroup === '3' && !searchText }) }
-                onClick={ () => setSelectedGroup('3') }
+                className={ classNames(CategoryButtonCss, { hover: selectedGroupIndication === '3' && !searchText }) }
+                onClick={ () => setSelectedGroupIndication('3') }
               >
                 <RiLeafFill className={ classNames(StyledIconCss, InputIconCss) } />
               </InputButton>
               <InputButton
-                className={ classNames(CategoryButtonCss, { hover: selectedGroup === '4' && !searchText }) }
-                onClick={ () => setSelectedGroup('4') }
+                className={ classNames(CategoryButtonCss, { hover: selectedGroupIndication === '4' && !searchText }) }
+                onClick={ () => setSelectedGroupIndication('4') }
               >
                 <RiCakeFill className={ classNames(StyledIconCss, InputIconCss) } />
               </InputButton>
               <InputButton
-                className={ classNames(CategoryButtonCss, { hover: selectedGroup === '5' && !searchText }) }
-                onClick={ () => setSelectedGroup('5') }
+                className={ classNames(CategoryButtonCss, { hover: selectedGroupIndication === '5' && !searchText }) }
+                onClick={ () => setSelectedGroupIndication('5') }
               >
                 <RiBuildingFill className={ classNames(StyledIconCss, InputIconCss) } />
               </InputButton>
               <InputButton
-                className={ classNames(CategoryButtonCss, { hover: selectedGroup === '6' && !searchText }) }
-                onClick={ () => setSelectedGroup('6') }
+                className={ classNames(CategoryButtonCss, { hover: selectedGroupIndication === '6' && !searchText }) }
+                onClick={ () => setSelectedGroupIndication('6') }
               >
                 <RiHeartPulseFill className={ classNames(StyledIconCss, InputIconCss) } />
               </InputButton>
               <InputButton
-                className={ classNames(CategoryButtonCss, { hover: selectedGroup === '7' && !searchText }) }
-                onClick={ () => setSelectedGroup('7') }
+                className={ classNames(CategoryButtonCss, { hover: selectedGroupIndication === '7' && !searchText }) }
+                onClick={ () => setSelectedGroupIndication('7') }
               >
                 <RiStarFill className={ classNames(StyledIconCss, InputIconCss) } />
               </InputButton>
               <InputButton
-                className={ classNames(CategoryButtonCss, { hover: selectedGroup === '8' && !searchText }) }
-                onClick={ () => setSelectedGroup('8') }
+                className={ classNames(CategoryButtonCss, { hover: selectedGroupIndication === '8' && !searchText }) }
+                onClick={ () => setSelectedGroupIndication('8') }
               >
                 <RiGlobalFill className={ classNames(StyledIconCss, InputIconCss) } />
               </InputButton>
               <InputButton
-                className={ classNames(CategoryButtonCss, { hover: selectedGroup === '9' && !searchText }) }
-                onClick={ () => setSelectedGroup('9') }
+                className={ classNames(CategoryButtonCss, { hover: selectedGroupIndication === '9' && !searchText }) }
+                onClick={ () => setSelectedGroupIndication('9') }
               >
                 <RiFlagFill className={ classNames(StyledIconCss, InputIconCss) } />
               </InputButton>
@@ -244,7 +260,7 @@ function ContentPicker({ onSelect = () => null, type }: PickerProps) {
               width: calc(100% - 12px);
               padding: 0 6px;
             ` }
-            onChange={ (event: ChangeEvent<HTMLInputElement>) => setSearchText(event.target.value) }
+            onChange={ (event: ChangeEvent<HTMLInputElement>) => setSearchQuery(event.target.value) }
           />
         </SearchContainer>
         <Scrollable>
@@ -272,7 +288,7 @@ function ContentPicker({ onSelect = () => null, type }: PickerProps) {
               (
                 (!searchText && emote.group?.toString() === selectedGroup) ||
                 (searchText && emote.label.includes(searchText))
-              ) && (parsedOptimize = parse(emote.emoji)).length ? (
+              ) && (parsedOptimize = EmojiCacheManager.get(emote.emoji)).length ? (
                 <Emote
                   key={ index }
                   className={ classNames(hoveredId === index ? 'hovered' : '', EmoteHoverEffect) }
@@ -290,7 +306,7 @@ function ContentPicker({ onSelect = () => null, type }: PickerProps) {
           {
             emojis[hoveredId] && (
               <Fragment>
-                <EmoteImage src={ parse(emojis[hoveredId].emoji)[0].url } />
+                <EmoteImage src={ EmojiCacheManager.get(emojis[hoveredId].emoji)[0].url } />
                 <StyledText className={ css`margin: 0 0 0 8px` }>{ emojis[hoveredId].label }</StyledText>
               </Fragment>
             )
