@@ -20,7 +20,6 @@ const Container = styled.div`
   height: 36px;
   display: flex;
   position: relative;
-  alignSelf: stretch;
   flex-direction: row;
   cursor: pointer;
   transition: .2s;
@@ -49,6 +48,7 @@ const TextCss = css`
   white-space: nowrap;
   overflow: hidden;
   display: flex;
+  flex-direction: row;
   align-items: center;
   @-moz-document url-prefix() {
     margin-top: 2px;
@@ -60,12 +60,12 @@ const ColorCss = css`
 `
 
 const Unread = styled.div`
-  position: absolute;
-  height: 8px;
-  border: 3px solid #fff;
-  border-radius: 0 4px 4px 0;
-  margin-left: -16px;
-  top: calc(50% - 4px);
+  height: 9px;
+  width: 9px;
+  background: var(--accent);
+  border-radius: 5px;
+  margin-top: 8px;
+  margin-right: 4px;
 `
 
 const ColorDot = styled.div`
@@ -116,12 +116,20 @@ function Tab({ Icon, title, active, onClick, tabId, negative, contextEnabled = f
       onContextMenu={ openContextMenu }
       className={ classNames({ active: active || tabId === channelId || tabId === guildId }) }
     >
-      { tabId && ChannelCache[tabId] && tabId !== channelId && tabId !== 'new' && unread && <Unread /> }
       { Icon && <Icon className={ classNames({ [StyledIconCss]: true, [TabIconCss]: true }) } /> }
-      <StyledText className={ classNames(TextCss, negative ? ColorCss : null) }>
+      <StyledText
+        className={
+          classNames(
+            TextCss,
+            negative ? ColorCss : null
+          )
+        }
+      >
         { dot && <ColorDot style={{ background: dot }} /> }
         <span className={ css`margin-top: -4px` }>{ title }</span>
       </StyledText>
+      <div className={ css`flex-grow: 1` } />
+      { tabId && ChannelCache[tabId] && tabId !== channelId && tabId !== 'new' && unread && <Unread /> }
     </Container>
   );
 

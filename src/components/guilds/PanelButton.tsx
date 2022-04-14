@@ -9,12 +9,18 @@ const PanelButton = styled.div`
   background: var(--background-primary);
   margin-bottom: 8px;
   border-radius: 50%;
+  outline: solid 0px;
+  outline-color: transparent;
   transition: .2s;
   cursor: pointer;
   flex-shrink: 0;
   &:hover, &.active {
-    background: var(--accent);
+    background: var(--background-light);
     border-radius: 12px;
+  }
+  &.active {
+    outline: solid 3px;
+    outline-color: var(--accent);
   }
   &:active {
     transform: translateY(2px);

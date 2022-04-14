@@ -63,20 +63,21 @@ const GuildLetters = css`
 `
 
 const Indicator = styled.div`
-
-  width: 2px;
-  background: #fff;
+  width: 8px;
+  background: transparent;
   position: relative;
+  z-index: 2;
+  top: 10px;
   height: 8px;
-  border: 0px solid #fff;
-  border-radius: 0 4px 4px 0;
-  top: 50%;
-  margin-top: -8px;
-  margin-left: -10px;
-  transition: transform .2s ease-in, border-radius .2s ease-in, border .2s ease-in;
+  border: 5px solid transparent;
+  border-radius: 5px;
+  margin-top: -10px;
+  margin-left: 38px;
+  transition: .2s;
 
   &.unread {
-    border: 2px solid #fff;
+    border: 5px solid var(--accent);
+    outline: 4px solid var(--background-secondary)
   }
 
   &.selected {
@@ -106,7 +107,7 @@ function Guilds() {
       {
         guildList.map((guildListId) => (
           <GuildContainer>
-            <Indicator className={ `${ guildId === guildListId ? 'selected' : undefined } ${ (Unreads[guildListId] || (guilds[guildListId].unread && !channels[guildListId])) ? 'unread' : undefined }` }/>
+            <Indicator className={ `${ (Unreads[guildListId] || (guilds[guildListId].unread && !channels[guildListId])) ? 'unread' : undefined }` }/>
             <PanelButton
               onClick={ () => switchGuild(guildListId) }
               onContextMenu={ (event: any) => openContextMenu(event, guildListId) }
