@@ -48,6 +48,8 @@ const TextCss = css`
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  display: flex;
+  align-items: center;
   @-moz-document url-prefix() {
     margin-top: 2px;
   }
@@ -56,18 +58,30 @@ const TextCss = css`
 const ColorCss = css`
   color: var(--text-negative);
 `
+
 const Unread = styled.div`
-    position: absolute;
-    height: 8px;
-    border: 3px solid #fff;
-    border-radius: 0 4px 4px 0;
-    margin-left: -16px;
-    top: calc(50% - 4px);
+  position: absolute;
+  height: 8px;
+  border: 3px solid #fff;
+  border-radius: 0 4px 4px 0;
+  margin-left: -16px;
+  top: calc(50% - 4px);
+`
+
+const ColorDot = styled.div`
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-left: 2px;
+  margin-right: 10px;
+  margin-top: -1px;
 `
 
 interface TabProps {
   Icon?: IconType,
   title: string,
+  dot?: string,
   active?: boolean,
   tabId?: string,
   contextEnabled?: boolean,
@@ -80,7 +94,7 @@ interface RouteParams {
   channelId: string
 }
 
-function Tab({ Icon, title, active, onClick, tabId, negative, contextEnabled = false }: TabProps) {
+function Tab({ Icon, title, active, onClick, tabId, negative, contextEnabled = false, dot = '' }: TabProps) {
   const ChannelCache = useStore($ChannelCacheStore);
   const Unreads = useStore($UnreadStore);
 
@@ -104,7 +118,10 @@ function Tab({ Icon, title, active, onClick, tabId, negative, contextEnabled = f
     >
       { tabId && ChannelCache[tabId] && tabId !== channelId && tabId !== 'new' && unread && <Unread /> }
       { Icon && <Icon className={ classNames({ [StyledIconCss]: true, [TabIconCss]: true }) } /> }
-      <StyledText className={ classNames(TextCss, negative ? ColorCss : null) }>{ title }</StyledText>
+      <StyledText className={ classNames(TextCss, negative ? ColorCss : null) }>
+        { dot && <ColorDot style={{ background: dot }} /> }
+        <span className={ css`margin-top: -4px` }>{ title }</span>
+      </StyledText>
     </Container>
   );
 

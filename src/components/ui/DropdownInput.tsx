@@ -112,7 +112,14 @@ function DropdownInput({ keys, defaultKey, noMargin = false, onChange = () => nu
         <Header>
           { !!keys.length && (
             <Fragment>
-              <Text className={ classNames({ active }) }>{ keys[selected]?.text }</Text>
+              <Text
+                className={ classNames({ active }) }
+                style={{
+                  background: keys[selected]?.color || 'var(--text-primary)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}
+              >{ keys[selected]?.text }</Text>
               <RiArrowDownSLine className={ classNames(StyledIconCss, DropIconCss, { active }) } />
             </Fragment>
           ) }
@@ -123,13 +130,16 @@ function DropdownInput({ keys, defaultKey, noMargin = false, onChange = () => nu
               <Item
                 onClick={ () => { setSelected(keys.indexOf(key)); onChange(key) } }
                 className={ classNames({ active: selected === keys.indexOf(key) } ) }
-                style={{
-                  background: key.color || 'var(--text-primary)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
-                }}
                 key={ key.id }
-              >{ key.text }</Item>
+              >
+                <span
+                  style={{
+                    background: key.color || 'var(--text-primary)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent'
+                  }}
+                >{ key.text }</span>
+              </Item>
             ))
           }
         </Scrollable>

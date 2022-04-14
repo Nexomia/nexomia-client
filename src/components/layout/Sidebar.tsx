@@ -4,12 +4,9 @@ import { Fragment, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useStore } from 'effector-react';
-import $GuildCacheStore, { setGuildRoles, setGuildMembers, cacheGuilds } from '../../store/GuildCacheStore';
-import $ChannelStore, { setGuildChannels } from '../../store/ChannelStore';
-import $ChannelCacheStore, { cacheChannels } from '../../store/ChannelCacheStore';
-import { cacheUsers } from '../../store/UserCacheStore';
-import { cacheMembers } from '../../store/MemberCacheStore';
-import { cacheRoles } from '../../store/RolesCacheStore';
+import $GuildCacheStore, {  } from '../../store/GuildCacheStore';
+import $ChannelStore from '../../store/ChannelStore';
+import $ChannelCacheStore from '../../store/ChannelCacheStore';
 import PermissionCalculator from '../../utils/PermissionCalculator';
 import { ComputedPermissions } from '../../store/models/ComputedPermissions';
 
@@ -27,8 +24,6 @@ import StyledText from '../ui/StyledText';
 import CenteredContainer from './CenteredContainer';
 import Dots from '../animations/Dots';
 import isTabGuild from '../../utils/isTabGuild';
-import GuildsService from '../../services/api/guilds/guilds.service';
-import Role from '../../store/models/Role';
 import Tab from '../sidebar/Tab';
 import $UserStore from '../../store/UserStore';
 import { setModalState } from '../../store/ModalStore';
@@ -36,6 +31,7 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import Member from '../sidebar/Member';
 import { addUnread } from '../../store/UnreadStore';
+import loadFullGuild from '../../utils/loadFullGuild';
 
 
 const SidebarContainer = styled.div`
@@ -344,23 +340,8 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
 
   async function loadChannels() {
     setLoading(true);
-    const response = await GuildsService.getFullGuild(guildId || '');
-    const membersResponse = await GuildsService.getGuildMembers(guildId || '');
-    if (!response) return navigate('/home');
-
-    const { channels, members, roles, ...guild } = response;
-    cacheGuilds([guild]);
-    cacheUsers([...membersResponse].map((member: any) => member.user));
-    setGuildMembers({ guild: guildId, members: [...membersResponse].map((member: any) => member.id) });
-    cacheMembers([...membersResponse].map((member: any) => {
-      delete member.user;
-      return { ...member, guild: guildId };
-    }));
-    cacheRoles(roles);
-    setGuildRoles({ guild: guildId, roles: roles.sort((a: Role, b: Role) => (a.position || 0) - (b.position || 0)).map((role: Role) => role.id) });
-    cacheChannels(channels);
-    setGuildChannels({ guild: guildId, channels: channels.map((channel: Channel) => channel.id) });
-    setGuildChannelsValue(channels.map((channel: Channel) => channel.id));
+    
+    const { channels, ...guild } = await loadFullGuild(guildId);
 
     if (channels.length) {
       channels.forEach((ch: Channel) => BigInt(ch.last_message_id) > BigInt(ch.last_read_snowflake) ? addUnread({ guildId: ch.guild_id || '@me', channelId: ch.id, message_id: ch.last_message_id}) : null)

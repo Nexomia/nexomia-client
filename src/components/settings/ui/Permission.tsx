@@ -35,6 +35,7 @@ const Selector = styled.div`
   padding: 2px 4px;
   background: var(--background-light);
   cursor: pointer;
+  flex-shrink: 0;
 
   & > svg {
     width: 24px;

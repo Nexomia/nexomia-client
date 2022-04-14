@@ -72,12 +72,20 @@ function ChannelGeneralView() {
 
       <StyledText
         onClick={ () => { setNsfw(!nsfw); setEdited(true) } }
-        className={ css`cursor: pointer; text-align: left; margin: 4px; margin-top: 32px; font-size: 14px; font-weight: 900` }
+        className={ css`
+          cursor: pointer;
+          text-align: left;
+          margin: 4px;
+          margin-top: 32px;
+          font-size: 14px;
+          font-weight: 900;
+          display: flex;
+          align-items: center;
+        ` }
       >
         { t('channel_general.nsfw') }
-        <span className={ css`display: inline-block; position: relative; top: -6px; float: right;` }>
-          <Switch active={ nsfw } />
-        </span>
+        <div className={ css`flex-grow: 1` } />
+        <Switch active={ nsfw } />
       </StyledText>
 
       <StyledText className={ css`text-align: left; margin: 4px; margin-top: 16px; font-size: 14px; font-weight: 900` }>
