@@ -205,6 +205,7 @@ function ChatView() {
       scrollerRef?.current?.scrollTop < 3500 &&
       !addLoading
     ) {
+      console.log('addload')
       setAddLoading(true);
       setAddedLoading(true);
       const response = await MessagesService.getChannelMessages(channelId, Messages[channelId].length, getNeededMessageCount());

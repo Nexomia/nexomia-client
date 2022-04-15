@@ -32,16 +32,12 @@ function MessageView({ channel, onMessagesLoaded = () => null, type = 0 }: Messa
 
   useEffect(() => {
     if (
-      !MessageStore[type === 0 ? channel : `0${channel}`] ||
-      !MessageStore[type === 0 ? channel : `0${channel}`].length
-    ) setLoading(true);
-    if (
       (
-        !MessageStore[type === 0 ? channel : `0${channel}`] ||
-        !MessageStore[type === 0 ? channel : `0${channel}`].length
+        !MessageStore[type === 0 ? channel : `0${channel}`]
       ) &&
       CachedChannels[channel]
     ) {
+      setLoading(true);
       loadMessages();
       return;
     }

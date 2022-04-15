@@ -91,7 +91,6 @@ function MemberSidebar() {
             let renderThis = false;
 
             for (const member of (renderedMembers || [])) {
-              console.log(member);
               if (member !== null) renderThis = true;
             }
 
