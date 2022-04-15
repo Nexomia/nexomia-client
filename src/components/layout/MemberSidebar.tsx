@@ -56,7 +56,6 @@ function MemberSidebar() {
         <SidebarHeader />
         <Scrollable>
           { GuildStore[guildId]?.roles && GuildStore[guildId].roles?.map((role: string) => {
-            console.log(MemberCacheStore)
             if (!RoleCacheStore[role]?.hoist) return null;
 
             const onlineMembers = GuildStore[guildId].members?.map((memberId) => (
@@ -67,28 +66,39 @@ function MemberSidebar() {
             ));
             if (!onlineMembers?.includes(true)) return null;
 
-            return (
+            const renderedMembers = (
+              (sortedUsers = GuildStore[guildId].members?.sort(
+                (a: string, b: string) => UserCacheStore[a]?.username?.localeCompare(UserCacheStore[b]?.username || '') || 0
+              ))?.map((memberId: string) => {
+                if (
+                  !MemberCacheStore[memberId + guildId].roles.includes(role) ||
+                  renderedUsers.includes(memberId) ||
+                  UserCacheStore[memberId].presence === 4 ||
+                  !UserCacheStore[memberId].connected
+                ) return null;
+                renderedUsers.push(memberId);
+    
+                return (
+                  (
+                    memberId && (PermissionCalculator.getUserPermissions(guildId, channelId, memberId) & ComputedPermissions.VIEW_CHANNEL) && (
+                      <Member id={ memberId } key={ memberId } guild={ guildId } />
+                    )
+                  ) || null
+                )
+              }) || null
+            );
+
+            let renderThis = false;
+
+            for (const member of (renderedMembers || [])) {
+              console.log(member);
+              if (member !== null) renderThis = true;
+            }
+
+            return renderThis && (
               <Fragment key={ role }>
                 <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` } key={ role }>{ RoleCacheStore[role].name !== 'everyone' ? RoleCacheStore[role].name : t('online') }</StyledText>
-                {
-                  (sortedUsers = GuildStore[guildId].members?.sort(
-                    (a: string, b: string) => UserCacheStore[a]?.username?.localeCompare(UserCacheStore[b]?.username || '') || 0
-                  ))?.map((memberId: string) => {
-                    if (
-                      !MemberCacheStore[memberId + guildId].roles.includes(role) ||
-                      renderedUsers.includes(memberId) ||
-                      UserCacheStore[memberId].presence === 4 ||
-                      !UserCacheStore[memberId].connected
-                    ) return null;
-                    renderedUsers.push(memberId);
-        
-                    return (
-                      memberId && (PermissionCalculator.getUserPermissions(guildId, channelId, memberId) & ComputedPermissions.VIEW_CHANNEL) && (
-                        <Member id={ memberId } key={ memberId } guild={ guildId } />
-                      )
-                    )
-                  })
-                }
+                { renderedMembers }
               </Fragment>
             )
           }) }
