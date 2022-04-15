@@ -36,7 +36,7 @@ const Container = styled.div`
   &:hover {
     background: var(--background-primary);
 
-    & > ${Presence} {
+    & > ${ Presence } {
       outline-color: var(--background-primary);
     }
   }
@@ -74,7 +74,11 @@ const AvatarCss = `
 
 const ActiveCss = css`
   &, &:hover {
-    background: var(--accent);
+    background: var(--background-light);
+  }
+
+  & > ${ Presence }, &:hover >  ${ Presence } {
+    outline-color: var(--background-light);
   }
 `
 
