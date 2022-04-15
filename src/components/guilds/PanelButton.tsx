@@ -18,8 +18,8 @@ const PanelButton = styled.div`
     background: var(--background-light);
     border-radius: 12px;
   }
-  &.active {
-    outline: solid 3px;
+  &.active:not(.remoutline) {
+    outline: solid 2px;
     outline-color: var(--accent);
   }
   &:active {

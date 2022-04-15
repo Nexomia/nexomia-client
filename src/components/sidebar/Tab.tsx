@@ -27,7 +27,7 @@ const Container = styled.div`
     background: var(--background-primary);
   }
   &.active {
-    background: var(--accent);
+    background: var(--background-light);
   }
   &:active {
     transform: scale(0.98);

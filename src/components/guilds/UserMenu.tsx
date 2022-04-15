@@ -76,23 +76,23 @@ function UserMenu() {
 
   return (
     <Container className={ classNames({ active: containerOpened }) }>
-      <PanelButton className={ classNames({ active: containerOpened }) } onClick={ () => setContainerOpened(!containerOpened) }>
+      <PanelButton className={ classNames(containerOpened && 'active', 'remoutline') } onClick={ () => setContainerOpened(!containerOpened) }>
         { user.avatar ? (
           <AvatarImg src={ user.avatar } />
         ) : (
           <AvatarLetters>{ getIconString(user.username) }</AvatarLetters>
         ) }
       </PanelButton>
-      <PanelButton onClick={ () => navigate('/home') } className={ classNames({ active: path === 'home' }) }>
+      <PanelButton onClick={ () => navigate('/home') } className={ classNames(path === 'home' && 'active', 'remoutline') }>
         <RiHomeFill className={ PanelIconCss } />
       </PanelButton>
-      <PanelButton onClick={ () => navigate('/discover') } className={ classNames({ active: path === 'discover' || path === 'profiles' }) }>
+      <PanelButton onClick={ () => navigate('/discover') } className={ classNames((path === 'discover' || path === 'profiles') && 'active', 'remoutline') }>
         <RiCompassFill className={ PanelIconCss } />
       </PanelButton>
-      <PanelButton onClick={ () => navigate('/channels/@me') } className={ classNames({ active: guildId === '@me' }) }>
+      <PanelButton onClick={ () => navigate('/channels/@me') } className={ classNames(guildId === '@me' && 'active', 'remoutline') }>
         <RiMailFill className={ PanelIconCss } />
       </PanelButton>
-      <PanelButton onClick={ () => navigate('/settings/general') } className={ classNames({ active: path === 'guildsettings' || path === 'settings' }) }>
+      <PanelButton onClick={ () => navigate('/settings/general') } className={ classNames((path === 'guildsettings' || path === 'settings') && 'active', 'remoutline') }>
         <RiSettings4Fill className={ PanelIconCss } />
       </PanelButton>
       <PanelButton className={ css`margin-bottom: 0` }>
