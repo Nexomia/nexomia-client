@@ -52,7 +52,7 @@ const MessageWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  min-height: 100%;
+  min-height: calc(100% - 36px);
   padding-bottom: 8px;
   justify-content: flex-end;
 `
