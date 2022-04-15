@@ -10,6 +10,18 @@ import getIconString from '../../utils/getIconString';
 import getMemberColor from '../../utils/getMemberColor';
 import StyledText from '../ui/StyledText';
 
+const Presence = styled.div`
+  width: 9px;
+  height: 9px;
+  margin: 0 -9px -9px 0;
+  border-radius: 50%;
+  outline: 4px solid var(--background-secondary-alt);
+  position: relative;
+  left: 25px;
+  top: 8px;
+  transition: .2s;
+`
+
 const Container = styled.div`
   margin: 0 8px 8px 8px;
   padding: 6px 8px;
@@ -23,6 +35,10 @@ const Container = styled.div`
   transition: .2s;
   &:hover {
     background: var(--background-primary);
+
+    & > ${Presence} {
+      outline-color: var(--background-primary);
+    }
   }
   &:active {
     transform: scale(0.98);
@@ -65,12 +81,6 @@ const ActiveCss = css`
 const Avatar = styled.img`${AvatarCss}`
 const LetterAvatar = styled.div`${AvatarCss}`
 
-const Presence = styled.div`
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-`
-
 interface MemberProps {
   id: string,
   guild?: string,
@@ -101,6 +111,7 @@ function Member({ id, guild, offline = false, tab = false, onClick = () => null,
   return (
     UserCache[id] ? (
       <Container onClick={ openProfile } className={ classNames(offline && OfflineCss, active && ActiveCss) }>
+        { UserCache[id].connected && <Presence style={{ background: ['var(--accent-green)', 'var(--accent-yellow)', 'var(--text-negative)'][(UserCache[id].presence || 3) - 1] }} /> }
         {
           UserCache[id].avatar ? (
             <Avatar src={ UserCache[id].avatar } className={ css`background: transparent` } />
@@ -108,7 +119,7 @@ function Member({ id, guild, offline = false, tab = false, onClick = () => null,
             <LetterAvatar>{ getIconString(UserCache[id].username || '') }</LetterAvatar>
           )
         }
-        <div className={ css`display: flex; flex-direction: column; justify-content: center; width: 154px;` }>
+        <div className={ css`display: flex; flex-direction: column; justify-content: center; width: 157px;` }>
           <div>
             <StyledText
               className={ css`
@@ -134,7 +145,6 @@ function Member({ id, guild, offline = false, tab = false, onClick = () => null,
             { UserCache[id].status }
           </StyledText> }
         </div>
-        { UserCache[id].connected && <Presence style={{ background: ['var(--accent-green)', 'var(--accent-yellow)', 'var(--text-negative)'][(UserCache[id].presence || 3) - 1] }} /> }
       </Container>
     ) : null
   )
