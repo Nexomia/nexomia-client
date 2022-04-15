@@ -130,6 +130,8 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [channels]);
 
+  let renderedChannels: any = [];
+
   return (
     <SidebarContainer className={ classNames({ [WideSidebarCss]: path === 'channelsettings' ||path === 'guildsettings' || path === 'settings' }) }>
       { !path && guildId === '@me' && type === 'channels' && (
@@ -271,53 +273,60 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       ) }
 
       { /* Guild Channels */ }
-      { !path && isTabGuild(guildId) && type === 'channels' && (guildChannels && guildChannels.length && channelsCache[guildChannels[0]] ? (
-        <Scrollable>
-          {
-            [
-              ...(guildChannels.map((channel: string) => (
-                !!(PermissionCalculator.getUserPermissions(guildId, channel, user.id) & ComputedPermissions.VIEW_CHANNEL) && (
-                  <Tab
-                    Icon={ BiHash }
-                    title={ channelsCache[channel]?.name || '' }
-                    tabId={ channelsCache[channel]?.id }
-                    key={ channelsCache[channel]?.id }
-                    onClick={ () => { navigate(`/channels/${guildId}/${channel}`) } }
-                    contextEnabled
-                  />
+      { !path && isTabGuild(guildId) && type === 'channels' && (
+        !!(guildChannels && guildChannels.length && channelsCache[guildChannels[0]]) && (
+          <Scrollable>
+            <Fragment>
+              {
+                renderedChannels = [
+                  ...(guildChannels.map((channel: string) => (
+                    !!(PermissionCalculator.getUserPermissions(guildId, channel, user.id) & ComputedPermissions.VIEW_CHANNEL) ? (
+                      <Tab
+                        Icon={ BiHash }
+                        title={ channelsCache[channel]?.name || '' }
+                        tabId={ channelsCache[channel]?.id }
+                        key={ channelsCache[channel]?.id }
+                        onClick={ () => { navigate(`/channels/${guildId}/${channel}`) } }
+                        contextEnabled
+                      />
+                    ) : null
+                  ))),
+                  (
+                    (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
+                    <Tab
+                      Icon={ RiAddFill }
+                      title={ t('chat:channel_new') }
+                      tabId={ 'new' }
+                      key={ 'new' }
+                      onClick={ () => { setModalState({ channelCreation: true }) } }
+                    /> : null
+                  )
+                ]
+              }
+              { (!renderedChannels || !renderedChannels.filter((channel: any) => channel !== null).length) && (
+                loading ? (
+                  <CenteredContainer>
+                    <Dots />
+                  </CenteredContainer>
+                ) : (
+                  <Fragment>
+                    <StyledText className={ css`text-align: center; margin-bottom: 16px` }>No channels</StyledText>
+                    {
+                      (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
+                      <Tab
+                        Icon={ RiAddFill }
+                        title={ t('chat:channel_new') }
+                        tabId={ 'new' }
+                        onClick={ () => { setModalState({ channelCreation: true }) } }
+                      /> : null
+                    }
+                  </Fragment>
                 )
-              ))),
-              (
-                (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
-                <Tab
-                  Icon={ RiAddFill }
-                  title={ t('chat:channel_new') }
-                  tabId={ 'new' }
-                  key={ 'new' }
-                  onClick={ () => { setModalState({ channelCreation: true }) } }
-                /> : null
-              )
-            ]
-          }
-        </Scrollable>
-      ) : loading ? (
-        <CenteredContainer>
-          <Dots />
-        </CenteredContainer>
-      ) : (
-        <Fragment>
-          <StyledText className={ css`text-align: center; margin-bottom: 16px` }>No channels</StyledText>
-          {
-            (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
-            <Tab
-              Icon={ RiAddFill }
-              title={ t('chat:channel_new') }
-              tabId={ 'new' }
-              onClick={ () => { setModalState({ channelCreation: true }) } }
-            /> : null
-          }
-        </Fragment>
-      )) }
+              ) }
+            </Fragment>
+          </Scrollable>
+        )
+      ) }
 
       { /* DM Channels */ }
       { !path && guildId === '@me' && type === 'channels' && (
