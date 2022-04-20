@@ -351,7 +351,7 @@ function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps
   async function uploadAttachment(file: InputAttachment, modifiedAttachments: InputAttachment[]) {
     const uploadUrl = await FilesService.createFile(1);
     console.log(uploadUrl);
-    const fileInfo = await FilesService.uploadFile(`https:${ uploadUrl }`, file.plain, (progress: any) => {
+    const fileInfo = await FilesService.uploadFile(uploadUrl, file.plain, (progress: any) => {
       let newAttachments = [ ...modifiedAttachments ];
       newAttachments[newAttachments.findIndex((attachment) => attachment.content === file.content)].progress = (progress.loaded / progress.total) * 100;
       setAttachments(newAttachments);

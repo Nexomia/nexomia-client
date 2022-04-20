@@ -7,7 +7,7 @@ class FilesService {
     const formData = new FormData();
     formData.append('file', content);
 
-    const response = await axios.post(url, formData, {
+    const response = await axios.post(`https:${ url }`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         authorization: CommonRequestManager.getToken()
