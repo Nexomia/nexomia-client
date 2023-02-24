@@ -202,7 +202,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             onClick={ () => { navigate(`/settings/emotes`) } }
           />
 
-          <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }>Build 12<br />18.02.2022</StyledText>
+          <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }>Build 13<br />24.02.2023</StyledText>
         </Fragment>
       ) }
 

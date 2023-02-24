@@ -295,7 +295,7 @@ function ContentPicker({ onSelect = () => null, type }: PickerProps) {
                   onMouseEnter={ () => setHoveredId(index) }
                   onClick={ () => onSelect(emote.label) }
                 >
-                  <EmoteImage src={ parsedOptimize[0].url } />
+                  <EmoteImage src={ parsedOptimize[0].url.replace('twemoji.maxcdn.com/v/latest/svg/', 'cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/') } />
                 </Emote>
               ) : null
             ))
@@ -306,7 +306,7 @@ function ContentPicker({ onSelect = () => null, type }: PickerProps) {
           {
             emojis[hoveredId] && (
               <Fragment>
-                <EmoteImage src={ EmojiCacheManager.get(emojis[hoveredId].emoji)[0].url } />
+                <EmoteImage src={ EmojiCacheManager.get(emojis[hoveredId].emoji)[0].url.replace('twemoji.maxcdn.com/v/latest/svg/', 'cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/') } />
                 <StyledText className={ css`margin: 0 0 0 8px` }>{ emojis[hoveredId].label }</StyledText>
               </Fragment>
             )

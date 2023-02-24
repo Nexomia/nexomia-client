@@ -21,6 +21,7 @@ class EmojiCacheManager {
       this.cache = data;
 
       console.log('[EmojiCacheManager] Emoji processing has been finished.');
+      console.log(this.cache);
     }
   }
 
