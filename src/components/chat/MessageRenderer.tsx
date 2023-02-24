@@ -258,9 +258,9 @@
                     { UserCache[MessageCache[id].author].username }
                     </span>
                     <span className={ css`color: var(--text-primary); &:hover { text-decoration: underline; }` }>
-                      { MessageCache[id].type === 5 ? ' ' + t('left_the_server') : '' }
-                      { MessageCache[id].type === 4 ? ' ' + t('joined_the_server') : '' }
-                      { MessageCache[id].type === 3 ? ' ' + t('pinned_a_message') : '' }
+                      { MessageCache[id].type === 5 ? ' ' + t('left_the_server')! : '' }
+                      { MessageCache[id].type === 4 ? ' ' + t('joined_the_server')! : '' }
+                      { MessageCache[id].type === 3 ? ' ' + t('pinned_a_message')! : '' }
                     </span>
                   </div>
                   <StyledText className={ css`margin: 0 0 0 8px; color: var(--text-secondary); display: inline-block; font-size: 12px` }>
@@ -268,7 +268,7 @@
                       Math.floor(Date.now() / 86400000) * 86400000 - 86400000 < MessageCache[id].created ? (
                         (
                           Math.floor(Date.now() / 86400000) * 86400000 > MessageCache[id].created
-                          ? t('date.yesterday')
+                          ? t('date.yesterday')!
                           : ''
                         )
                         + format(new Date(MessageCache[id].created), 'HH:mm')

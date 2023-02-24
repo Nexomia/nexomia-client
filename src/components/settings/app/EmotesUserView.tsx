@@ -122,11 +122,8 @@ function EmotesUserView() {
     <Fragment>
       { !openedPack ? (
         <Fragment>
-          <StyledText className={ css`text-align: center; margin: 32px 0` }>
-            { 'Express your emotions freely with user-created emote packs! Create your own emote pack or add an existing one!' }
-          </StyledText>
           <FilledButton
-            className={ css`margin-top: 0; margin-bottom: 32px` }
+            className={ css`margin-top: 16px; margin-bottom: 32px` }
             onClick={ () => setModalState({ packCreation: true }) }
           >{ 'New emote pack' }</FilledButton>
           <CardContainer>

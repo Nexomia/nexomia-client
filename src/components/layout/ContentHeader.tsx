@@ -90,27 +90,27 @@ function ContentHeader() {
       ) }
 
       { path === 'profiles' && guildId !== 'people' && (
-        <Content>{ t('tabs.profile_header').replace('%username%', usersCache[guildId]?.username || '') }</Content>
+        <Content>{ t('tabs.profile_header')!.replace('%username%', usersCache[guildId]?.username || '') }</Content>
       ) }
 
       { path === 'guildsettings' && channelId === 'general' && (
-        <Content>{ t('tabs.general') }</Content>
+        <Content>{ t('tabs.general')! }</Content>
       ) }
 
       { path === 'guildsettings' && channelId === 'roles' && (
-        <Content>{ t('tabs.roles') }</Content>
+        <Content>{ t('tabs.roles')! }</Content>
       ) }
 
       { path === 'guildsettings' && channelId === 'invites' && (
-        <Content>{ t('tabs.invites') }</Content>
+        <Content>{ t('tabs.invites')! }</Content>
       ) }
 
       { path === 'settings' && guildId === 'general' && (
-        <Content>{ t('tabs.profile') }</Content>
+        <Content>{ t('tabs.profile')! }</Content>
       ) }
 
       { path === 'settings' && guildId === 'emotes' && (
-        <Content>{ t('tabs.emotes') }</Content>
+        <Content>{ t('tabs.emotes')! }</Content>
       ) }
     </Header>
   );

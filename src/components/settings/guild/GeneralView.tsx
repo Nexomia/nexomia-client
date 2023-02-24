@@ -111,7 +111,7 @@ function GeneralView() {
             `
           }
           defaultValue={ GuildsCache[guildId]?.name }
-          placeholder={ t('server_general.name') }
+          placeholder={ t('server_general.name')! }
           onChange={ (event: ChangeEvent<HTMLInputElement>) => { setGuildName(event.target.value); setEdited(true) } }
         />
         <MultilineField
@@ -123,7 +123,7 @@ function GeneralView() {
             `
           }
           defaultValue={ '' }
-          placeholder={ t('server_general.description') }
+          placeholder={ t('server_general.description')! }
         />
       </BadgeContainer>
       <StyledText className={ css`text-align: left; margin: 4px; font-size: 14px; font-weight: 900` }>

@@ -55,9 +55,9 @@ function Login() {
         <Modal className={ modalCss }>
           <LoadingPlaceholder title={ t('logging_in') } active={ loginLoading } />
           <ModalHeader>{ t('log_in') }<br /><StyledText>{ t('welcomer_log_in') }</StyledText></ModalHeader>
-          <InputField placeholder={ t('fields.email') } ref={ emailInput } />
+          <InputField placeholder={ t('fields.email')! } ref={ emailInput } />
           { (emailError && <StyledText className={ negativeColorCss }>{ t('errors.required_field') }</StyledText>) }
-          <InputField placeholder={ t('fields.password') } type="password" hidden={ true } ref={ passwordInput } />
+          <InputField placeholder={ t('fields.password')! } type="password" hidden={ true } ref={ passwordInput } />
           { (passwordError && <StyledText className={ negativeColorCss }>{ t('errors.required_field') }</StyledText>) }
           { (loginError && <StyledText className={ negativeColorCss }>{ t('errors.invalid_credentials') }</StyledText>) }
           <StyledText>{ t('no_account') } <Link to="/register">{ t('register') }</Link></StyledText>

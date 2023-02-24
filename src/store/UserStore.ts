@@ -10,6 +10,7 @@ interface UserInfo {
   description: string
   discriminator: string,
   avatar: string,
+  status: string,
   banner: string,
   verified: boolean,
   flags: number,
@@ -25,6 +26,7 @@ const $UserStore = createStore<UserInfo>({
   description: '',
   discriminator: '',
   avatar: '',
+  status: '',
   banner: '',
   verified: false,
   flags: 0,

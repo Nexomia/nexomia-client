@@ -120,7 +120,7 @@ function GeneralUserView() {
             `
           }
           defaultValue={ UserCache.username }
-          placeholder={ t('user_general.name') }
+          placeholder={ t('user_general.name')! }
           onChange={ (event: ChangeEvent<HTMLInputElement>) => { setUserName(event.target.value); setEdited(true); } }
           minLength={1}
           maxLength={20}
@@ -149,7 +149,7 @@ function GeneralUserView() {
             )
           }
           defaultValue={ '#' +  UserCache.discriminator }
-          placeholder={ '#' + t('user_general.tag') }
+          placeholder={ '#' + t('user_general.tag')! }
           onChange={ (event: ChangeEvent<HTMLInputElement>) => { setTag(event.target.value); setEdited(true); } }
           minLength={UserCache.premium_type ? 4 : 5}
           maxLength={UserCache.premium_type ? 8 : 5}
@@ -163,7 +163,7 @@ function GeneralUserView() {
             `
           }
           defaultValue={ UserCache.description }
-          placeholder={ t('user_general.description') }
+          placeholder={ t('user_general.description')! }
           onChange={ (event: ChangeEvent<HTMLTextAreaElement>) => { setDescription(event.target.value); setEdited(true) } }
         />
       </BadgeContainer>

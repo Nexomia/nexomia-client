@@ -1,7 +1,7 @@
 // TODO: Reimplement from scratch
 
 import classNames from 'classnames';
-import { styled } from 'linaria/lib/react';
+import { styled } from 'linaria/react';
 
 type SwitchProps = {
   active: boolean

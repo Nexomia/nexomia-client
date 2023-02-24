@@ -77,9 +77,9 @@ function MessageView({ channel, onMessagesLoaded = () => null, type = 0 }: Messa
           ) : (
             <StyledText className={ css`margin-left: 16px` }>
               { type === 0 ? (
-                t('conv_start')
+                t('conv_start')!
               ) : (
-                t('conv_start_pin')
+                t('conv_start_pin')!
               ) }
             </StyledText>
           )

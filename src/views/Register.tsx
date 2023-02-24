@@ -61,11 +61,11 @@ function Register() {
           { registerState === 0 && (
             <Fragment>
               <ModalHeader>{ t('register') }<br /><StyledText>{ t('welcomer_register') }</StyledText></ModalHeader>
-              <InputField placeholder={ t('fields.email') } ref={ emailInput } />
+              <InputField placeholder={ t('fields.email')! } ref={ emailInput } />
               { (emailError && <StyledText className={ negativeColorCss }>{ t('errors.required_field') }</StyledText>) }
-              <InputField placeholder={ t('fields.username') } ref={ usernameInput } />
+              <InputField placeholder={ t('fields.username')! } ref={ usernameInput } />
               { (usernameError && <StyledText className={ negativeColorCss }>{ t('errors.required_field') }</StyledText>) }
-              <InputField placeholder={ t('fields.password') } type="password" ref={ passwordInput } hidden={ true } />
+              <InputField placeholder={ t('fields.password')! } type="password" ref={ passwordInput } hidden={ true } />
               { (passwordError && <StyledText className={ negativeColorCss }>{ t('errors.required_field') }</StyledText>) }
               <StyledText>{ t('has_account') } <Link to="/login">{ t('log_in') }</Link></StyledText>
               <FilledButton onClick={ register }>{ t('continue') }</FilledButton>

@@ -14,7 +14,9 @@ const $ModalStore = createStore<Modals>({
   emojiEdit: [false, '', '', ''],
   packDelete: [false, ''],
   packCreation: false,
-  emojiPack: [false, '']
+  emojiPack: [false, ''],
+  statusChange: false,
+  warning: false
 });
 
 $ModalStore.on(setModalState, (state, modifiedState: Modals) => ({ ...state, ...modifiedState }));

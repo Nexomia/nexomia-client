@@ -41,6 +41,7 @@ import { setGuildChannels } from '../store/ChannelStore';
 import { cacheUsers } from '../store/UserCacheStore';
 import { cacheEmojiPacks } from '../store/EmojiPackStore';
 import EmojiCacheManager from '../utils/EmojiCacheManager';
+import { setModalState } from '../store/ModalStore';
 
 function App() {
   const { token } = useStore($AuthStore);
@@ -172,7 +173,10 @@ function App() {
     SocketManager.setToken(token);
     SocketManager.init(setLoaded);
 
-    SocketManager.onLoad = () => setLoaded(true);
+    SocketManager.onLoad = () => {
+      setLoaded(true);
+      setModalState({ warning: true });
+    }
   }
 
   function closeContextMenu() {

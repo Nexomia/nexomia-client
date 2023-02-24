@@ -79,21 +79,21 @@ function ContextMenu() {
                 PermissionCalculator.getUserPermissions(id || '', '', '')
                 & ComputedPermissions.MANAGE_GUILD
               ) ? (
-                <ContextTab title={ t('menu.settings') } onClick={ () => navigate(`/guildsettings/${id}/general`) } />
+                <ContextTab title={ t('menu.settings')! } onClick={ () => navigate(`/guildsettings/${id}/general`) } />
               ) : null }
 
               { (
                 PermissionCalculator.getUserPermissions(id || '', '', '')
                 & ComputedPermissions.CREATE_INVITES
               ) ? (
-                <ContextTab title={ t('server_invites.invite_create') } onClick={ () => setModalState({ inviteCreation: true }) } />
+                <ContextTab title={ t('server_invites.invite_create')! } onClick={ () => setModalState({ inviteCreation: true }) } />
               ) : null }
 
               { GuildCache[id || '']?.owner_id !== User.id ? (
-                <ContextTab title={ step ? t('menu.confirmation') : t('menu.leave_server') } onClick={ leaveGuild } />
+                <ContextTab title={ step ? t('menu.confirmation')! : t('menu.leave_server')! } onClick={ leaveGuild } />
               ) : null }
 
-              <ContextTab title={ t('menu.copy_id') } onClick={ copyId } />
+              <ContextTab title={ t('menu.copy_id')! } onClick={ copyId } />
             </Fragment>
           ) }
 
@@ -107,7 +107,7 @@ function ContextMenu() {
                 ) &
                 ComputedPermissions.ADD_REACTIONS
               ) || ChannelCache[MessageCache[id || '']?.channel_id]?.recipients?.length ? (
-                <ContextTab title={ t('menu.add_reaction') } />
+                <ContextTab title={ t('menu.add_reaction')! } />
               ) : null }
 
               { (
@@ -118,13 +118,13 @@ function ContextMenu() {
                 ) &
                 ComputedPermissions.WRITE_MESSAGES
               ) || ChannelCache[MessageCache[id || '']?.channel_id]?.recipients?.length ? (
-                <ContextTab title={ t('menu.reply') } onClick={ addReply } />
+                <ContextTab title={ t('menu.reply')! } onClick={ addReply } />
               ) : null }
 
               { (
                 MessageCache[id || ''].author === User.id
               ) && !MessageCache[id || '']?.type ? (
-                <ContextTab title={ t('menu.edit') } />
+                <ContextTab title={ t('menu.edit')! } />
               ) : null }
 
               { ((
@@ -137,8 +137,8 @@ function ContextMenu() {
               ) && !MessageCache[id || '']?.type) || ChannelCache[MessageCache[id || '']?.channel_id]?.recipients?.length ? (
                 <ContextTab
                   title={ ChannelCache[MessageCache[id || '']?.channel_id].pinned_messages_ids?.includes(id || '  ')
-                    ? t('menu.unpin')
-                    : t('menu.pin')
+                    ? t('menu.unpin')!
+                    : t('menu.pin')!
                   }
                   onClick={ ChannelCache[MessageCache[id || '']?.channel_id].pinned_messages_ids?.includes(id || '  ')
                     ? unpinMessage
@@ -156,7 +156,7 @@ function ContextMenu() {
               ) ||
               ChannelCache[MessageCache[id || '']?.channel_id]?.recipients?.length ||
               MessageCache[id || '']?.author === User.id ? (
-                <ContextTab title={ t('menu.delete') } onClick={ deleteMessage } />
+                <ContextTab title={ t('menu.delete')! } onClick={ deleteMessage } />
               ) : null }
 
               { (
@@ -171,20 +171,20 @@ function ContextMenu() {
                 )
               ) &&
               MessageCache[id || '']?.author !== User.id ? (
-                <ContextTab title={ t('menu.ban') } onClick={ () => {
+                <ContextTab title={ t('menu.ban')! } onClick={ () => {
                   setContextMenu({ id: guildId, data: { user_id: MessageCache[id || ''].author } });
                   setModalState({ guildBanUser: true });
                 } } />
               ) : null }
 
-              <ContextTab title={ t('menu.copy_id') } onClick={ copyId } />
+              <ContextTab title={ t('menu.copy_id')! } onClick={ copyId } />
             </Fragment>
           ) }
 
           { type === 'channel' && (
             <Fragment>
               { (Unreads[ChannelCache[id].guild_id || '@me']?.filter(ch => ch.channel_id === id).length) ? (
-                <ContextTab title={ t('menu.set_read') } onClick={ markChannelAsRead } />
+                <ContextTab title={ t('menu.set_read')! } onClick={ markChannelAsRead } />
               ) : null }
 
               { (
@@ -200,7 +200,7 @@ function ContextMenu() {
                 )
               ) ? (
                 <Fragment>
-                  <ContextTab title={ t('menu.invite_people') } onClick={ () => {
+                  <ContextTab title={ t('menu.invite_people')! } onClick={ () => {
                     setContextMenu({ id, data: { channel: true, fast: true } })
                     setModalState({ inviteCreation: true })
                   }}
@@ -220,12 +220,12 @@ function ContextMenu() {
                 )
               ) ? (
                 <Fragment>
-                  <ContextTab title={ t('menu.edit') } onClick={ () => navigate(`/channelsettings/${id}/general`) } />
-                  <ContextTab title={ step ? t('menu.confirmation') : t('menu.delete') } onClick={ deleteChannel } />
+                  <ContextTab title={ t('menu.edit')! } onClick={ () => navigate(`/channelsettings/${id}/general`) } />
+                  <ContextTab title={ step ? t('menu.confirmation')! : t('menu.delete')! } onClick={ deleteChannel } />
                 </Fragment>
               ) : null }
 
-              <ContextTab title={ t('menu.copy_id') } onClick={ copyId } />
+              <ContextTab title={ t('menu.copy_id')! } onClick={ copyId } />
             </Fragment>
           ) }
         </Base>

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useStore } from 'effector-react';
 import { css } from 'linaria';
-import { styled } from 'linaria/lib/react';
+import { styled } from 'linaria/react';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import guildsService from '../../services/api/guilds/guilds.service';
@@ -95,11 +95,11 @@ function GuildBanUserModal({ active }: ModalProps) {
   }, [userValue]);
 
   const messageDeletionInterval: DropdownKey[] = [
-    { id: "0",      text: t('modals.guildBan.nothing') },
-    { id: "3600",   text: t('modals.guildBan.hour') },
-    { id: "86400",  text: t('modals.guildBan.day') },
-    { id: "604800", text: t('modals.guildBan.week') },
-    { id: "-1",     text: t('modals.guildBan.all') },
+    { id: "0",      text: t('modals.guildBan.nothing')! },
+    { id: "3600",   text: t('modals.guildBan.hour')! },
+    { id: "86400",  text: t('modals.guildBan.day')! },
+    { id: "604800", text: t('modals.guildBan.week')! },
+    { id: "-1",     text: t('modals.guildBan.all')! },
   ];
 
   return (
@@ -137,10 +137,10 @@ function GuildBanUserModal({ active }: ModalProps) {
           </ModalHeader>
           
           { !data?.user_id && (
-            <InputField placeholder={ t('modals.guildBan_user') } onChange={ (event) => { setUserValue(event.target.value) } } />
+            <InputField placeholder={ t('modals.guildBan_user')! } onChange={ (event) => { setUserValue(event.target.value) } } />
           ) }
 
-          <InputField placeholder={ t('modals.guildBan_reason') } onChange={ (event) => { setReasonValue(event.target.value) } } />
+          <InputField placeholder={ t('modals.guildBan_reason')! } onChange={ (event) => { setReasonValue(event.target.value) } } />
 
           <DropdownInput
             keys={ messageDeletionInterval }

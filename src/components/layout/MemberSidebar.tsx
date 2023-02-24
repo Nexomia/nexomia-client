@@ -96,12 +96,12 @@ function MemberSidebar() {
 
             return renderThis && (
               <Fragment key={ role }>
-                <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` } key={ role }>{ RoleCacheStore[role].name !== 'everyone' ? RoleCacheStore[role].name : t('online') }</StyledText>
+                <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` } key={ role }>{ RoleCacheStore[role].name !== 'everyone' ? RoleCacheStore[role].name : t('online')! }</StyledText>
                 { renderedMembers }
               </Fragment>
             )
           }) }
-          <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` }>{ t('offline') }</StyledText>
+          <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` }>{ t('offline')! }</StyledText>
           {
             (
               GuildStore[guildId]?.members &&

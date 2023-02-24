@@ -44,10 +44,10 @@ function EmojiEditModal({ active }: ModalProps) {
   return (
     <Layer className={ classNames({ [LayerBackgroundShadeCss]: true, [InactiveLayerCss]: !active }) } onClick={ (event) => { closeModal(event) } } ref={ layerRef }>
       <Modal className={ css`width: 440px` }>
-        <LoadingPlaceholder title={ t('saving_changes') } active={ loading } />
+        <LoadingPlaceholder title={ t('saving_changes')! } active={ loading } />
         <ModalHeader>{ 'Enter a new emote name' }</ModalHeader>
         <InputField
-          placeholder={ t('modals.name') }
+          placeholder={ t('modals.name')! }
           onChange={ (event) => { setName(event.target.value) } }
           ref={ inputRef }
           value={ name }

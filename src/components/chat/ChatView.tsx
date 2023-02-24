@@ -156,7 +156,7 @@ function ChatView() {
                         { Typers[channelId].indexOf(user) !== Typers[channelId].length - 1 && ', ' }
                       </Fragment>
                     )) }
-                    { ' ' + (Typers[channelId].length > 1 ? t('are_typing') : t('is_typing')) }
+                    { ' ' + (Typers[channelId].length > 1 ? t('are_typing')! : t('is_typing'))! }
                   </StyledText>
                 </Fragment>
               ) }

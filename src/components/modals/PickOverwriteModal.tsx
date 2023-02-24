@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useStore } from 'effector-react';
 import { css } from 'linaria';
-import { styled } from 'linaria/lib/react';
+import { styled } from 'linaria/react';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import guildsService from '../../services/api/guilds/guilds.service';
@@ -142,7 +142,7 @@ function PickOverwriteModal({ active }: ModalProps) {
             )}
           </ModalHeader>
           
-          <InputField placeholder={ t('modals.overwrite.user') } onChange={ (event) => { setUserValue(event.target.value) } } />
+          <InputField placeholder={ t('modals.overwrite.user')! } onChange={ (event) => { setUserValue(event.target.value) } } />
 
           { !user && (
             <DropdownInput

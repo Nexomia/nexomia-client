@@ -136,18 +136,18 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
     <SidebarContainer className={ classNames({ [WideSidebarCss]: path === 'channelsettings' ||path === 'guildsettings' || path === 'settings' }) }>
       { !path && guildId === '@me' && type === 'channels' && (
         <SidebarHeader>
-          <Content>{ t('tabs.direct_messages') }</Content>
+          <Content>{ t('tabs.direct_messages')! }</Content>
         </SidebarHeader>
       ) }
 
       { (path === 'discover' || path === 'profiles') && type === 'channels' && (
         <Fragment>
           <SidebarHeader>
-            <Content>{ t('tabs.discover') }</Content>
+            <Content>{ t('tabs.discover')! }</Content>
           </SidebarHeader>
           <Tab
             Icon={ RiUserFill }
-            title={ t('tabs.people') }
+            title={ t('tabs.people')! }
             tabId={ 'people' }
             active={ path === 'profiles' }
             onClick={ () => { navigate(`/discover/people`) } }
@@ -158,17 +158,17 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       { path === 'home' && type === 'channels' && (
         <Fragment>
           <SidebarHeader>
-            <Content>{ t('tabs.home') }</Content>
+            <Content>{ t('tabs.home')! }</Content>
           </SidebarHeader>
           <Tab
             Icon={ RiMessage3Fill }
-            title={ t('tabs.feed') }
+            title={ t('tabs.feed')! }
             tabId={ 'feed' }
             onClick={ () => { navigate(`/home/feed`) } }
           />
           <Tab
             Icon={ RiUserFill }
-            title={ t('tabs.friends') }
+            title={ t('tabs.friends')! }
             tabId={ 'friends' }
             onClick={ () => { navigate(`/home/friends`) } }
           />
@@ -178,18 +178,18 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       { path === 'settings' && type === 'channels' && (
         <Fragment>
           <SidebarHeader>
-            <Content>{ t('tabs.app_settings') }</Content>
+            <Content>{ t('tabs.app_settings')! }</Content>
           </SidebarHeader>
           <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }>{ t('tabs.user_divider') }</StyledText>
           <Tab
-            title={ t('tabs.profile') }
+            title={ t('tabs.profile')! }
             tabId={ 'general' }
             onClick={ () => { navigate(`/settings/general`) } }
           />
 
           <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }>{ t('tabs.chat') }</StyledText>
           <Tab
-            title={ t('tabs.emotes') }
+            title={ t('tabs.emotes')! }
             tabId={ 'emotes' }
             onClick={ () => { navigate(`/settings/emotes`) } }
           />
@@ -197,7 +197,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
           <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }></StyledText>
           <Tab
             negative={ true }
-            title={ t('tabs.logout') }
+            title={ t('tabs.logout')! }
             tabId={ 'logout' }
             onClick={ () => { navigate(`/settings/emotes`) } }
           />
@@ -209,25 +209,25 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       { path === 'guildsettings' && type === 'channels' && (
         <Fragment>
           <SidebarHeader>
-            <Content>{ t('tabs.server_settings') }</Content>
+            <Content>{ t('tabs.server_settings')! }</Content>
           </SidebarHeader>
           <Tab
-            title={ t('tabs.general') }
+            title={ t('tabs.general')! }
             tabId={ 'general' }
             onClick={ () => { navigate(`/guildsettings/${guildId}/general`) } }
           />
           <Tab
-            title={ t('tabs.roles') }
+            title={ t('tabs.roles')! }
             tabId={ 'roles' }
             onClick={ () => { navigate(`/guildsettings/${guildId}/roles`) } }
           />
           <Tab
-            title={ t('tabs.invites') }
+            title={ t('tabs.invites')! }
             tabId={ 'invites' }
             onClick={ () => { navigate(`/guildsettings/${guildId}/invites`) } }
           />
           <Tab
-            title={ t('tabs.bans') }
+            title={ t('tabs.bans')! }
             tabId={ 'bans' }
             onClick={ () => { navigate(`/guildsettings/${guildId}/bans`) } }
           />
@@ -238,25 +238,25 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       { path === 'channelsettings' && type === 'channels' && (
         <Fragment>
           <SidebarHeader>
-            <Content>{ t('tabs.channel_settings') }</Content>
+            <Content>{ t('tabs.channel_settings')! }</Content>
           </SidebarHeader>
           <Tab
-            title={ t('tabs.general') }
+            title={ t('tabs.general')! }
             tabId={ 'general' }
             onClick={ () => { navigate(`/channelsettings/${guildId}/general`) } }
           />
           <Tab
-            title={ t('tabs.permissions') }
+            title={ t('tabs.permissions')! }
             tabId={ 'permissions' }
             onClick={ () => { navigate(`/channelsettings/${guildId}/permissions`) } }
           />
           <Tab
-            title={ t('tabs.invites') }
+            title={ t('tabs.invites')! }
             tabId={ 'invites' }
             onClick={ () => { navigate(`/channelsettings/${guildId}/invites`) } }
           />
           <Tab
-            title={ t('tabs.webhooks') }
+            title={ t('tabs.webhooks')! }
             tabId={ 'webhooks' }
             onClick={ () => { navigate(`/channelsettings/${guildId}/webhooks`) } }
           />
@@ -315,7 +315,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
                       (PermissionCalculator.getUserPermissions(guildId, '', user.id) & ComputedPermissions.MANAGE_CHANNELS) ?
                       <Tab
                         Icon={ RiAddFill }
-                        title={ t('chat:channel_new') }
+                        title={ t('chat:channel_new')! }
                         tabId={ 'new' }
                         onClick={ () => { setModalState({ channelCreation: true }) } }
                       /> : null

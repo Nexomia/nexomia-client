@@ -253,7 +253,7 @@ function ContentPicker({ onSelect = () => null, type }: PickerProps) {
       <ContentContainer>
         <SearchContainer>
           <InputField
-            placeholder={ t('emoji_search') }
+            placeholder={ t('emoji_search')! }
             className={ css`
               margin: 6px;
               height: 36px;

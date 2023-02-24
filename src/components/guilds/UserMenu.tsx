@@ -20,6 +20,7 @@ import PanelButton from './PanelButton';
 import PanelIconCss from '../css/PanelIconCss';
 import classNames from 'classnames';
 import getIconString from '../../utils/getIconString';
+import { setModalState } from '../../store/ModalStore';
 
 const Container = styled.div`
   flex-shrink: 0;
@@ -95,7 +96,7 @@ function UserMenu() {
       <PanelButton onClick={ () => navigate('/settings/general') } className={ classNames((path === 'guildsettings' || path === 'settings') && 'active', 'remoutline') }>
         <RiSettings4Fill className={ PanelIconCss } />
       </PanelButton>
-      <PanelButton className={ css`margin-bottom: 0` }>
+      <PanelButton className={ css`margin-bottom: 0` } onClick={ () => setModalState({ statusChange: true }) }>
         <RiEmotionLaughFill className={ PanelIconCss } />
       </PanelButton>
     </Container>

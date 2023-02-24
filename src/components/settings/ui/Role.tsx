@@ -54,10 +54,11 @@ interface RoleProps {
   defaultRole: boolean,
   onClick?: any,
   active?: boolean,
+  noArrow?: boolean,
   ref?: any
 }
 
-function Role({ name, color, defaultRole, onClick, active = false, ref }: RoleProps) {
+function Role({ name, color, defaultRole, onClick, active = false, noArrow = false, ref }: RoleProps) {
   const { t } = useTranslation(['settings']);
 
   return (
@@ -66,7 +67,7 @@ function Role({ name, color, defaultRole, onClick, active = false, ref }: RolePr
       <StyledText className={ css`margin: 0; font-weight: 900` }>{ name }</StyledText>
       <Splitter />
       { defaultRole && (<StyledText className={ DefaultIconCss }>{ t('server_roles.default_role') }</StyledText>) }
-      { !active && (<RiArrowRightSLine className={ classNames({ [StyledIconCss]: true, [IconCss]: true }) } />) }
+      { !active && !noArrow && (<RiArrowRightSLine className={ classNames({ [StyledIconCss]: true, [IconCss]: true }) } />) }
     </Container>
   )
 }

@@ -144,9 +144,9 @@ function GuildBanCollapsible({ ban }: GuildBanCollapsibleProps) {
       </CollapsibleHead>
       <CollapsibleContent className={ collapsed ? CollapsibleContentActive : CollapsibleContentHidden }>
         <ContentContainer>
-          <StyledText className={ css`margin-top: 0; color: var(--text-secondary)` }>{ t('server_bans.reason') }:</StyledText>
-          <StyledText className={ css`margin-left: 8px;` }>{ ban.reason ? ban.reason : t('server_bans.no_reason') }</StyledText>
-          <StyledText className={ css`color: var(--text-secondary); margin-top: 16px;` }>{ t('server_bans.banned_by') }:</StyledText>
+          <StyledText className={ css`margin-top: 0; color: var(--text-secondary)` }>{ t('server_bans.reason')! }:</StyledText>
+          <StyledText className={ css`margin-left: 8px;` }>{ ban.reason ? ban.reason : t('server_bans.no_reason')! }</StyledText>
+          <StyledText className={ css`color: var(--text-secondary); margin-top: 16px;` }>{ t('server_bans.banned_by')! }:</StyledText>
           { ban.users && (
           <Container className={ css`margin-left: 8px; margin-top: 8px;` }>
             {

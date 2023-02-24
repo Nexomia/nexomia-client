@@ -70,7 +70,7 @@ function ServerCreationModal({ active }: ModalProps) {
         { modalPage === 1 && (
           <Fragment>
             <ModalHeader>{ t('modals.server_create_name_header') }</ModalHeader>
-            <InputField placeholder={ t('modals.server_create_name_placeholder') } onChange={ (event) => { setNameValue(event.target.value) } } />
+            <InputField placeholder={ t('modals.server_create_name_placeholder')! } onChange={ (event) => { setNameValue(event.target.value) } } />
             { (createError && <StyledText className={ negativeColorCss }>{ t('modals.server_create_error') }</StyledText>) }
             <FilledButton onClick={ createServer }>{ t('modals.create') }</FilledButton>
           </Fragment>
@@ -79,7 +79,7 @@ function ServerCreationModal({ active }: ModalProps) {
         { modalPage === 2 && (
           <Fragment>
             <ModalHeader>{ t('modals.server_join_header') }</ModalHeader>
-            <InputField placeholder={ t('modals.server_join_invite_placeholder') } onChange={ (event) => { setInviteValue(event.target.value) } } />
+            <InputField placeholder={ t('modals.server_join_invite_placeholder')! } onChange={ (event) => { setInviteValue(event.target.value) } } />
             { (joinError && <StyledText className={ negativeColorCss }>{ t('modals.server_join_error') }</StyledText>) }
             <FilledButton onClick={ joinServer }>{ t('modals.join') }</FilledButton>
           </Fragment>

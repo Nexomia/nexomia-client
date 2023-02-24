@@ -3,7 +3,7 @@ import { css } from 'linaria';
 import { htmlUnescape } from 'escape-goat';
 import classNames from 'classnames';
 import { ClipboardEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
-import { createEditor, BaseEditor, Descendant, Node, Text } from 'slate';
+import { createEditor, BaseEditor, Descendant, Node, Text, Transforms, Editor } from 'slate';
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
 import { RiAddCircleFill, RiCloseLine, RiEmotionLaughFill, RiSendPlane2Fill, RiStickyNoteFill } from 'react-icons/ri';
 
@@ -221,7 +221,7 @@ function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps
           >
             <Editable
               className={ EditableCss }
-              placeholder={ t('input_placeholder') }
+              placeholder={ t('input_placeholder')! }
               decorate={ decorate }
               renderLeaf={ (props) => (<MarkdownLeaf { ...props } />) }
               onKeyDown={ handleKeyPress }
@@ -264,7 +264,7 @@ function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps
                   />
                 ))
               ) : (
-                <StyledText className={ css`margin: 20px 0 0 0` }>{ InputCache[channel]?.forwards?.length } { t('forwarded_messages') }</StyledText>
+                <StyledText className={ css`margin: 20px 0 0 0` }>{ InputCache[channel]?.forwards?.length } { t('forwarded_messages')! }</StyledText>
               )
             }
           </ForwardedMessagesContainer>
@@ -301,6 +301,7 @@ function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps
   async function sendMessage() {
     if (sendLoading) return;
     if (attachments.length && attachments.filter((att: any) => att.ready === true).length < attachments.length) return;
+    if (sendLocked) return;
 
     const forwards = [ ...(InputCache[channel]?.forwards || []) ];
     const attaches = [ ...attachments ].map((attachment) => attachment.id);
@@ -311,7 +312,12 @@ function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps
 
     const content = htmlUnescape(output);
     editor.insertBreak();
-    setValue(initialValue);
+    Transforms.delete(editor, {
+      at: {
+        anchor: Editor.start(editor, []),
+        focus: Editor.end(editor, []),
+      },
+    });
     updateInputInfo({ channel, forwards: [], attachments: [] });
     setAttachments([]);
 

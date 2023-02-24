@@ -49,7 +49,7 @@ function PasswordConfirmationModal({ active }: ModalProps) {
 
         <InputField
           value={data?.ok ? '' : password}
-          placeholder={ t('modals.password') }
+          placeholder={ t('modals.password')! }
           onChange={ (event) => { setPassword(event.target.value) } }
           ref={ inputRef }
           type='password'

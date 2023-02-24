@@ -8,6 +8,8 @@ import {
   Route
 } from 'react-router-dom';
 
+
+// @ts-ignore
 import { attachLogger } from 'effector-logger/attach';
 import { root } from 'effector-root';
 

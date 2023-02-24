@@ -42,15 +42,15 @@ function ChannelCreationModal({ active }: ModalProps) {
   return (
     <Layer className={ classNames({ [LayerBackgroundShadeCss]: true, [InactiveLayerCss]: !active }) } onClick={ (event) => { closeModal(event) } } ref={ layerRef }>
       <Modal className={ css`width: 440px` }>
-        <LoadingPlaceholder title={ t('modals.channel_creating') } active={ loading } />
-        <ModalHeader>{ t('modals.channel_create_header') }</ModalHeader>
+        <LoadingPlaceholder title={ t('modals.channel_creating')! } active={ loading } />
+        <ModalHeader>{ t('modals.channel_create_header')! }</ModalHeader>
         <InputField
-          placeholder={ t('modals.name') }
+          placeholder={ t('modals.name')! }
           onChange={ (event) => { setName(event.target.value) } }
           ref={ inputRef }
         />
-        { (error && <StyledText className={ negativeColorCss }>{ t('modals.channel_create_error') }</StyledText>) }
-        <FilledButton onClick={ createChannel }>{ t('modals.create') }</FilledButton>
+        { (error && <StyledText className={ negativeColorCss }>{ t('modals.channel_create_error')! }</StyledText>) }
+        <FilledButton onClick={ createChannel }>{ t('modals.create')! }</FilledButton>
       </Modal>
     </Layer>
   )

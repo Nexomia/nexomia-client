@@ -33,7 +33,7 @@ function PinnedMessagesView({ channel }: PinnedMessagesViewProps) {
 
   return (
     <Container>
-      <PopoutHeader className={ css`padding: 16px` }>{ t('tabs.pinned_messages') }</PopoutHeader>
+      <PopoutHeader className={ css`padding: 16px` }>{ t('tabs.pinned_messages')! }</PopoutHeader>
       <Scrollable>
         <MessageView channel={ channel } type={ 1 } />
       </Scrollable>

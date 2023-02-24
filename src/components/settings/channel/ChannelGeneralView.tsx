@@ -48,7 +48,7 @@ function ChannelGeneralView() {
           `
         }
         defaultValue={ ChannelsCache[guildId]?.name }
-        placeholder={ t('channel_general.channel_name') }
+        placeholder={ t('channel_general.channel_name')! }
         onChange={ (event: ChangeEvent<HTMLInputElement>) => { setChannelName(event.target.value); setEdited(true) } }
       />
 
@@ -66,7 +66,7 @@ function ChannelGeneralView() {
           `
         }
         defaultValue={ ChannelsCache[guildId]?.topic }
-        placeholder={ t('channel_general.channel_topic_placeholder') }
+        placeholder={ t('channel_general.channel_topic_placeholder')! }
         onChange={ (event: ChangeEvent<HTMLTextAreaElement>) => { setTopic(event.target.value); setEdited(true) } }
       />
 
@@ -102,7 +102,7 @@ function ChannelGeneralView() {
           `
         }
         value={ ChannelsCache[guildId]?.topic }
-        placeholder={ t('channel_general.channel_timeout_placeholder') }
+        placeholder={ t('channel_general.channel_timeout_placeholder')! }
         onChange={ (event: ChangeEvent<HTMLInputElement>) => { setChannelName(event.target.value); setEdited(true) } }
         type="number"
       />

@@ -32,7 +32,7 @@ export const resources = {
 } as const;
 
 i18n.use(initReactI18next).init({
-  lng: 'en',
+  lng: 'ru',
   ns: ['reg', 'states', 'settings', 'chat'],
   resources
 });
