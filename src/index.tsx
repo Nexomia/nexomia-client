@@ -19,7 +19,7 @@ import Register from './views/Register';
 import { ErrorBoundary } from 'react-error-boundary';
 import Crash from './views/Crash';
 
-const renderRoot = createRoot(document.getElementById('root')!);
+const renderRoot = createRoot(document.getElementById('root')!, {});
 renderRoot.render(
   <React.StrictMode>
     <ErrorBoundary
