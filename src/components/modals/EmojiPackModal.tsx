@@ -117,7 +117,7 @@ function EmojiPackModal({ active }: ModalProps) {
 
   function explore() {
     setModalState({ emojiPack: [false, Modals.emojiPack[1]] });
-    navigate('/settings/emotes');
+    navigate('/app/settings/emotes');
   }
 }
 

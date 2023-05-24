@@ -28,15 +28,15 @@ renderRoot.render(
       <Router>
         <Routes>
           <Route
-            path='/login'
+            path='/app/login'
             element={ <Login /> }
           />
           <Route
-            path='/register'
+            path='/app/register'
             element={ <Register /> }
           />
           <Route
-            path='/*'
+            path='/app/*'
             element={ <App /> }
           />
         </Routes>

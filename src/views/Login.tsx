@@ -34,7 +34,7 @@ function Login() {
 
   useEffect(() => {
     if (token && token !== '') {
-      navigate('/home');
+      navigate('/app/home');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -60,7 +60,8 @@ function Login() {
           <InputField placeholder={ t('fields.password')! } type="password" hidden={ true } ref={ passwordInput } />
           { (passwordError && <StyledText className={ negativeColorCss }>{ t('errors.required_field') }</StyledText>) }
           { (loginError && <StyledText className={ negativeColorCss }>{ t('errors.invalid_credentials') }</StyledText>) }
-          <StyledText>{ t('no_account') } <Link to="/register">{ t('register') }</Link></StyledText>
+          { /*<StyledText>{ t('no_account') } <Link to="/register">{ t('register') }</Link></StyledText>*/ }
+          <StyledText>Регистрация приостановлена</StyledText>
           <FilledButton onClick={ login }>{ t('continue') }</FilledButton>
         </Modal>
       </Layer>
@@ -88,7 +89,7 @@ function Login() {
     setToken(response.access_token);
     setRefreshToken(response.refresh_token);
 
-    navigate('/home');
+    navigate('/app/home');
   }
 }
 

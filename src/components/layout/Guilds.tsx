@@ -139,9 +139,9 @@ function Guilds() {
 
   function switchGuild(id: string) {
     if (channels[id] && channels[id].length) {
-      navigate(`/channels/${id}/${channels[id][channels[id].indexOf(guilds[id]?.default_channel || '')] || channels[id][0]}`);
+      navigate(`/app/channels/${id}/${channels[id][channels[id].indexOf(guilds[id]?.default_channel || '')] || channels[id][0]}`);
     } else {
-      navigate(`/channels/${id}`);
+      navigate(`/app/channels/${id}`);
     }
   }
 

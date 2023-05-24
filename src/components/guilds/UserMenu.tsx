@@ -84,16 +84,16 @@ function UserMenu() {
           <AvatarLetters>{ getIconString(user.username) }</AvatarLetters>
         ) }
       </PanelButton>
-      <PanelButton onClick={ () => navigate('/home') } className={ classNames(path === 'home' && 'active', 'remoutline') }>
+      <PanelButton onClick={ () => navigate('/app/home') } className={ classNames(path === 'home' && 'active', 'remoutline') }>
         <RiHomeFill className={ PanelIconCss } />
       </PanelButton>
-      <PanelButton onClick={ () => navigate('/discover') } className={ classNames((path === 'discover' || path === 'profiles') && 'active', 'remoutline') }>
+      <PanelButton onClick={ () => navigate('/app/discover') } className={ classNames((path === 'discover' || path === 'profiles') && 'active', 'remoutline') }>
         <RiCompassFill className={ PanelIconCss } />
       </PanelButton>
-      <PanelButton onClick={ () => navigate('/channels/@me') } className={ classNames(guildId === '@me' && 'active', 'remoutline') }>
+      <PanelButton onClick={ () => navigate('/app/channels/@me') } className={ classNames(guildId === '@me' && 'active', 'remoutline') }>
         <RiMailFill className={ PanelIconCss } />
       </PanelButton>
-      <PanelButton onClick={ () => navigate('/settings/general') } className={ classNames((path === 'guildsettings' || path === 'settings') && 'active', 'remoutline') }>
+      <PanelButton onClick={ () => navigate('/app/settings/general') } className={ classNames((path === 'guildsettings' || path === 'settings') && 'active', 'remoutline') }>
         <RiSettings4Fill className={ PanelIconCss } />
       </PanelButton>
       <PanelButton className={ css`margin-bottom: 0` } onClick={ () => setModalState({ statusChange: true }) }>

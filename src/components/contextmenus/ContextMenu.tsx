@@ -79,7 +79,7 @@ function ContextMenu() {
                 PermissionCalculator.getUserPermissions(id || '', '', '')
                 & ComputedPermissions.MANAGE_GUILD
               ) ? (
-                <ContextTab title={ t('menu.settings')! } onClick={ () => navigate(`/guildsettings/${id}/general`) } />
+                <ContextTab title={ t('menu.settings')! } onClick={ () => navigate(`/app/guildsettings/${id}/general`) } />
               ) : null }
 
               { (
@@ -220,7 +220,7 @@ function ContextMenu() {
                 )
               ) ? (
                 <Fragment>
-                  <ContextTab title={ t('menu.edit')! } onClick={ () => navigate(`/channelsettings/${id}/general`) } />
+                  <ContextTab title={ t('menu.edit')! } onClick={ () => navigate(`/app/channelsettings/${id}/general`) } />
                   <ContextTab title={ step ? t('menu.confirmation')! : t('menu.delete')! } onClick={ deleteChannel } />
                 </Fragment>
               ) : null }
@@ -265,7 +265,7 @@ function ContextMenu() {
       setContextMenu({ visible: false, lock: false });
 
       if (guildId === id) {
-        navigate('/home');
+        navigate('/app/home');
       }
     }
   }

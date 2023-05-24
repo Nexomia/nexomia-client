@@ -132,7 +132,7 @@ function App() {
 
           <Route
             path={ `/` }
-            element={ <Navigate to={ `/home` } /> }
+            element={ <Navigate to={ `/app/home` } /> }
           />
         </Routes>
       ) }
@@ -148,7 +148,7 @@ function App() {
     const receivedUserInfo = await UsersService.getUser('@me');
     if (!receivedUserInfo) {
       setToken('');
-      navigate('/login');
+      navigate('/app/login');
       return;
     }
 

@@ -155,7 +155,7 @@ function Member({ id, guild, offline = false, tab = false, onClick = () => null,
 
   function openProfile() {
     if (tab) onClick();
-    else navigate(`/profiles/${id}`);
+    else navigate(`/app/profiles/${id}`);
   }
 
   async function loadUser() {

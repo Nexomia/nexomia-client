@@ -113,7 +113,7 @@ function ServerCreationModal({ active }: ModalProps) {
     }]);
     addGuild(id);
 
-    navigate(`/channels/${id}`);
+    navigate(`/app/channels/${id}`);
 
     setLoading(false);
     setNameValue('');
@@ -140,7 +140,7 @@ function ServerCreationModal({ active }: ModalProps) {
     }]);
     addGuild(id);
 
-    navigate(`/channels/${id}`);
+    navigate(`/app/channels/${id}`);
 
     setLoading(false);
     setNameValue('');

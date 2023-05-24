@@ -114,7 +114,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       if (!newGuildChannels.length && (!path || path === 'guildsettings') && isTabGuild(guildId)) {
         loadChannels();
       } else if (!path && !channelId && guildId !== '@me') {
-        navigate(`/channels/${guildId}/${newGuildChannels[newGuildChannels.indexOf(guilds[guildId]?.default_channel || '')] || newGuildChannels[0]}`);
+        navigate(`/app/channels/${guildId}/${newGuildChannels[newGuildChannels.indexOf(guilds[guildId]?.default_channel || '')] || newGuildChannels[0]}`);
       }
     }
 
@@ -150,7 +150,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             title={ t('tabs.people')! }
             tabId={ 'people' }
             active={ path === 'profiles' }
-            onClick={ () => { navigate(`/discover/people`) } }
+            onClick={ () => { navigate(`/app/discover/people`) } }
           />
         </Fragment>
       ) }
@@ -164,13 +164,13 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             Icon={ RiMessage3Fill }
             title={ t('tabs.feed')! }
             tabId={ 'feed' }
-            onClick={ () => { navigate(`/home/feed`) } }
+            onClick={ () => { navigate(`/app/home/feed`) } }
           />
           <Tab
             Icon={ RiUserFill }
             title={ t('tabs.friends')! }
             tabId={ 'friends' }
-            onClick={ () => { navigate(`/home/friends`) } }
+            onClick={ () => { navigate(`/app/home/friends`) } }
           />
         </Fragment>
       ) }
@@ -184,14 +184,14 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
           <Tab
             title={ t('tabs.profile')! }
             tabId={ 'general' }
-            onClick={ () => { navigate(`/settings/general`) } }
+            onClick={ () => { navigate(`/app/settings/general`) } }
           />
 
           <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }>{ t('tabs.chat') }</StyledText>
           <Tab
             title={ t('tabs.emotes')! }
             tabId={ 'emotes' }
-            onClick={ () => { navigate(`/settings/emotes`) } }
+            onClick={ () => { navigate(`/app/settings/emotes`) } }
           />
 
           <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }></StyledText>
@@ -199,7 +199,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             negative={ true }
             title={ t('tabs.logout')! }
             tabId={ 'logout' }
-            onClick={ () => { navigate(`/settings/emotes`) } }
+            onClick={ () => { navigate(`/app/settings/emotes`) } }
           />
 
           <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }>Build 13<br />24.02.2023</StyledText>
@@ -214,22 +214,22 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
           <Tab
             title={ t('tabs.general')! }
             tabId={ 'general' }
-            onClick={ () => { navigate(`/guildsettings/${guildId}/general`) } }
+            onClick={ () => { navigate(`/app/guildsettings/${guildId}/general`) } }
           />
           <Tab
             title={ t('tabs.roles')! }
             tabId={ 'roles' }
-            onClick={ () => { navigate(`/guildsettings/${guildId}/roles`) } }
+            onClick={ () => { navigate(`/app/guildsettings/${guildId}/roles`) } }
           />
           <Tab
             title={ t('tabs.invites')! }
             tabId={ 'invites' }
-            onClick={ () => { navigate(`/guildsettings/${guildId}/invites`) } }
+            onClick={ () => { navigate(`/app/guildsettings/${guildId}/invites`) } }
           />
           <Tab
             title={ t('tabs.bans')! }
             tabId={ 'bans' }
-            onClick={ () => { navigate(`/guildsettings/${guildId}/bans`) } }
+            onClick={ () => { navigate(`/app/guildsettings/${guildId}/bans`) } }
           />
                     
         </Fragment>
@@ -243,22 +243,22 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
           <Tab
             title={ t('tabs.general')! }
             tabId={ 'general' }
-            onClick={ () => { navigate(`/channelsettings/${guildId}/general`) } }
+            onClick={ () => { navigate(`/app/channelsettings/${guildId}/general`) } }
           />
           <Tab
             title={ t('tabs.permissions')! }
             tabId={ 'permissions' }
-            onClick={ () => { navigate(`/channelsettings/${guildId}/permissions`) } }
+            onClick={ () => { navigate(`/app/channelsettings/${guildId}/permissions`) } }
           />
           <Tab
             title={ t('tabs.invites')! }
             tabId={ 'invites' }
-            onClick={ () => { navigate(`/channelsettings/${guildId}/invites`) } }
+            onClick={ () => { navigate(`/app/channelsettings/${guildId}/invites`) } }
           />
           <Tab
             title={ t('tabs.webhooks')! }
             tabId={ 'webhooks' }
-            onClick={ () => { navigate(`/channelsettings/${guildId}/webhooks`) } }
+            onClick={ () => { navigate(`/app/channelsettings/${guildId}/webhooks`) } }
           />
                     
         </Fragment>
@@ -286,7 +286,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
                         title={ channelsCache[channel]?.name || '' }
                         tabId={ channelsCache[channel]?.id }
                         key={ channelsCache[channel]?.id }
-                        onClick={ () => { navigate(`/channels/${guildId}/${channel}`) } }
+                        onClick={ () => { navigate(`/app/channels/${guildId}/${channel}`) } }
                         contextEnabled
                       />
                     ) : null
@@ -338,7 +338,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
                 tab={ true }
                 key={ channel }
                 active={ channelId === channel }
-                onClick={ () => { navigate(`/channels/@me/${channel}`) } }
+                onClick={ () => { navigate(`/app/channels/@me/${channel}`) } }
               />
             ))
           }
@@ -356,7 +356,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       channels.forEach((ch: Channel) => BigInt(ch.last_message_id) > BigInt(ch.last_read_snowflake) ? addUnread({ guildId: ch.guild_id || '@me', channelId: ch.id, message_id: ch.last_message_id}) : null)
       const defaultChannel = channels[channels.findIndex((channel: Channel) => guild?.default_channel === channel.id)]?.id || channels[0].id;
       if (defaultChannel && !channelId && guildId !== '@me') {
-        navigate(`/channels/${guildId}/${defaultChannel}`);
+        navigate(`/app/channels/${guildId}/${defaultChannel}`);
       }
     }
 

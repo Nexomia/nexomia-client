@@ -73,7 +73,7 @@ function ChannelPermissionsView() {
     }
 
     if (!defaultRole.name) {
-      navigate('/home');
+      navigate('/app/home');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -334,7 +334,7 @@
     )
 
     function showUserProfile() {
-      navigate(`/profiles/${ MessageCache[id].author }`);
+      navigate(`/app/profiles/${ MessageCache[id].author }`);
     }
 
     function openContextMenu(event: any) {
