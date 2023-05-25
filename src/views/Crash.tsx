@@ -29,7 +29,7 @@ function Crash({ error, componentStack, resetErrorBoundary }: any) {
   )
 
   function reload() {
-    window.location.pathname = '/';
+    window.location.pathname = '/app';
   }
 }
 

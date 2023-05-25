@@ -32,6 +32,7 @@ import classNames from 'classnames';
 import Member from '../sidebar/Member';
 import { addUnread } from '../../store/UnreadStore';
 import loadFullGuild from '../../utils/loadFullGuild';
+import { setRefreshToken, setToken } from '../../store/AuthStore';
 
 
 const SidebarContainer = styled.div`
@@ -199,7 +200,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
             negative={ true }
             title={ t('tabs.logout')! }
             tabId={ 'logout' }
-            onClick={ () => { navigate(`/app/settings/emotes`) } }
+            onClick={ logout }
           />
 
           <StyledText className={ css`margin: 2px 0px 2px 16px; color: var(--text-secondary); font-weight: 900` }>Build 13<br />24.02.2023</StyledText>
@@ -361,6 +362,12 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
     }
 
     setLoading(false);
+  }
+
+  async function logout() {
+    setToken('');
+    setRefreshToken('');
+    window.location.pathname = '/app';
   }
 }
 
