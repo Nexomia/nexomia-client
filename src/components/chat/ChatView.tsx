@@ -110,6 +110,7 @@ function ChatView() {
 
   useEffect(() => {
     if (!addedLoading) {
+      console.log(addScroll);
       setTimeout(() => {
         scrollerRef.current?.scrollTo({
           top: scrollerRef?.current?.scrollHeight - addScroll,
@@ -140,7 +141,7 @@ function ChatView() {
             <MessageWrapper>
               { 
                 !!(permissions & ComputedPermissions.VIEW_CHANNEL) && 
-                <MessageView channel={ channelId } onMessagesLoaded={ () => scrollView(true) } />
+                <MessageView channel={ channelId } onMessagesLoaded={ () => setImmediate(() => scrollView(true)) } />
               }
             </MessageWrapper>
             <TypersContainer>
