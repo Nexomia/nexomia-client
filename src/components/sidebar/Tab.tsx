@@ -107,7 +107,7 @@ function Tab({ Icon, title, active, onClick, tabId, negative, contextEnabled = f
     } else {
       setUnread(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [Unreads]);
 
   return (

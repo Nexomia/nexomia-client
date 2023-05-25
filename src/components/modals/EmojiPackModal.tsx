@@ -68,7 +68,7 @@ function EmojiPackModal({ active }: ModalProps) {
         loadPack();
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [Modals]);
 
   const [error, setError] = useState(false);

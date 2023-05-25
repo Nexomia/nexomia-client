@@ -89,14 +89,14 @@ function PickOverwriteModal({ active }: ModalProps) {
     });
 
     setRoleList(roles);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [id, active, ChannelCache[guildId]]);
 
   useEffect(() => {
     if (active) {
       setSelected(null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, []);
 
   useEffect(() => {
@@ -110,7 +110,7 @@ function PickOverwriteModal({ active }: ModalProps) {
       setUserLoading(false);
       setUser(undefined);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [userValue]);
 
   return (

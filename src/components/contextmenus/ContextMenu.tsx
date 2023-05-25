@@ -58,7 +58,7 @@ function ContextMenu() {
       }
       setTimeout(() => setBlockVisible(true), 0);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [ContextMenu]);
 
   const [step, setStep] = useState(false);

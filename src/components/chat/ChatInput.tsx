@@ -190,15 +190,15 @@ function ChatInput({ channel, onMessageSent, onAttachmentAdded }: ChatInputProps
     }
 
     setAttachments(modifiedAttachments);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [loading]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   useEffect(() => onAttachmentAdded(), [attachments, InputCache[channel]]);
 
   useEffect(() => {
     setPermissions(PermissionCalculator.getUserPermissions(CachedChannels[channel]?.guild_id || '', channel, ''))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [Roles, channel, CachedChannels]);
 
   return (

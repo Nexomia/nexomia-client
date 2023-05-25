@@ -35,7 +35,7 @@ function PasswordConfirmationModal({ active }: ModalProps) {
 
   useEffect(() => {
     if (data?.ok) closeModal();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [data?.ok]);
 
   return (

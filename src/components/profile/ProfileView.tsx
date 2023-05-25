@@ -85,7 +85,7 @@ function ProfileView({ user }: ProfileViewProps) {
 
   useEffect(() => {
     loadUserInfo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, []);
 
   return (

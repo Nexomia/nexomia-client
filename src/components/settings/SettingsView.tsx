@@ -34,7 +34,7 @@ function SettingsView() {
 
   useEffect(() => {
     document.title = `${Guilds[guildId]?.name} settings - Nexomia`;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [])
 
   return (

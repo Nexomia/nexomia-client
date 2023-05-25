@@ -133,7 +133,7 @@ function PackCard({
       if (!UserCache[author]) loadUserInfo();
       else setAuthorUser(UserCache[author]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [UserCache]);
 
   return (

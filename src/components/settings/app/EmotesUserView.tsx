@@ -98,7 +98,7 @@ function EmotesUserView() {
   useEffect(() => {
     setOpenedPack(Modals.emojiPack[1]);
     setModalState({ emojiPack: [false, ''] });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, []);
 
   useEffect(() => {
@@ -106,14 +106,14 @@ function EmotesUserView() {
       uploadEmoji();
       setPrevContent(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [result.loading]);
 
   useEffect(() => {
     if (iconResult.filesContent?.length && !iconResult.loading) {
       uploadIcon();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [iconResult.loading]);
 
   const { t } = useTranslation(['settings']);

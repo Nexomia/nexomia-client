@@ -42,7 +42,7 @@ function StatusChangeModal({ active }: ModalProps) {
       setName(User.status);
       setPage(0);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [active]);
 
   return (

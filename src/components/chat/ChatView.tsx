@@ -90,12 +90,12 @@ function ChatView() {
 
   useEffect(() => {
     setShowTopMargin(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [Roles, channelId, Channels]);
 
   useEffect(() => {
     setPermissions(PermissionCalculator.getUserPermissions(Channels[channelId]?.guild_id || '', channelId, ''))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [Roles, channelId, Channels]);
 
   useEffect(() => {
@@ -105,7 +105,7 @@ function ChatView() {
     } else {
       setLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [channelId, loading]);
 
   useEffect(() => {
@@ -117,12 +117,12 @@ function ChatView() {
         });
       }, 0);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [addedLoading]);
 
   useEffect(() => {
     scrollView(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [Messages[channelId]]);
 
   useEffect(() => {

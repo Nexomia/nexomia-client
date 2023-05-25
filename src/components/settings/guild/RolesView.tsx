@@ -103,12 +103,12 @@ function RolesView() {
         & (ComputedPermissions.MANAGE_ROLES | ComputedPermissions.ADMINISTRATOR)
       )
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, []);
 
   useEffect(() => {
     setRoleList([ ...(GuildsCache[guildId]?.roles || []) ]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [GuildsCache]);
 
   const [canMove, setCanMove] = useState(false);

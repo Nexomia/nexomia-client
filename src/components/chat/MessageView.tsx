@@ -41,7 +41,7 @@ function MessageView({ channel, onMessagesLoaded = () => null, type = 0 }: Messa
       loadMessages();
       return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [MessageStore[type === 0 ? channel : `0${channel}`]]);
 
   return (

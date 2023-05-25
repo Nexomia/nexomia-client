@@ -72,7 +72,7 @@ function GuildBanUserModal({ active }: ModalProps) {
 
   useEffect(() => {
     if (data?.user_id) setUser(UserCache[data?.user_id]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, [data]);
 
   useEffect(() => {
@@ -91,7 +91,7 @@ function GuildBanUserModal({ active }: ModalProps) {
       setUserLoading(false);
       setUser(undefined);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, [userValue]);
 
   const messageDeletionInterval: DropdownKey[] = [

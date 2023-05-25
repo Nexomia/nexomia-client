@@ -63,7 +63,7 @@ function BansView() {
       setBans(await GuildsService.getGuildBans(guildId));
     }
     getBans();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, []);
 
   function removeBan(guild: string, user: string) {

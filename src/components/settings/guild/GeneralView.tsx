@@ -66,7 +66,7 @@ function GeneralView() {
       setAvatarEdited(true);
       setEdited(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [bannerResult]);
 
   return (

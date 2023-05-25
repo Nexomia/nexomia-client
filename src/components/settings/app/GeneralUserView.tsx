@@ -60,7 +60,7 @@ function GeneralUserView() {
         (tag.length > (UserCache.premium_type ? 7 : 4) || tag.length < (UserCache.premium_type ? 3 : 4))
       )
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [tag]);
 
   useEffect(() => {
@@ -72,12 +72,12 @@ function GeneralUserView() {
         (tag.length > (UserCache.premium_type ? 7 : 4) || tag.length < (UserCache.premium_type ? 3 : 4) ))
       )
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [tag]);
 
   useEffect(() => {
     if (password) saveChanges();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [password]);
 
   useEffect(() => {
@@ -92,7 +92,7 @@ function GeneralUserView() {
       setBannerEdited(false);
       setEdited(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [bannerResult]);
   return (
     <Fragment>

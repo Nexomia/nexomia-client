@@ -38,7 +38,7 @@ function EmojiEditModal({ active }: ModalProps) {
 
   useEffect(() => {
     setName(Modals.emojiEdit[3]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [active]);
 
   return (

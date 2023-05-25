@@ -49,7 +49,7 @@ function TextRenderer({ file }: TextRendererProps) {
 
   useEffect(() => {
     loadContent();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, []);
 
   return (

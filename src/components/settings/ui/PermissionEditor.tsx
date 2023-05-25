@@ -21,7 +21,7 @@ function PermissionEditor({ initialPermissions, inherit, onChange, guild, catego
   const { t } = useTranslation(['settings']);
     useEffect(() => {
       setPermissions(initialPermissions); 
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      
     }, [initialPermissions]);
   return (
     <Fragment>

@@ -121,13 +121,13 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
     if (!['channels', 'guildsettings'].includes(path)) {
       document.title = 'Nexomia';
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [guildId, path]);
 
   useEffect(() => {
     const newGuildChannels = channels[guildId] || [];
     setGuildChannelsValue(newGuildChannels);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [channels]);
 
   let renderedChannels: any = [];
