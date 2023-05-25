@@ -62,7 +62,7 @@ function Content() {
           <SettingsView />
         ) }
 
-      { path === 'channelsettings' && (
+        { path === 'channelsettings' && (
           <SettingsView />
         ) }
 

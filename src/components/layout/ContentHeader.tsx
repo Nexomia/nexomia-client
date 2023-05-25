@@ -17,6 +17,7 @@ import isTabGuild from '../../utils/isTabGuild';
 import InputButton from '../chat/InputButton';
 import { useTranslation } from 'react-i18next';
 import PinnedMessagesView from '../chat/PinnedMessagesView';
+import getGroupDMName from '../../store/getGroupDMName';
 
 const Header = styled.div`
   height: 48px;
@@ -70,7 +71,7 @@ function ContentHeader() {
 
   return (
     <Header>
-      { path === 'profiles' && guildId !== 'people' && (
+      { (path === 'profiles' && guildId !== 'people') || (guildId === '@me' && channelId) && (
         <RiUserFill className={ classNames({ [StyledIconCss]: true, [HeaderIconCss]: true }) } />
       ) }
 
@@ -81,6 +82,17 @@ function ContentHeader() {
       { !path && isTabGuild(guildId) && channelId && (
         <Fragment>
           <Content>{ channelsCache[channelId]?.name || '' }</Content>
+          <div className={ css`flex-grow: 1` } />
+          <InputButton onClick={ () => setPinsOpened(!pinsOpened) }>
+            <RiPushpinFill className={ classNames(StyledIconCss, InputIconCss) } />
+          </InputButton>
+          { pinsOpened && <PinnedMessagesView channel={ channelId } /> }
+        </Fragment>
+      ) }
+
+      { !path && guildId === '@me' && channelId && (
+        <Fragment>
+          <Content>{ channelsCache[channelId]?.name || getGroupDMName(channelsCache[channelId].recipients!) }</Content>
           <div className={ css`flex-grow: 1` } />
           <InputButton onClick={ () => setPinsOpened(!pinsOpened) }>
             <RiPushpinFill className={ classNames(StyledIconCss, InputIconCss) } />

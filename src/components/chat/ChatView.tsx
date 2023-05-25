@@ -66,11 +66,13 @@ const TypersContainer = styled.div`
 `
 
 interface RouteParams {
-  channelId: string
+  channelId: string,
+  guildId: string
 }
 
 function ChatView() {
   const { channelId } = useParams<RouteParams>();
+  const { guildId } = useParams<RouteParams>();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const Messages = useStore($MessageStore);
   const Channels = useStore($ChannelCacheStore);
@@ -140,7 +142,7 @@ function ChatView() {
             ) }
             <MessageWrapper>
               { 
-                !!(permissions & ComputedPermissions.VIEW_CHANNEL) && 
+                (!!(permissions & ComputedPermissions.VIEW_CHANNEL) || guildId === '@me' ) && 
                 <MessageView channel={ channelId } onMessagesLoaded={ () => setImmediate(() => scrollView(true)) } />
               }
             </MessageWrapper>
@@ -166,7 +168,8 @@ function ChatView() {
         </MessageContainer>
       </MessageContainerWrapper>
       { permissions & (ComputedPermissions.WRITE_MESSAGES) &&
-        permissions & (ComputedPermissions.VIEW_CHANNEL)  ? (
+        permissions & (ComputedPermissions.VIEW_CHANNEL) ||
+        guildId === '@me' ? (
         <ChatInput
           channel={ channelId }
           onMessageSent={ () => scrollView(true) }

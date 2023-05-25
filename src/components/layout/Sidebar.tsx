@@ -33,6 +33,9 @@ import Member from '../sidebar/Member';
 import { addUnread } from '../../store/UnreadStore';
 import loadFullGuild from '../../utils/loadFullGuild';
 import { setRefreshToken, setToken } from '../../store/AuthStore';
+import $UserCacheStore from '../../store/UserCacheStore';
+import BigTab from '../sidebar/BigTab';
+import getGroupDMName from '../../store/getGroupDMName';
 
 
 const SidebarContainer = styled.div`
@@ -97,6 +100,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
   const channels = useStore<GuildChannels>($ChannelStore);
   const channelsCache = useStore<ChannelsCache>($ChannelCacheStore);
   const user = useStore($UserStore);
+  const userCache = useStore($UserCacheStore);
 
   const { t } = useTranslation(['settings', 'chat']);
 
@@ -333,15 +337,32 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
       { !path && guildId === '@me' && type === 'channels' && (
         <Scrollable>
           {
-            guildChannels.map((channel: string) => (
-              <Member
-                id={ channelsCache[channel]?.recipients?.filter((id: string) => id !== user.id)[0] || '' }
+            guildChannels.map((channel: string) => {
+
+              let channelName: string;
+
+              if (channelsCache[channel]?.name) {
+                channelName = channelsCache[channel].name as string;
+              } else if (channelsCache[channel]?.recipients?.length || 0 > 1) {
+                channelName = getGroupDMName(channelsCache[channel].recipients!);
+              } else return (
+                <Member
+                  id={ channelsCache[channel]?.recipients?.filter((id: string) => id !== user.id)[0] || '' }
+                  tab={ true }
+                  key={ channel }
+                  active={ channelId === channel }
+                  onClick={ () => { navigate(`/app/channels/@me/${channel}`) } }
+                />
+              );
+
+              return <BigTab
+                name={ channelName }
                 tab={ true }
                 key={ channel }
                 active={ channelId === channel }
                 onClick={ () => { navigate(`/app/channels/@me/${channel}`) } }
               />
-            ))
+            })
           }
         </Scrollable>
       ) }

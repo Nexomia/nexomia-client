@@ -1,18 +1,20 @@
 import { useStore } from 'effector-react';
 import { css } from 'linaria';
 import { styled } from 'linaria/react';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import $GuildCacheStore from '../../store/GuildCacheStore';
 import $MemberCacheStore from '../../store/MemberCacheStore';
 import { ComputedPermissions } from '../../store/models/ComputedPermissions';
 import $RoleCacheStore from '../../store/RolesCacheStore';
-import $UserCacheStore from '../../store/UserCacheStore';
+import $UserCacheStore, { cacheUsers } from '../../store/UserCacheStore';
 import PermissionCalculator from '../../utils/PermissionCalculator';
 import Member from '../sidebar/Member';
 import StyledText from '../ui/StyledText';
 import SidebarHeader from './SidebarHeader';
+import $ChannelCacheStore from '../../store/ChannelCacheStore';
+import usersService from '../../services/api/users/users.service';
 
 const SidebarContainer = styled.div`
   display: flex;
@@ -41,6 +43,7 @@ interface RouteParams {
 function MemberSidebar() {
   const { guildId, channelId } = useParams<RouteParams>();
   const GuildStore = useStore($GuildCacheStore);
+  const ChannelCacheStore = useStore($ChannelCacheStore);
   const RoleCacheStore = useStore($RoleCacheStore);
   const UserCacheStore = useStore($UserCacheStore);
   const MemberCacheStore = useStore($MemberCacheStore);
@@ -50,8 +53,15 @@ function MemberSidebar() {
   let renderedUsers: string[] = [];
   let sortedUsers: any;
 
+  useEffect(() => {
+    if (guildId === '@me')
+      for (const member of ChannelCacheStore[channelId].recipients!) {
+        if (!UserCacheStore[member]) loadUser(member);
+      }
+  }, []);
+
   return (
-    GuildStore[guildId]?.roles ? (
+    GuildStore[guildId]?.roles || guildId === '@me' ? (
       <SidebarContainer>
         <SidebarHeader />
         <Scrollable>
@@ -101,6 +111,16 @@ function MemberSidebar() {
               </Fragment>
             )
           }) }
+          { guildId === '@me' &&
+            ( renderedUsers = ChannelCacheStore[channelId].recipients!.filter((id: string) => !(UserCacheStore[id]?.presence === 4 || !UserCacheStore[id]?.connected)) ) &&
+            renderedUsers.length > 0 &&
+            <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` }>{ t('online')! }</StyledText>
+          }
+          {
+            guildId === '@me' && (
+              renderedUsers.map((id: string) => <Member id={ id } key={ id } />)
+            )
+          }
           <StyledText className={ css`margin: 8px 0 8px 16px; font-size: 14px; font-weight: 900` }>{ t('offline')! }</StyledText>
           {
             (
@@ -119,11 +139,26 @@ function MemberSidebar() {
               })
             ) || null
           }
+          {
+            guildId === '@me' && (
+              ChannelCacheStore[channelId].recipients?.map((id: string) => (
+                (UserCacheStore[id]?.presence === 4 || !UserCacheStore[id]?.connected)
+                  ? <Member offline id={ id } key={ id } />
+                  : null
+              ))
+            )
+          }
           { (renderedUsers = []) && null }
         </Scrollable>
       </SidebarContainer>
     ) : null
   )
+
+  async function loadUser(id: string) {
+    const response = await usersService.getUser(id);
+
+    if (response) cacheUsers([response]);
+  }
 }
 
 export default MemberSidebar;
