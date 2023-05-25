@@ -275,7 +275,7 @@ function Sidebar({ type = 'channels' }: SidebarProps) {
 
       { /* Guild Channels */ }
       { !path && isTabGuild(guildId) && type === 'channels' && (
-        !!(guildChannels && guildChannels.length && channelsCache[guildChannels[0]]) && (
+        (
           <Scrollable>
             <Fragment>
               {
