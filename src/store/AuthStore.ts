@@ -1,4 +1,4 @@
-import { createStore, createEvent } from 'effector-root';
+import { createStore, createEvent } from 'effector';
 
 const setToken = createEvent<string>();
 const setRefreshToken = createEvent<string>();

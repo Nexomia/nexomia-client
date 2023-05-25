@@ -1,4 +1,4 @@
-import { createStore, createEvent } from 'effector-root';
+import { createStore, createEvent } from 'effector';
 
 const setUser = createEvent<UserInfo>();
 const addEmojiPack = createEvent<string>();

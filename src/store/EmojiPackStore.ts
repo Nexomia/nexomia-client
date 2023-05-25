@@ -1,4 +1,4 @@
-import { createStore, createEvent } from 'effector-root';
+import { createStore, createEvent } from 'effector';
 import { cacheEmojis } from './EmojiStore';
 import Emoji from './models/Emoji';
 import EmojiPack from './models/EmojiPack';

@@ -60,10 +60,6 @@ const Container = styled.div`
   flex-direction: row;
   flex-grow: 0;
   overflow: hidden;
-
-  & > div.i1qjsqhi:first-child {
-    margin-left: 14px;
-  }
 `
 
 const InputIconCss = css`

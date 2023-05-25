@@ -1,5 +1,4 @@
-
-/// <reference types="react-scripts" />
+/// <referencetypes="vite-plugin-svgr/client" />
 
 declare module '*.opus' {
   const src: string;

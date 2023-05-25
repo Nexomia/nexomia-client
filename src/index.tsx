@@ -9,9 +9,7 @@ import {
 } from 'react-router-dom';
 
 
-// @ts-ignore
-import { attachLogger } from 'effector-logger/attach';
-import { root } from 'effector-root';
+import { attachLogger } from 'effector-logger';
 
 import App from './views/App';
 import Login from './views/Login';
@@ -45,4 +43,4 @@ renderRoot.render(
   </React.StrictMode>
 );
 
-attachLogger(root);
+attachLogger();

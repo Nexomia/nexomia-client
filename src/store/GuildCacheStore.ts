@@ -1,4 +1,4 @@
-import { createStore, createEvent } from 'effector-root';
+import { createStore, createEvent } from 'effector';
 
 import Guild from './models/Guild';
 import GuildBan from './models/GuildBan';

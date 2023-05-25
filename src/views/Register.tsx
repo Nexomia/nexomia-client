@@ -56,7 +56,7 @@ function Register() {
     <div className="Login dark-theme">
       <Layer>
         <Modal className={ modalCss }>
-          { /*<LoadingPlaceholder title={ (placeholderText === 0 && 'Creating your account...') || 'Almost there...' } active={ registerLoading } />
+          <LoadingPlaceholder title={ (placeholderText === 0 && 'Creating your account...') || 'Almost there...' } active={ registerLoading } />
 
           { registerState === 0 && (
             <Fragment>
@@ -77,9 +77,7 @@ function Register() {
               <ModalHeader>{ t('account_created') }<br /><StyledText>{ t('account_log_in') }</StyledText></ModalHeader>
               <FilledButton onClick={ login }>{ t('continue') }</FilledButton>
             </Fragment>
-          ) } */ }
-          <ModalHeader>{ t('register') }<br /><StyledText>Регистрация приостановлена</StyledText></ModalHeader>
-          
+          ) }
         </Modal>
       </Layer>
     </div>

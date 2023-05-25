@@ -1,4 +1,4 @@
-import { createEvent, createStore } from 'effector-root';
+import { createEvent, createStore } from 'effector';
 
 interface ContextMenu {
   type?: string,
