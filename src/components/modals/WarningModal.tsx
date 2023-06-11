@@ -35,8 +35,8 @@ function WarningModal({ active }: ModalProps) {
   return (
     <Layer className={ classNames({ [LayerBackgroundShadeCss]: true, [InactiveLayerCss]: !active }) } onClick={ (event) => { closeModal(event) } } ref={ layerRef }>
       <Modal className={ css`width: 440px` }>
-        <ModalHeader>{ 'Внимание!' }</ModalHeader>
-        <StyledText className={ css`text-align: center` }>Данное приложение является незавершенным.<br />Все предоставлено в ознакомительных целях.</StyledText>
+        <ModalHeader>{ 'Wanring!' }</ModalHeader>
+        <StyledText className={ css`text-align: center` }>This app is unfinished.<br />Everything is shown in informational purpose.</StyledText>
         <FilledButton onClick={ () => setModalState({ warning: false }) }>{ 'Понятно' }</FilledButton>
       </Modal>
     </Layer>
